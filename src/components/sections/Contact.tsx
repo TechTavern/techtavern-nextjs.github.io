@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Mail } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -25,7 +25,7 @@ export default function Contact() {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
               <Phone className="text-primary" size={20} />
             </div>
@@ -35,7 +35,7 @@ export default function Contact() {
             >
               +1 (678) 822 4200
             </a>
-          </div>
+          </div> */}
           
           <div className="flex items-center gap-4">
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">

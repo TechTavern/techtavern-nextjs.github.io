@@ -2,10 +2,10 @@ import createMDX from "@next/mdx";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import type { NextConfig } from "next";
 
 const withMDX = createMDX({
   options: {
-    // If you installed these remark/rehype plugins:
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,
@@ -14,21 +14,29 @@ const withMDX = createMDX({
   },
 });
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "export" as const,  // produce /out for GitHub Pages
-  trailingSlash: true,        // friendlier with static hosting
-  images: { unoptimized: true },
-  pageExtensions: ["ts", "tsx", "mdx"],
-
-  // For project pages like https://username.github.io/my-repo
-  // set NEXT_PUBLIC_BASE_PATH=/my-repo in the build environment
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || "",
-
+const nextConfig: NextConfig = {
+  // Only use export mode in production builds
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    trailingSlash: true,
+    // Only set base path in production with explicit environment variable
+    ...(process.env.NEXT_PUBLIC_BASE_PATH && {
+      basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+      assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
+    }),
+  }),
+  
+  // Ensure all pages are statically generated
   experimental: {
-    mdxRs: true,              // Next’s Rust MDX compiler path
+    workerThreads: false,
+    cpus: 1,
   },
+  
+  images: {
+    unoptimized: true,
+  },
+  
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
 };
 
 export default withMDX(nextConfig);

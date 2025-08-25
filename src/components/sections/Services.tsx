@@ -74,7 +74,7 @@ const serviceAreas = [
 
 export default function Services() {
   return (
-    <div className="space-y-16">
+    <div className="space-y-0">
       {/* Technology Logos Section */}
       <div className="text-center">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-12">

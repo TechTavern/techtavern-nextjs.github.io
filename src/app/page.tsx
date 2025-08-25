@@ -16,7 +16,7 @@ export default function Home() {
       />
 
       {/* Info Section with Gradient Background */}
-      <section className="gradient-brand text-light pt-16 pb-8" id="Info">
+      <section className="gradient-brand text-light pt-6 pb-0" id="Info">
         <div className="container mx-auto px-4 mt-12">
           <Info />
         </div>
@@ -29,7 +29,7 @@ export default function Home() {
       <Mission />
 
       {/* Services Section */}
-      <section className="gradient-brand text-light py-16" id="Services">
+      <section className="gradient-brand text-light py-0" id="Services">
         {/* Top Divider */}
         <SvgDivider position="top" fill="white" />
         
@@ -42,13 +42,13 @@ export default function Home() {
       </section>
 
       {/* About/Profile Section */}
-      <section className="bg-nero text-light py-16" id="About">
+      <section className="bg-nero text-light pt-16 pb-0" id="About">
         <div className="container mx-auto px-4">
           <Profile />
         </div>
         
         {/* Wave divider using inline SVG for custom styling */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 240" className="w-full h-[60px] block" preserveAspectRatio="none">
           <path
             fill="#f2f7ff"
             fillOpacity="1"
