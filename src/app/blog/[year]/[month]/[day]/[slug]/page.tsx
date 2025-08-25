@@ -9,17 +9,17 @@ export function generateStaticParams() {
   }));
 }
 
-type Props = { params: Promise<{ year: string; month: string; day: string; slug: string }> };
+type Props = { params: { year: string; month: string; day: string; slug: string } };
 
-export async function generateMetadata({ params }: Props) {
-  const { year, month, day, slug } = await params;
+export function generateMetadata({ params }: Props) {
+  const { year, month, day, slug } = params;
   const post = getPostByParams(year, month, day, slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt || undefined };
 }
 
-export default async function BlogPostPage({ params }: Props) {
-  const { year, month, day, slug } = await params;
+export default function BlogPostPage({ params }: Props) {
+  const { year, month, day, slug } = params;
   const post = getPostByParams(year, month, day, slug);
   if (!post) notFound();
 
