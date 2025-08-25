@@ -3,9 +3,13 @@ import { getAllPosts, getPostByParams } from "@/lib/posts";
 import { getMDXComponent } from "@/lib/mdx-imports";
 
 // Build all routes at export time
-export function generateStaticParams() {
-  return getAllPosts().map((p) => ({
-    year: p.year, month: p.month, day: p.day, slug: p.slug,
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((p) => ({
+    year: p.year,
+    month: p.month,
+    day: p.day,
+    slug: p.slug,
   }));
 }
 
@@ -13,14 +17,15 @@ type Props = { params: Promise<{ year: string; month: string; day: string; slug:
 
 export async function generateMetadata({ params }: Props) {
   const { year, month, day, slug } = await params;
-  const post = getPostByParams(year, month, day, slug);
+  const post = await getPostByParams(year, month, day, slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt || undefined };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { year, month, day, slug } = await params;
-  const post = getPostByParams(year, month, day, slug);
+  const post = await getPostByParams(year, month, day, slug);
+
   if (!post) notFound();
 
   // Get the MDX component from our static import map

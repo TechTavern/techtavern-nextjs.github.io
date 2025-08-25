@@ -3,8 +3,8 @@ import { getAllPosts } from "@/lib/posts";
 
 export const metadata = { title: "Blog" };
 
-export default function BlogIndexPage() {
-  const posts = getAllPosts();
+export default async function BlogIndexPage() {
+  const posts = await getAllPosts();
   return (
     <main className="container mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-3xl font-bold">Blog</h1>
