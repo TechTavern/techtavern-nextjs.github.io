@@ -1,0 +1,13 @@
+{
+    "permissions": {
+      "allow": [
+        "Bash(npm-win install)",
+        "Bash(npm-win run build)",
+        "Bash(npm-win run dev)",
+        "Bash(npm-win run test)"
+      ],
+      "deny": [],
+      "ask": [],
+      "defaultMode": "acceptEdits"
+    }
+  }
