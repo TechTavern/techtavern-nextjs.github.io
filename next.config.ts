@@ -22,10 +22,9 @@ const nextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
 
   // For project pages like https://username.github.io/my-repo
-  // set NEXT_PUBLIC_BASE_PATH=/my-repo in the build environment,
-  // then uncomment these:
-  // basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
-  // assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  // set NEXT_PUBLIC_BASE_PATH=/my-repo in the build environment
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || "",
 
   experimental: {
     mdxRs: true,              // Next’s Rust MDX compiler path

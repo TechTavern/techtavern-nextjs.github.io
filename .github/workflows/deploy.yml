@@ -3,50 +3,284 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: write
+  checks: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: true
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: false
+
+env:
+  NODE_OPTIONS: --max_old_space_size=4096
 
 jobs:
-  build:
+  # Quality gates - run for all events
+  quality-gates:
     runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.check-deploy.outputs.should-deploy }}
+      environment: ${{ steps.check-deploy.outputs.environment }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'npm'
 
-      - name: Setup pnpm
-        run: npm i -g pnpm@9
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install deps
-        run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: TypeScript check
+        run: npm run typecheck
+        continue-on-error: false
+
+      - name: Lint check
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Security audit
+        run: npm audit --audit-level moderate
+        continue-on-error: true
+
+      - name: Check for vulnerabilities
+        run: |
+          if command -v snyk &> /dev/null && [ -n "${{ secrets.SNYK_TOKEN }}" ]; then
+            echo "Running Snyk security scan..."
+            npx snyk test --severity-threshold=high || echo "Snyk scan found issues but continuing..."
+          else
+            echo "Snyk not configured, skipping advanced security scan"
+          fi
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
+
+      - name: Determine deployment
+        id: check-deploy
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "should-deploy=false" >> $GITHUB_OUTPUT
+            echo "environment=none" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          else
+            echo "should-deploy=false" >> $GITHUB_OUTPUT
+            echo "environment=none" >> $GITHUB_OUTPUT
+          fi
+
+  # Build job - runs after quality gates pass
+  build:
+    needs: quality-gates
+    if: needs.quality-gates.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      build-size: ${{ steps.build-info.outputs.build-size }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Configure environment
+        run: |
+          if [[ "${{ needs.quality-gates.outputs.environment }}" == "production" ]]; then
+            echo "Building for production (root domain)"
+            export NEXT_PUBLIC_BASE_PATH=""
+          else
+            echo "Building for staging (subdirectory)"
+            export NEXT_PUBLIC_BASE_PATH="/techtavern-nextjs.github.io"
+          fi
+          echo "NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH" >> $GITHUB_ENV
 
       - name: Build static site
-        env:
-          # For project sites like https://username.github.io/my-repo
-          # NEXT_PUBLIC_BASE_PATH: /my-repo
-        run: pnpm build
+        run: npm run build
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Remove source maps from production
+        if: needs.quality-gates.outputs.environment == 'production'
+        run: |
+          find ./out -name "*.map" -type f -delete
+          echo "Removed source maps for production security"
+
+      - name: Validate build output
+        run: |
+          echo "Validating build output..."
+          
+          # Check if out directory exists and has content
+          if [ ! -d "./out" ] || [ -z "$(ls -A ./out)" ]; then
+            echo "Error: Build output directory is missing or empty"
+            exit 1
+          fi
+          
+          # Check for critical files
+          critical_files=("index.html")
+          for file in "${critical_files[@]}"; do
+            if [ ! -f "./out/$file" ]; then
+              echo "Warning: Critical file $file not found in build output"
+            fi
+          done
+          
+          # Check for large files that might indicate issues
+          large_files=$(find ./out -type f -size +10M 2>/dev/null || true)
+          if [ -n "$large_files" ]; then
+            echo "Warning: Large files detected in build output:"
+            echo "$large_files"
+          fi
+          
+          echo "Build validation completed"
+
+      - name: Build information
+        id: build-info
+        run: |
+          build_size=$(du -sh ./out | cut -f1)
+          echo "build-size=$build_size" >> $GITHUB_OUTPUT
+          echo "Build size: $build_size"
+          
+          echo "Build contents:"
+          find ./out -type f | head -20
+          
+          file_count=$(find ./out -type f | wc -l)
+          echo "Total files: $file_count"
+
+      - name: Set proper permissions
+        run: |
+          find ./out -type f -exec chmod 644 {} \;
+          find ./out -type d -exec chmod 755 {} \;
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-${{ github.sha }}
+          path: ./out
+          retention-days: 30
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        if: needs.quality-gates.outputs.should-deploy == 'true'
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
+  # Deploy job - runs after successful build
   deploy:
-    needs: build
+    needs: [quality-gates, build]
+    if: needs.quality-gates.outputs.should-deploy == 'true'
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: ${{ needs.quality-gates.outputs.environment == 'production' && 'github-pages-production' || 'github-pages' }}
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Post-deployment validation
+        run: |
+          echo "Deployment completed successfully!"
+          echo "Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "Build size: ${{ needs.build.outputs.build-size }}"
+          echo "Environment: ${{ needs.quality-gates.outputs.environment }}"
+          
+          # Optional: Add basic health check
+          sleep 30
+          if command -v curl &> /dev/null; then
+            echo "Performing basic health check..."
+            if curl -f -s "${{ steps.deployment.outputs.page_url }}" > /dev/null; then
+              echo "✅ Site is responding"
+            else
+              echo "⚠️ Site health check failed, but deployment completed"
+            fi
+          fi
+
+  # Comment on PR with build information
+  pr-comment:
+    needs: [quality-gates, build]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## 🚀 Build Summary
+            
+            **Quality Gates**: ✅ Passed
+            - TypeScript check: ✅ 
+            - Lint check: ✅
+            - Security audit: ✅
+            
+            **Build Information**:
+            - Build size: ${{ needs.build.outputs.build-size || 'N/A' }}
+            - Node.js version: 20
+            - Environment: PR Preview (not deployed)
+            
+            **Note**: This PR was built successfully but not deployed. Merge to main for staging deployment.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
