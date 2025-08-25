@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function BlogPostPage({ params }: Props) {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
+
   if (!post) notFound();
 
   // Get the MDX component from our static import map
