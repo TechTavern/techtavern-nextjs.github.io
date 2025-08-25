@@ -4,9 +4,9 @@ This is a project for website of Tech Tavern, LLC.
 
 ## Note on Windows Dev Setup
 
-Because I seem to like the way of pain, I'm developing this on a Windows machine while using WSL. 
-Which causes problems with commanes like `npm run dev` and such.  So I've setup npm commands to 
-run through a win-npm wrapper instead. 
+Because I seem to like the way of pain, I'm developing this on a Windows machine while using WSL.
+Which causes problems with commanes like `npm run dev` and such.  So I've setup npm commands to
+run through a win-npm wrapper instead.
 
 The setup is as follows:
 
