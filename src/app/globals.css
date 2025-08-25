@@ -1,4 +1,18 @@
+/* Enable Tailwind */
 @import "tailwindcss";
+
+/* Add the Typography plugin for nice blog prose */
+@plugin "@tailwindcss/typography";
+
+/* Ensure Tailwind scans MDX living outside /src if needed - disabled since content dir is empty */
+/* @source "../../content"; */
+
+/* Optional: your theme tokens live right in CSS in v4
+@theme {
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+}
+*/
+
 
 :root {
   --background: #ffffff;
