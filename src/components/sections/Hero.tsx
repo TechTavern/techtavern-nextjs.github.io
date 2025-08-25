@@ -21,7 +21,7 @@ export default function Hero({ title, description }: HeroProps) {
               </h1>
               
               <p className="text-lg md:text-xl lg:text-2xl mb-8 text-light/90 leading-relaxed">
-                {description} Hello World!!??
+                {description}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
