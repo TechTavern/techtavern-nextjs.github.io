@@ -129,3 +129,14 @@ Posts must have frontmatter with:
 - Regular lighthouse audits and performance testing
 
 Remember: These guidelines should enhance development velocity while maintaining code quality. Leverage TypeScript's type system and Next.js optimizations to build robust, scalable applications.
+
+# NextJS Windows Project
+
+This project uses Windows npm through PowerShell. 
+
+**Use `win-npm` instead of `npm` for all package management:**
+- `win-npm install`
+- `win-npm run dev` 
+- `win-npm run build`
+
+The development server runs on Windows for proper file watching.
