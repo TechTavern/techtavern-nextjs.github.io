@@ -1,40 +1,201 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 /* Enable Tailwind */
 @import "tailwindcss";
 
 /* Add the Typography plugin for nice blog prose */
 @plugin "@tailwindcss/typography";
 
-/* Ensure Tailwind scans MDX living outside /src if needed - disabled since content dir is empty */
-/* @source "../../content"; */
-
-/* Optional: your theme tokens live right in CSS in v4
+/* Tech Tavern Custom Theme Configuration */
 @theme {
-  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  /* ===== COLOR SYSTEM ===== */
+  /* Primary Brand Colors */
+  --color-primary: #89685d;           /* Beaver - warm earth tone */
+  --color-primary-dark: #6b5049;     /* Darker beaver */
+  --color-primary-light: #a08074;    /* Lighter beaver */
+  
+  /* Secondary Colors */
+  --color-secondary: #c1c6ce;        /* Ghost - subtle gray */
+  --color-secondary-dark: #9da2aa;   /* Darker ghost */
+  --color-secondary-light: #e1e4ea;  /* Lighter ghost */
+  
+  /* Accent Colors */
+  --color-accent: #5d8089;           /* Info blue-gray */
+  --color-accent-dark: #4a656c;     /* Darker info */
+  --color-accent-light: #7a9ba3;    /* Lighter info */
+  
+  /* State Colors */
+  --color-danger: #954035;           /* El Salvador red */
+  --color-warning: #958f35;         /* Warning yellow-olive */
+  --color-success: #35953a;         /* Success green */
+  --color-info: #5d8089;            /* Info blue-gray */
+  
+  /* Brand Specific */
+  --color-linkedin: #0072b1;        /* LinkedIn blue */
+  
+  /* Neutral Scale */
+  --color-light: #f2f7ff;           /* Very light blue */
+  --color-dark: #232326;            /* Shark dark */
+  --color-nero: #1f1e1e;            /* Nearly black */
+  --color-seal-brown: #260101;      /* Deep brown */
+  --color-maroon: #730202;          /* Deep red */
+  
+  /* Blue Scale */
+  --color-beau-blue: #c2e0f2;       /* Light blue */
+  --color-beau-blue-light: #e6f5ff; /* Even lighter blue */
+  --color-two: #9bb1bf;             /* Mid blue-gray */
+  --color-three: #d93829;           /* Bright red */
+  
+  /* Special Effect Colors */
+  --color-mask: rgba(0, 0, 0, 0.7);              /* Dark overlay */
+  --color-mask-glass: rgba(38, 1, 1, 0.2);       /* Glassmorphism overlay */
+  --color-gradient-start: rgb(38, 1, 1);         /* Gradient start - seal brown */
+  --color-gradient-end: rgb(115, 2, 2);          /* Gradient end - maroon */
+  
+  /* ===== TYPOGRAPHY ===== */
+  --font-sans: 'Lato', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Code', Consolas, monospace;
+  
+  /* ===== SPACING & SIZING ===== */
+  --spacing-header-offset: 4rem;
+  --size-icon: 5rem;
+  --size-shape-divider: 98px;
+  
+  /* ===== BORDER RADIUS ===== */
+  --radius-card: 5%;
+  --radius-icon: 100%;
+  --radius-subtle: 0.375rem;
+  
+  /* ===== BACKDROP FILTERS ===== */
+  --backdrop-blur-glass: blur(8px);
+  
+  /* ===== SHADOWS ===== */
+  --shadow-enabled: true;
 }
-*/
 
+/* ===== CUSTOM UTILITY CLASSES ===== */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Glassmorphism Effect */
+.glass {
+  backdrop-filter: var(--backdrop-blur-glass);
+  background-color: var(--color-mask-glass);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Brand Gradients */
+.gradient-brand {
+  background: var(--color-gradient-start);
+  background: linear-gradient(
+    135deg,
+    var(--color-gradient-start) 0%,
+    var(--color-gradient-end) 100%
+  );
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Divider Styles */
+.divider {
+  height: 2px;
+  width: 80%;
+  background: linear-gradient(
+    90deg, 
+    hsl(0, 0%, 20%), 
+    hsl(0, 0%, 70%), 
+    hsl(0, 0%, 20%)
+  );
 }
 
+/* Custom Clip Paths */
+.side-notch {
+  clip-path: polygon(20% 0%, 100% 0, 100% 80%, 80% 100%, 0 100%, 0 19%);
+}
+
+/* Background Image Utilities */
+.bg-hero {
+  background-image: url('/assets/img/stephen-poore-TZUAQH7ACe4-unsplash-2400x1276.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Shape Dividers */
+.shape-divider-top {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.shape-divider svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: var(--size-shape-divider);
+}
+
+/* Feature List Styling */
+.feature-list {
+  padding-left: 2rem;
+  list-style-type: none;
+}
+
+.feature-list li {
+  padding-left: 2rem;
+  background-image: url('/assets/img/check.svg');
+  background-repeat: no-repeat;
+  line-height: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Icon Styling */
+.icon {
+  color: var(--color-light);
+  height: var(--size-icon);
+  width: var(--size-icon);
+  font-size: 1.75rem;
+  border-radius: var(--radius-icon);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* LinkedIn Specific */
+.linkedin-color {
+  color: var(--color-linkedin);
+}
+
+.li-icon {
+  text-align: center;
+  width: 2em;
+  line-height: inherit;
+}
+
+/* Parallax Window */
+.parallax-window {
+  min-height: 500px;
+  background: transparent;
+}
+
+/* Image Frame */
+.bg-image-frame {
+  height: 60vh;
+}
+
+/* Page Header */
+.page-header {
+  margin-top: var(--spacing-header-offset);
+  font-size: 1.25rem;
+  color: var(--color-light);
+}
+
+/* ===== GLOBAL STYLES ===== */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }

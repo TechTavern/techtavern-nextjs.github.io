@@ -1,17 +1,23 @@
 import "./globals.css";
-import Link from "next/link";
 import type { ReactNode } from "react";
+
+export const metadata = {
+  title: "Tech Tavern - Technology Solutions & Cybersecurity",
+  description: "Empowering businesses through innovative technology solutions, cybersecurity expertise, and strategic IT leadership.",
+  keywords: "technology consulting, cybersecurity, IT solutions, software development, DevOps",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-white text-gray-900">
-        <header className="border-b">
-          <nav className="mx-auto max-w-3xl p-4 flex gap-4">
-            <Link href="/" className="font-semibold">Home</Link>
-            <Link href="/blog/" className="font-semibold">Blog</Link>
-          </nav>
-        </header>
+    <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className="min-h-screen font-sans antialiased">
         {children}
       </body>
     </html>
