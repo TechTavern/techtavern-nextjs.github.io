@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import path from "node:path";
 import { getAllPosts, getPostByParams } from "@/lib/posts";
+import { getMDXComponent } from "@/lib/mdx-imports";
 
 // Build all routes at export time
 export function generateStaticParams() {
@@ -9,22 +9,28 @@ export function generateStaticParams() {
   }));
 }
 
-type Props = { params: { year: string; month: string; day: string; slug: string } };
+type Props = { params: Promise<{ year: string; month: string; day: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props) {
-  const post = getPostByParams(params.year, params.month, params.day, params.slug);
+  const { year, month, day, slug } = await params;
+  const post = getPostByParams(year, month, day, slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt || undefined };
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = getPostByParams(params.year, params.month, params.day, params.slug);
+  const { year, month, day, slug } = await params;
+  const post = getPostByParams(year, month, day, slug);
   if (!post) notFound();
 
-  // Import the MDX file as a component using Next’s MDX pipeline
-  const rel = path.relative(process.cwd(), post.filePath);
-  const module = await import(path.join(process.cwd(), rel));
-  const MDXContent = module.default;
+  // Get the MDX component from our static import map
+  const fileName = post.filePath.split("/").pop()!;
+  const MDXContent = getMDXComponent(fileName);
+  
+  if (!MDXContent) {
+    console.error(`MDX component not found for: ${fileName}`);
+    notFound();
+  }
 
   return (
     <main className="container mx-auto max-w-3xl p-6">
