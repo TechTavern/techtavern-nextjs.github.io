@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import services from '@/data/services';
 
 const technologies = [
   // First row
@@ -28,48 +29,6 @@ const technologies = [
   [
     { src: '/assets/img/logos/React-icon.svg', alt: 'React logo', title: 'React', width: 120 }
   ]
-];
-
-const serviceAreas = [
-  {
-    title: "Tap into Skills",
-    content: "Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.",
-    features: [
-      "Designing and delivering tutorials and workshops.",
-      "Fostering community engagement through technology.",
-      "Running challenges, hackathons, and reverse pitches.",
-      "Coordinating meetups and professional exchanges."
-    ],
-    image: "/assets/img/undraw_teaching_f1cm.svg",
-    imageAlt: "line drawing of a person standing in front of a blackboard",
-    layout: "text-first"
-  },
-  {
-    title: "Tap into Impact", 
-    content: "Tech Tavern helps you execute your strategy through experience at all levels of IT. We move you forward by collaboratively developing and managing plans, measuring and monitoring outcomes, or providing IT leadership.",
-    features: [
-      "Interim CIO and IT Leadership.",
-      "Strategic IT planning support.",
-      "Proposal and grant support.",
-      "IT and data policy development."
-    ],
-    image: "/assets/img/undraw_Scrum_board_re_wk7v.svg",
-    imageAlt: "line drawing of a person in front of a scrum board",
-    layout: "image-first"
-  },
-  {
-    title: "Tap into Code",
-    content: "In addition to strategic IT leadership, Tech Tavern provides direct hands-on support for your IT needs. Be it kick-starting an initiative with best practices, prototyping, and rapid development, or consolidating and streamlining operations, Tech Tavern has the right skills and partnerships for you.",
-    features: [
-      "Software creation and support with a focus on Python, Go, Javascript/Typescript.",
-      "Data support for standard RDBMS systems, document-based or time series databases.",
-      "Data structure, simulation and processing.",
-      "Cloud operations and services."
-    ],
-    image: "/assets/img/undraw_programming_2svr.svg",
-    imageAlt: "line drawing of someone from behind working on a computer with several monitors",
-    layout: "text-first"
-  }
 ];
 
 export default function Services() {
@@ -135,46 +94,24 @@ export default function Services() {
         </div>
       </div>
 
-      {/* Service Areas */}
-      <div className="space-y-16 pt-12">
-        {serviceAreas.map((service, index) => (
-          <div 
-            key={index}
-            className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
-              service.layout === 'image-first' ? 'lg:grid-flow-col-dense' : ''
-            }`}
-          >
-            {/* Content */}
-            <div className={`space-y-6 ${service.layout === 'image-first' ? 'lg:col-start-2' : ''}`}>
-              <h3 className="text-3xl md:text-4xl font-heading font-bold text-light">
+      {/* Services */}
+      <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center">
+        {services.map((service, index) => {
+          const IconComponent = service.icon;
+          return (
+            <div key={index} className="group space-y-4">
+              <div className="icon gradient-brand mb-6 mx-auto transition-transform duration-300 group-hover:scale-110">
+                <IconComponent size={48} className="text-light" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-heading font-semibold text-light">
                 {service.title}
               </h3>
-              
-              <p className="text-lg text-light/90 leading-relaxed">
-                {service.content}
+              <p className="text-base md:text-lg text-light/90 leading-relaxed">
+                {service.description}
               </p>
-              
-              <ul className="feature-list space-y-2 text-light">
-                {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="text-base">
-                    {feature}
-                  </li>
-                ))}
-              </ul>
             </div>
-            
-            {/* Image */}
-            <div className={`${service.layout === 'image-first' ? 'lg:col-start-1' : ''}`}>
-              <Image
-                src={service.image}
-                alt={service.imageAlt}
-                width={500}
-                height={400}
-                className="w-full h-auto object-contain"
-              />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
