@@ -33,6 +33,13 @@ export default function Hero({ title, description }: HeroProps) {
                 </Link>
                 
                 <Link 
+                  href="/articles"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg"
+                >
+                  Articles
+                </Link>
+                
+                <Link 
                   href="#Contact"
                   className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg"
                 >
