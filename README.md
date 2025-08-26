@@ -40,6 +40,19 @@ Environment variables are validated at runtime using Zod (see `src/lib/env.ts`).
 - Failure mode: an invalid `SITE_URL` value (e.g., `not-a-url`) will throw an error early during startup/build.
 - Defaults: if `SITE_URL` is unset in local dev, the app falls back to `http://localhost:3000` for sitemap/RSS previews only.
 
+Quick example: computing absolute URLs
+
+```ts
+// src/anywhere.ts
+import { getBaseUrl } from '@/lib/site';
+
+// Preferred: let URL handle slashes
+const absolute = new URL('/articles/2025/08/24/hello-world/', getBaseUrl()).toString();
+
+// Or simple string concat (getBaseUrl() has no trailing slash)
+const absolute2 = `${getBaseUrl()}/articles/2025/08/24/hello-world/`;
+```
+
 Where to set `SITE_URL`:
 - Local development: create `.env.local` at the repository root
   - Example: `SITE_URL=http://localhost:3000`
