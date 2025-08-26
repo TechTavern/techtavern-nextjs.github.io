@@ -50,7 +50,7 @@ export async function getAllPosts(): Promise<PostMeta[]> {
         year,
         month,
         day,
-        url: `/blog/${year}/${month}/${day}/${data.slug}/`,
+        url: `/articles/${year}/${month}/${day}/${data.slug}/`,
         filePath,
       };
     })
