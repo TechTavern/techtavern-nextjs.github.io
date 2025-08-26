@@ -40,25 +40,28 @@ function computeReadingTime(text: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
+export const FrontmatterSchema = z.object({
+  title: z.string({ required_error: "title is required" }).min(1, "title is required"),
+  date: z
+    .string({ required_error: "date is required" })
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be yyyy-mm-dd"),
+  slug: z.string({ required_error: "slug is required" }).min(1, "slug is required"),
+  excerpt: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  featuredImage: z.string().optional(),
+  ogTitle: z.string().optional(),
+  ogDescription: z.string().optional(),
+  ogImage: z.string().optional(),
+  canonicalUrl: z.string().url().optional(),
+  draft: z.boolean().optional(),
+});
+
 export async function getAllPosts(): Promise<PostMeta[]> {
   const files = await fg("**/*.mdx", { cwd: POSTS_DIR, absolute: true });
   const items = await Promise.all(
     files.map(async (filePath) => {
       const raw = await fs.readFile(filePath, "utf8");
       const { data, content } = matter(raw);
-      const FrontmatterSchema = z.object({
-        title: z.string().min(1, "title is required"),
-        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be yyyy-mm-dd"),
-        slug: z.string().min(1, "slug is required"),
-        excerpt: z.string().optional(),
-        tags: z.array(z.string()).optional(),
-        featuredImage: z.string().optional(),
-        ogTitle: z.string().optional(),
-        ogDescription: z.string().optional(),
-        ogImage: z.string().optional(),
-        canonicalUrl: z.string().url().optional(),
-        draft: z.boolean().optional(),
-      });
       const parsed = FrontmatterSchema.safeParse(data);
       if (!parsed.success) {
         const issues = parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');

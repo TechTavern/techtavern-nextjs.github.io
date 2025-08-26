@@ -31,6 +31,15 @@ The site generates absolute links in the sitemap and RSS using `SITE_URL`.
   - Custom domain: `https://example.com`
 - NEXT_PUBLIC_BASE_PATH: Already handled by CI for staging vs production; you usually don’t set this locally.
 
+### Env Validation (Zod)
+
+Environment variables are validated at runtime using Zod (see `src/lib/env.ts`).
+
+- Validation: `SITE_URL` must be a valid URL if provided; `NEXT_PUBLIC_BASE_PATH` defaults to an empty string.
+- Normalization: trailing slashes are removed when computing the base URL.
+- Failure mode: an invalid `SITE_URL` value (e.g., `not-a-url`) will throw an error early during startup/build.
+- Defaults: if `SITE_URL` is unset in local dev, the app falls back to `http://localhost:3000` for sitemap/RSS previews only.
+
 Where to set `SITE_URL`:
 - Local development: create `.env.local` at the repository root
   - Example: `SITE_URL=http://localhost:3000`

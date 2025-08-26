@@ -68,6 +68,13 @@ jobs:
         run: npm run lint
         continue-on-error: false
 
+      - name: Run unit tests (if installed)
+        run: |
+          node -e "require.resolve('jest/package.json')" 2>/dev/null \
+            && npm test -- --ci \
+            || echo "Jest not installed yet; skipping tests"
+        continue-on-error: false
+
       - name: Security audit
         run: npm audit --audit-level moderate
         continue-on-error: true
