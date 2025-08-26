@@ -80,36 +80,120 @@ async function main() {
   const slug = filename.replace(/\.mdx$/i, '').split('-').slice(3).join('-'); // final slug (may include numeric suffix)
 
   const filePath = path.join(articlesDir, filename);
-  // Extra metadata prompts
-  const excerpt = (await rlQuestion('Excerpt (optional): ')).trim();
-  const tagsInput = (await rlQuestion('Tags (comma-separated, optional): ')).trim();
-  const featuredImage = (await rlQuestion('Featured image path (optional): ')).trim();
 
   function yq(s) {
     return '"' + String(s).replace(/\\/g, '\\\\').replace(/\"/g, '\\"') + '"';
   }
 
-  const tags = tagsInput
-    ? tagsInput.split(',').map((t) => t.trim()).filter(Boolean)
-    : [];
-
+  // Generate all frontmatter fields with boilerplate data
   const fm = [
     '---',
     `title: ${yq(title)}`,
     `date: ${yq(dateStr)}`,
     `slug: ${yq(slug)}`,
+    `excerpt: ${yq('A brief description of this article.')}`,
+    `tags: ["technology", "programming"]`,
+    `featuredImage: ${yq('/images/placeholder.jpg')}`,
+    `ogTitle: ${yq(title)}`,
+    `ogDescription: ${yq('A brief description of this article for social media sharing.')}`,
+    `ogImage: ${yq('/images/placeholder-og.jpg')}`,
+    `canonicalUrl: ${yq('https://techtavern.com/articles/' + dateStr.replace(/-/g, '/') + '/' + slug + '/')}`,
+    `draft: false`,
+    '---',
+    ''
   ];
-  if (excerpt) fm.push(`excerpt: ${yq(excerpt)}`);
-  if (tags.length) fm.push(`tags: [${tags.map((t) => yq(t)).join(', ')}]`);
-  if (featuredImage) fm.push(`featuredImage: ${yq(featuredImage)}`);
-  fm.push('---', '');
 
   const frontmatter = fm.join('\n');
 
   const body = [
-    `# ${title}`,
+    'This is a comprehensive article with various markdown examples to demonstrate formatting capabilities.',
     '',
-    'Write your article here. Replace this with your content.',
+    '## Introduction',
+    '',
+    'This section introduces the topic and provides context for the reader.',
+    '',
+    '## Main Content',
+    '',
+    '### Code Examples',
+    '',
+    'Here\'s a JavaScript code block:',
+    '',
+    '```javascript',
+    'function greet(name) {',
+    '  return `Hello, ${name}!`;',
+    '}',
+    '',
+    'console.log(greet("World"));',
+    '```',
+    '',
+    '### Lists and Formatting',
+    '',
+    'Unordered list:',
+    '- First item',
+    '- Second item with **bold text**',
+    '- Third item with *italic text*',
+    '- Fourth item with `inline code`',
+    '',
+    'Ordered list:',
+    '1. First step',
+    '2. Second step',
+    '3. Third step',
+    '',
+    '### Links and Images',
+    '',
+    'Here\'s a [link to Google](https://google.com) and an image:',
+    '',
+    '![Alt text](/images/example.jpg)',
+    '',
+    '### Tables',
+    '',
+    '| Feature | Description | Status |',
+    '|---------|-------------|--------|',
+    '| Feature A | Does something cool | ✅ Complete |',
+    '| Feature B | Does something else | 🚧 In Progress |',
+    '| Feature C | Future enhancement | 📋 Planned |',
+    '',
+    '### Blockquotes',
+    '',
+    '> This is an important quote or callout that stands out from the rest of the content.',
+    '>',
+    '> It can span multiple lines and provide additional context or emphasis.',
+    '',
+    '### Technical Details',
+    '',
+    'Sometimes you need to show command line examples:',
+    '',
+    '```bash',
+    'npm install package-name',
+    'npm run build',
+    'npm start',
+    '```',
+    '',
+    'Or configuration files:',
+    '',
+    '```json',
+    '{',
+    '  "name": "example-project",',
+    '  "version": "1.0.0",',
+    '  "scripts": {',
+    '    "start": "node index.js"',
+    '  }',
+    '}',
+    '```',
+    '',
+    '## Conclusion',
+    '',
+    'This section wraps up the article and provides key takeaways or next steps.',
+    '',
+    '### Key Points',
+    '',
+    '- Point one summarizing important information',
+    '- Point two with actionable advice',
+    '- Point three looking toward the future',
+    '',
+    '---',
+    '',
+    '*Replace this content with your actual article. This template provides examples of common markdown formatting you might use.*',
     '',
   ].join('\n');
 
