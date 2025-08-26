@@ -16,7 +16,7 @@ export type PostMeta = {
   filePath: string;
 };
 
-const POSTS_DIR = path.join(process.cwd(), "content", "posts");
+const POSTS_DIR = path.join(process.cwd(), "content", "articles");
 
 let cachedPosts: PostMeta[] | null = null;
 

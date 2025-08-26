@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 
-export const metadata = { title: "Blog" };
+export const metadata = { title: "Articles" };
 
 export default async function BlogIndexPage() {
   const posts = await getAllPosts();
   return (
     <main className="container mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Blog</h1>
+      <h1 className="mb-6 text-3xl font-bold">Articles</h1>
       <ul className="space-y-6">
         {posts.map((p) => (
           <li key={p.url} className="border-b pb-4">
