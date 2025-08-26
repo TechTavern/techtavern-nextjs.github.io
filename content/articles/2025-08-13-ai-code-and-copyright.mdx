@@ -1,0 +1,55 @@
+---
+title: "AI, Code, and Copyright: What Engineering Leaders Should Actually Worry About"
+date: "2025-08-13"
+slug: "ai-code-and-copyright"
+---
+**TLDR version:** AI pair programmers are not giant copy machines. Verbatim copying can happen in edge cases, yet the bigger business risks sit elsewhere. Treat this like any other software risk: understand where copyright protection applies, add guardrails, review outputs, and keep moving.
+
+### The common misconception
+
+You may have heard, “AI was trained on text and code, so it can only spit that back out.” That is not how modern models work. Large language models learn patterns in language, then generate new sequences from those patterns. They do not store a database of articles or repos to fetch on demand.
+
+That said, models can sometimes memorize unusual or highly repeated examples and, if prompted just right, reveal pieces of them. This is a known issue that model builders work to prevent with data cleanup and training fixes. The takeaway is simple: whole-cloth reproduction is rare and can be managed with sensible controls.
+
+### Copyright 101 for code, without the jargon
+
+Two ideas from U.S. copyright law matter most for software:
+
+1. Ideas vs expression. Copyright protects the expression of an idea, not the idea, process, system, or method itself. In code, that line gets tested, but the core principle is steady.  
+2. Substantial and original. Small, routine snippets usually are not protectable on their own. Courts tend to filter out unprotectable elements in software first, then compare what remains. A well known case, Computer Associates v. Altai, established an approach that removes ideas, necessary elements, and public domain code before asking whether two programs are substantially similar. Google v. Oracle also showed how fair use can apply to software interfaces, which reminds us that software copyright has limits and defenses.
+
+In Plain English: short boilerplate and common patterns are not where copyright fights usually happen.
+
+### So, is “AI-coded” copyright infringement a big operational risk?
+
+For most teams today, the risk may not be zero but is small and manageable and it's probably less than the copy and paste days.
+
+* Copyright still centers on human authorship, originality, and substantial similarity. Routine helper methods and boilerplate are not a strong basis for a claim.  
+* Lawsuits around AI and code have mostly targeted training practices and tool providers, not everyday users who review and edit suggestions.  
+* Many vendors now offer enterprise indemnities for their coding assistants when you follow their terms, which shifts risk away from normal development teams.
+
+This is not a free pass. It simply means you should treat AI code assistance like any other source of code that needs review, attribution where required, and compliance discipline.
+
+### Practical mitigation that works
+
+If you want a short playbook for your engineering handbook, use this:
+
+* Keep humans in the loop. Require code review for AI-assisted contributions. Make acceptance criteria part of your PR template.  
+* Enable duplication filters. Turn on the product settings that suppress suggestions that match public code above a threshold.  
+* Scan and license-check. Run your usual SCA and license tools on AI-assisted code before merge.  
+* Use prompt discipline. Avoid prompts that ask for verbatim reproduction of a named work. Prefer functional specs, tests, and constraints over “copy X’s implementation.”  
+* Log decisions. If a suggested block looks close to a known source, either attribute per license or replace it. Leave a short note in the PR.
+
+### The real, emerging risks leaders should plan for
+
+1. Copyright in AI outputs is narrow. The U.S. Copyright Office has said purely AI-generated material cannot be copyrighted. Human selection, arrangement, and editing can help, which means your protected IP sits in the human contribution around the AI, not the raw model output. If your moat relied on copyright over raw code, shift your strategy toward architecture, data, integrations, and proprietary workflows.
+
+2. Training data permissions are shifting. More publishers and sites are signaling that their content should not be used for training. This mostly affects model providers, but it has policy implications for enterprises that fine-tune on internal or partner data. Make sure your data-governance policy is clear about what can be used for training and who approves it.
+
+### Bottom line for CIOs and engineering leaders
+
+* Misconception: “AI only reproduces what it saw.” Reality: Models generate from learned patterns. Verbatim reproduction can occur in narrow situations and is reduced by training hygiene and product safeguards. Treat it as a controllable risk.  
+* Misconception: “Any AI-suggested snippet is a copyright trap.” Reality: Copyright protects substantial, original expression, not ideas or routine elements. Courts filter out the unprotectable parts of software before comparing what remains, and fair use still applies.  
+* Action: Keep normal software controls in place, enable duplication filters, review code, and document choices. For strategic risk, plan for narrower copyright in AI outputs and tighter rules around training data.
+
+*DISCLAIMER: This article is for general information and is not legal advice. If you face a specific dispute, speak with counsel.*
