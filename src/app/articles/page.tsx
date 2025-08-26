@@ -55,14 +55,25 @@ export default async function ArticlesIndexPage() {
                   key={post.url}
                   className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-secondary/20"
                 >
+                  {post.featuredImage && (
+                    <div className="relative w-full overflow-hidden bg-secondary/10" style={{aspectRatio: '16/9'}}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={post.featuredImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <time 
-                        dateTime={post.date}
-                        className="text-sm text-accent font-medium"
-                      >
-                        {formatDate(post.date)}
-                      </time>
+                      <div className="flex items-center gap-2 text-sm text-accent font-medium">
+                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                        {post.readingTimeMinutes ? (
+                          <span className="text-dark/50">· {post.readingTimeMinutes} min</span>
+                        ) : null}
+                      </div>
                       {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {post.tags.slice(0, 2).map((tag) => (

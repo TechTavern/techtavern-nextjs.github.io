@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAllPosts, getPostByParams } from "@/lib/posts";
-import { getMDXComponent } from "@/lib/mdx-imports";
+import { useMDXComponents } from "@/mdx-components";
+import { compileMDX } from "next-mdx-remote/rsc";
+import { getBaseUrl } from "@/lib/site";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -20,16 +22,32 @@ export async function generateMetadata({ params }: Props) {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
   if (!post) return {};
-  return { 
-    title: post.title, 
-    description: post.excerpt || `Read ${post.title} on Tech Tavern's blog`,
+  const title = post.ogTitle || post.title;
+  const description = post.ogDescription || post.excerpt || `Read ${post.title} on Tech Tavern's blog`;
+  const base = getBaseUrl();
+  const chooseImage = post.ogImage || post.featuredImage;
+  const images = chooseImage
+    ? [chooseImage.startsWith('http') ? chooseImage : `${base}${chooseImage}`]
+    : undefined;
+  return {
+    title,
+    description,
     openGraph: {
-      title: post.title,
-      description: post.excerpt || `Read ${post.title} on Tech Tavern's blog`,
+      title,
+      description,
       type: 'article',
       publishedTime: post.date,
+      images,
+      url: post.url,
     },
-  };
+    twitter: {
+      card: images ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      images,
+    },
+    alternates: post.canonicalUrl ? { canonical: post.canonicalUrl } : undefined,
+  } as any;
 }
 
 function formatDate(dateString: string): string {
@@ -44,17 +62,26 @@ function formatDate(dateString: string): string {
 export default async function ArticlePage({ params }: Props) {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
-
   if (!post) notFound();
 
-  // Get the MDX component from our static import map
-  const fileName = post.filePath.split("/").pop()!;
-  const MDXContent = getMDXComponent(fileName);
-  
-  if (!MDXContent) {
-    console.error(`MDX component not found for: ${fileName}`);
-    notFound();
-  }
+  const fs = await import('node:fs/promises');
+  const source = await fs.readFile(post.filePath, 'utf8');
+  const [{ default: remarkGfm }, { default: rehypeSlug }, { default: rehypeAutolinkHeadings }] = await Promise.all([
+    import('remark-gfm'),
+    import('rehype-slug'),
+    import('rehype-autolink-headings'),
+  ]);
+  const { content } = await compileMDX({
+    source,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]],
+      },
+    },
+    components: useMDXComponents({}),
+  });
 
   return (
     <>
@@ -78,6 +105,16 @@ export default async function ArticlePage({ params }: Props) {
       <header className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
+            {post.featuredImage && (
+              <div className="mb-8 rounded-lg overflow-hidden shadow-lg border border-secondary/20">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={post.featuredImage}
+                  alt={post.title}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            )}
             <div className="mb-6">
               <Link
                 href="/articles"
@@ -105,12 +142,12 @@ export default async function ArticlePage({ params }: Props) {
             </h1>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <time 
-                dateTime={post.date}
-                className="text-accent font-medium"
-              >
-                {formatDate(post.date)}
-              </time>
+              <div className="text-accent font-medium">
+                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                {post.readingTimeMinutes ? (
+                  <span className="text-dark/60 ml-2">· {post.readingTimeMinutes} min read</span>
+                ) : null}
+              </div>
               
               {post.tags && post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
@@ -154,7 +191,7 @@ export default async function ArticlePage({ params }: Props) {
               prose-li:mb-1
               prose-img:rounded-lg prose-img:shadow-lg
             ">
-              <MDXContent />
+              {content}
             </div>
           </article>
         </div>

@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 - `src/app/`: App Router pages, layouts, metadata, global CSS.
 - `src/components/`: Reusable UI and section components (PascalCase files).
-- `src/lib/`: Utilities (e.g., `posts.ts`, `mdx-imports.ts`).
+- `src/lib/`: Utilities (e.g., `posts.ts`).
 - `src/data/`: Static data sources (e.g., `services.ts`).
 - `content/articles/`: MDX posts. Filenames `YYYY-MM-DD-slug.mdx` with frontmatter `title`, `date` (yyyy-mm-dd), `slug`.
 - `public/`: Static assets, fonts, and images.
@@ -33,7 +33,7 @@ CI builds on pushes/PRs; deployment runs on `main`. For staging vs production, t
 
 ## Content Workflow (MDX)
 - Add posts to `content/articles/` with required frontmatter.
-- Update `src/lib/mdx-imports.ts` to import new files and map filename → component so Next.js can statically bundle them.
+- MDX is compiled at dev/build time from the filesystem; no import map maintenance is required.
 - URLs are date-based: `/articles/YYYY/MM/DD/slug/`.
 
 ## Commit & Pull Request Guidelines

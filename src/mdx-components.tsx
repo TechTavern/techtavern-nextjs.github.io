@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import React from "react";
 import Link from "next/link";
+import MDXImage from "@/components/ui/MDXImage";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -50,27 +51,23 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       />
     ),
 
-    // Enhanced link styling
+    // Enhanced link styling + policy
     a: ({ href, ...props }) => {
-      // External links
-      if (href?.startsWith('http')) {
+      const isExternal = typeof href === 'string' && /^https?:\/\//.test(href);
+      const className = "text-primary hover:text-primary-dark font-medium transition-colors duration-300 underline decoration-primary/30 hover:decoration-primary-dark underline-offset-4";
+      if (isExternal) {
         return (
           <a
             href={href}
             {...props}
-            className="text-primary hover:text-primary-dark font-medium transition-colors duration-300 underline decoration-primary/30 hover:decoration-primary-dark underline-offset-4"
+            className={className}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer external"
           />
         );
       }
-      // Internal links
       return (
-        <Link
-          href={href || '#'}
-          {...props}
-          className="text-primary hover:text-primary-dark font-medium transition-colors duration-300 underline decoration-primary/30 hover:decoration-primary-dark underline-offset-4"
-        />
+        <Link href={href || '#'} {...props} className={className} />
       );
     },
 
@@ -177,13 +174,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       />
     ),
 
-    // Image styling
-    img: (props) => (
-      <img 
-        {...props} 
-        className="rounded-lg shadow-lg my-6 max-w-full h-auto" 
-      />
-    ),
+    // Image handling: prefers next/image for local assets with known dimensions
+    img: (props) => <MDXImage {...props} />,
+    // Allow explicit usage in MDX: <Image .../>
+    Image: (props) => <MDXImage {...props as any} />,
 
     ...components,
   };

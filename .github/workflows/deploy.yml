@@ -152,6 +152,15 @@ jobs:
           fi
           echo "NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH" >> $GITHUB_ENV
 
+          # Derive SITE_URL if not provided via Actions Variables/Secrets
+          DEFAULT_ORIGIN="https://${{ github.repository_owner }}.github.io"
+          # Prefer Actions Variable, then Secret, else default to owner GitHub Pages origin
+          SITE_URL_INPUT='${{ vars.SITE_URL }}'
+          if [ -z "$SITE_URL_INPUT" ]; then SITE_URL_INPUT='${{ secrets.SITE_URL }}'; fi
+          if [ -z "$SITE_URL_INPUT" ]; then SITE_URL_INPUT="$DEFAULT_ORIGIN"; fi
+          export SITE_URL="$SITE_URL_INPUT"
+          echo "SITE_URL=$SITE_URL" >> $GITHUB_ENV
+
       - name: Build static site
         run: npm run build
 
