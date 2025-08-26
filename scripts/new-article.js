@@ -96,7 +96,7 @@ async function main() {
   const fm = [
     '---',
     `title: ${yq(title)}`,
-    `date: ${dateStr}`,
+    `date: ${yq(dateStr)}`,
     `slug: ${yq(slug)}`,
   ];
   if (excerpt) fm.push(`excerpt: ${yq(excerpt)}`);

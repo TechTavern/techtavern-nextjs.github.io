@@ -19,36 +19,53 @@ This is a Next.js-based static blog for Tech Tavern, LLC, configured for GitHub 
 ```bash
 # Development
 npm run dev          # Start development server
+npm run dev:watch    # Dev server with MDX change notifications
 
 # Build and Deploy
 npm run build        # Build static site to /out directory
 npm start           # Start production server (after build)
 
 # Code Quality  
-npm run lint        # Run ESLint (note: currently just "eslint" - may need file specification)
+npm run lint        # Run ESLint with Next.js and TypeScript rules
+npm run typecheck   # TypeScript type checking without emit
+
+# Testing
+npm run test        # Run Jest tests
+npm run test:watch  # Run Jest tests in watch mode
+
+# Content Creation
+npm run new-article # Interactive script to create new MDX article
 ```
 
 ## File Structure
 
-- `content/posts/*.mdx` - Blog posts with date-prefixed filenames
-- `src/app/blog/[year]/[month]/[day]/[slug]/page.tsx` - Dynamic blog post pages
-- `src/lib/posts.ts` - Post metadata extraction and URL generation
+- `content/articles/*.mdx` - Blog posts with date-prefixed filenames (YYYY-MM-DD-slug.mdx)
+- `src/app/articles/[year]/[month]/[day]/[slug]/page.tsx` - Dynamic blog post pages
+- `src/lib/posts.ts` - Post metadata extraction, URL generation, and Zod schema validation
+- `src/lib/env.ts` - Environment variable validation using Zod
 - `src/mdx-components.tsx` - Global MDX component styling
+- `scripts/new-article.js` - Interactive article creation script
 
 ## Blog Post Requirements
 
 Posts must have frontmatter with:
-- `title: string`
-- `date: string` (yyyy-mm-dd format)
-- `slug: string` 
-- Optional: `excerpt`, `tags` array
+- `title: string` (required)
+- `date: string` (yyyy-mm-dd format, required)
+- `slug: string` (required)
+- Optional: `excerpt`, `tags` array, `featuredImage`, `ogTitle`, `ogDescription`, `ogImage`, `canonicalUrl`, `draft` boolean
+
+Frontmatter is validated using Zod schema at build time for type safety.
 
 ## Development Notes
 
-- TypeScript strict mode enabled with path aliases (`@/*` → `src/*`)
-- ESLint configured for Next.js and TypeScript
-- Images are unoptimized for static export compatibility
-- Contains legacy Jekyll site in `techtavern.github.io/` directory (likely for reference)
+- **TypeScript**: Strict mode enabled with path aliases (`@/*` → `src/*`)
+- **ESLint**: Configured with Next.js core-web-vitals and TypeScript rules
+- **Testing**: Jest with React Testing Library, jsdom environment
+- **Images**: Unoptimized for static export compatibility
+- **Environment**: Uses Zod validation for SITE_URL and NEXT_PUBLIC_BASE_PATH
+- **Content**: MDX with gray-matter frontmatter parsing, reading time calculation (~200 wpm)
+- **Security**: CSP headers configured in root layout
+- **URLs**: Date-based structure `/articles/YYYY/MM/DD/slug/`
 
 ## Code Quality and Best Practices Guidelines (Next.js with TypeScript)
 
@@ -129,6 +146,22 @@ Posts must have frontmatter with:
 - Regular lighthouse audits and performance testing
 
 Remember: These guidelines should enhance development velocity while maintaining code quality. Leverage TypeScript's type system and Next.js optimizations to build robust, scalable applications.
+
+## Testing Framework
+
+- **Jest**: Configured with Next.js integration
+- **React Testing Library**: For component testing
+- **jsdom**: Test environment for DOM testing
+- **Setup**: `jest.setup.js` with testing-library/jest-dom
+- **Coverage**: Collects from `src/**/*.{ts,tsx}` excluding type definitions
+- **Path mapping**: Supports `@/*` imports in tests
+
+## Environment Configuration
+
+- **SITE_URL**: Public origin for sitemap/RSS (validated with Zod)
+- **NEXT_PUBLIC_BASE_PATH**: Handled automatically by CI for staging/production
+- **Validation**: Runtime environment validation using `src/lib/env.ts`
+- **Defaults**: Falls back to `http://localhost:3000` in development
 
 # NextJS Windows Project
 
