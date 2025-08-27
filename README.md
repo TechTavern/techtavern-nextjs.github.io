@@ -71,6 +71,7 @@ Sitemap is available at `/sitemap.xml` and RSS at `/rss.xml`.
 - `lint`: ESLint (Next + TS rules)
 - `typecheck`: TypeScript `--noEmit`
 - `new-article`: Interactive script to scaffold a new MDX article
+- `article-enrichment`: AI-powered script to generate excerpts and tags for articles
 - `dev:watch`: Run dev and print MDX file change notifications (optional)
 
 ## Dev & Build
@@ -87,6 +88,34 @@ Sitemap is available at `/sitemap.xml` and RSS at `/rss.xml`.
 - MDX content is compiled during dev/build automatically; no manual import map needed.
 
 Reading time is computed automatically (~200 wpm) and displayed on the index and article pages.
+
+### Article Enrichment (AI-Powered)
+
+The project includes an automated article enrichment system that uses OpenAI's API to generate excerpts and tags for articles:
+
+```bash
+npm run article-enrichment
+```
+
+**Requirements:**
+- OpenAI API key in `.env.local`: `OPENAI_API_KEY=your_key_here`
+- Articles in `content/articles/` directory with `.mdx` extension
+
+**What it does:**
+- Scans all `.mdx` files in `content/articles/`
+- Skips articles that already have good excerpts and tags
+- Uses GPT-4o to analyze article content and generate:
+  - **Excerpts**: 100-160 character summaries capturing key insights
+  - **Tags**: 2-5 relevant categorization tags (e.g., "AI Regulation", "Cloud Computing", "Best Practices")
+- Updates frontmatter automatically with generated content
+- Provides detailed progress reporting
+
+**Use cases:**
+- Bulk processing of existing articles missing excerpts/tags
+- Ensuring consistent quality and SEO optimization
+- Saving time on manual content categorization
+
+The script intelligently identifies articles that need enrichment and preserves existing quality content. It uses a specialized prompt designed for technology-focused business articles to ensure relevant, professional results.
 
 ### MDX Links & Images
 
