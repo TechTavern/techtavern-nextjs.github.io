@@ -17,7 +17,7 @@ describe('FrontmatterSchema', () => {
     const invalid = {
       date: '2025-08-24',
       // slug missing
-    } as any;
+    };
     const res = FrontmatterSchema.safeParse(invalid);
     expect(res.success).toBe(false);
     if (!res.success) {
@@ -37,4 +37,3 @@ describe('FrontmatterSchema', () => {
     expect(res.success).toBe(false);
   });
 });
-

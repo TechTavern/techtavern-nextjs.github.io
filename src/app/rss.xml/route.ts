@@ -1,6 +1,9 @@
 import { getAllPosts } from '@/lib/posts'
 import { getBaseUrl, siteMeta } from '@/lib/site'
 
+// Ensure static generation for static export
+export const dynamic = 'force-static';
+
 function escapeXml(s: string) {
   return s
     .replace(/&/g, '&amp;')

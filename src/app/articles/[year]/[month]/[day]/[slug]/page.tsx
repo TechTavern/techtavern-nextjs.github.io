@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAllPosts, getPostByParams } from "@/lib/posts";
-import { useMDXComponents } from "@/mdx-components";
+import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getBaseUrl } from "@/lib/site";
+import type { Metadata } from "next";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -18,7 +19,7 @@ export async function generateStaticParams() {
 
 type Props = { params: Promise<{ year: string; month: string; day: string; slug: string }> };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
   if (!post) return {};
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: Props) {
       images,
     },
     alternates: post.canonicalUrl ? { canonical: post.canonicalUrl } : undefined,
-  } as any;
+  };
 }
 
 function formatDate(dateString: string): string {
@@ -80,7 +81,7 @@ export default async function ArticlePage({ params }: Props) {
         rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]],
       },
     },
-    components: useMDXComponents({}),
+    components: getMDXComponents({}),
   });
 
   return (
@@ -206,7 +207,7 @@ export default async function ArticlePage({ params }: Props) {
                 Ready to Transform Your Business?
               </h2>
               <p className="text-lg text-dark/70 mb-6 max-w-2xl mx-auto">
-                Let's discuss how Tech Tavern's expertise can help you achieve your technology goals.
+                Let&rsquo;s discuss how Tech Tavern&rsquo;s expertise can help you achieve your technology goals.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link

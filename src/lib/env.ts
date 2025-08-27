@@ -7,7 +7,7 @@ const EnvSchema = z.object({
 });
 
 // Parse selectively from process.env to avoid pulling in unrelated keys
-function parseEnv() {
+export function parseEnv() {
   const raw = {
     SITE_URL: process.env.SITE_URL,
     NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH,
@@ -21,4 +21,3 @@ function parseEnv() {
 }
 
 export const env = parseEnv();
-

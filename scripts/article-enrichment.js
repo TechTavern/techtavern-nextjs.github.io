@@ -31,7 +31,7 @@ async function loadEnvLocal() {
     }
     
     return env;
-  } catch (error) {
+  } catch {
     console.warn('Warning: Could not read .env.local file');
     return {};
   }
@@ -128,7 +128,7 @@ Return your analysis as a JSON object with "excerpt" and "tags" fields.`;
       const jsonMatch = result.match(/```json\n?(.*?)\n?```/s) || result.match(/```\n?(.*?)\n?```/s);
       const jsonText = jsonMatch ? jsonMatch[1] : result;
       analysis = JSON.parse(jsonText);
-    } catch (parseError) {
+    } catch {
       console.error('Failed to parse OpenAI response as JSON:', result);
       throw new Error('Invalid JSON response from OpenAI');
     }

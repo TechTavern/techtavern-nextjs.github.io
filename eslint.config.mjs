@@ -21,6 +21,14 @@ const eslintConfig = [
       "techtavern.github.io/**",
     ],
   },
+  // Allow CommonJS in tooling scripts and Jest config
+  {
+    files: ["**/*.js", "**/*.cjs"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-var-requires": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

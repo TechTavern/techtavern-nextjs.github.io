@@ -1,9 +1,13 @@
 import { env } from './env';
 
-export function getBaseUrl() {
-  const base = (env.SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
-  const basePath = (env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '');
+export function getBaseUrlWith(e: { SITE_URL?: string; NEXT_PUBLIC_BASE_PATH?: string }) {
+  const base = (e.SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+  const basePath = (e.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '');
   return `${base}${basePath}`;
+}
+
+export function getBaseUrl() {
+  return getBaseUrlWith(env);
 }
 
 export const siteMeta = {

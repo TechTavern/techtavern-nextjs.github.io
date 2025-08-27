@@ -2,12 +2,12 @@
 import Image from "next/image";
 import React from "react";
 
-type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
+export type MDXImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   width?: number;
   height?: number;
 };
 
-export default function MDXImage({ src, alt, width, height, className = "", ...rest }: Props) {
+export default function MDXImage({ src, alt, width, height, className = "", ...rest }: MDXImageProps) {
   const srcStr = typeof src === "string" ? src : String(src || "");
   const isExternal = /^https?:\/\//i.test(srcStr);
   const canUseNextImage = !isExternal && !!width && !!height && !!srcStr;
@@ -28,6 +28,7 @@ export default function MDXImage({ src, alt, width, height, className = "", ...r
 
   // Fallback to native img when external or dimensions are unknown
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={srcStr}
       alt={alt || ""}
@@ -37,4 +38,3 @@ export default function MDXImage({ src, alt, width, height, className = "", ...r
     />
   );
 }
-

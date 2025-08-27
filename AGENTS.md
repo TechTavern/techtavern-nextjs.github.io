@@ -10,12 +10,12 @@
 - `.github/workflows/`: CI for lint/typecheck/build/deploy to GitHub Pages.
 
 ## Build, Test, and Development Commands
-- Dev server: `npm run dev` (WSL users: `win-npm run dev`).
+- Dev server: `win-npm run dev` (WSL users: `win-npm run dev`).
 - WSL wrapper: On Windows with WSL, prefix any npm command with `win-npm` to run it from the Windows host. Examples: `win-npm install`, `win-npm run build`, `win-npm run test`, `win-npm run lint`, `win-npm run dev`.
-- Build static export: `npm run build` → outputs to `out/`.
-- Start prod server: `npm start` (rarely needed; export is default).
-- Lint: `npm run lint` (Next.js + TypeScript rules).
-- Type check: `npm run typecheck`.
+- Build static export: `win-npm run build` → outputs to `out/`.
+- Start prod server: `win-npm start` (rarely needed; export is default).
+- Lint: `win-npm run lint` (Next.js + TypeScript rules).
+- Type check: `win-npm run typecheck`.
 
 CI builds on pushes/PRs; deployment runs on `main`. For staging vs production, the workflow sets `NEXT_PUBLIC_BASE_PATH` automatically.
 

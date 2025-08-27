@@ -2,8 +2,9 @@ import type { MDXComponents } from "mdx/types";
 import React from "react";
 import Link from "next/link";
 import MDXImage from "@/components/ui/MDXImage";
+import type { MDXImageProps } from "@/components/ui/MDXImage";
 
-export function useMDXComponents(components: MDXComponents): MDXComponents {
+export function getMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Enhanced heading styles with Tech Tavern branding
     h1: (props) => (
@@ -175,9 +176,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
 
     // Image handling: prefers next/image for local assets with known dimensions
-    img: (props) => <MDXImage {...props} />,
+    img: (props) => <MDXImage {...(props as MDXImageProps)} />,
     // Allow explicit usage in MDX: <Image .../>
-    Image: (props) => <MDXImage {...props as any} />,
+    Image: (props: MDXImageProps) => <MDXImage {...props} />,
 
     ...components,
   };

@@ -1,12 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+/* eslint-disable @next/next/no-img-element */
 
 // Mock next/image so we can detect when it is used
 jest.mock('next/image', () => {
-  return function MockImage(props: any) {
+  return function MockImage(props: Record<string, unknown>) {
     // Emulate next/image by rendering an img element
     // Add a marker so we can assert that MDXImage chose next/image path
-    return <img data-testid="next-image" {...props} />;
+    return <img alt="" data-testid="next-image" {...props} />;
   };
 });
 
@@ -28,4 +29,3 @@ describe('MDXImage', () => {
     expect(img).not.toHaveAttribute('data-testid', 'next-image');
   });
 });
-

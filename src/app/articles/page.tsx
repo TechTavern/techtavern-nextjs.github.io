@@ -44,7 +44,7 @@ export default async function ArticlesIndexPage() {
                   Coming Soon
                 </h2>
                 <p className="text-dark/70">
-                  We're working on some great content for you. Check back soon for insights on technology and cybersecurity.
+                  We&rsquo;re working on some great content for you. Check back soon for insights on technology and cybersecurity.
                 </p>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default async function ArticlesIndexPage() {
             Need Technology Expertise?
           </h2>
           <p className="text-xl text-dark/70 mb-8 max-w-2xl mx-auto">
-            Let's discuss how Tech Tavern can help your business with innovative technology solutions and cybersecurity expertise.
+            Let&rsquo;s discuss how Tech Tavern can help your business with innovative technology solutions and cybersecurity expertise.
           </p>
           <Link
             href="/#Contact"
