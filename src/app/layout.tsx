@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="manifest" href="/site.webmanifest" />
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';"
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
