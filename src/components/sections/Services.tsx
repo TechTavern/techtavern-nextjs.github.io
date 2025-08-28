@@ -6,91 +6,37 @@ interface TechLogo {
   title: string;
 }
 
-interface TechGroup {
-  type: 'group';
+interface TechnologyGroup {
+  title: string;
   logos: TechLogo[];
 }
 
-interface TechSingle {
-  type: 'single';
-  src: string;
-  alt: string;
-  title: string;
-}
-
-type Technology = TechGroup | TechSingle;
-
-const technologies: Technology[] = [
-  // Microsoft (grouped together)
+const technologyGroups: TechnologyGroup[] = [
   {
-    type: 'group',
+    title: 'Cloud',
     logos: [
-      { src: '/assets/img/logos/Microsoft_365.svg', alt: 'Microsoft 365 Logo', title: 'Microsoft 365' },
-      { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' }
+      { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' },
+      { src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', alt: 'Amazon Web Services Logo', title: 'Amazon Web Services' },
+      { src: '/assets/img/logos/Google_Cloud_Logo.svg', alt: 'Google Cloud Logo', title: 'Google Cloud Platform' }
     ]
   },
-  // Cloud Services
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', 
-    alt: 'Amazon Web Services Logo', 
-    title: 'Amazon Web Services' 
+  {
+    title: 'AI',
+    logos: [
+      { src: '/assets/img/logos/OpenAI_Logo.svg', alt: 'OpenAI ChatGPT Logo', title: 'OpenAI ChatGPT' },
+      { src: '/assets/img/logos/Anthropic_Claude_Logo.svg', alt: 'Anthropic Claude Logo', title: 'Anthropic Claude' },
+      { src: '/assets/img/logos/Google_Gemini_Logo.svg', alt: 'Google Gemini Logo', title: 'Google Gemini' },
+      { src: '/assets/img/logos/Grok-2025-logo.svg', alt: 'Grok Logo', title: 'Grok AI' }
+    ]
   },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Google_Cloud_Logo.svg', 
-    alt: 'Google Cloud Logo', 
-    title: 'Google Cloud Platform' 
-  },
-  // AI Technologies
-  { 
-    type: 'single',
-    src: '/assets/img/logos/OpenAI_Logo.svg', 
-    alt: 'OpenAI ChatGPT Logo', 
-    title: 'OpenAI ChatGPT' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Anthropic_Claude_Logo.svg', 
-    alt: 'Anthropic Claude Logo', 
-    title: 'Anthropic Claude' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Google_Gemini_Logo.svg', 
-    alt: 'Google Gemini Logo', 
-    title: 'Google Gemini' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Grok-2025-logo.svg', 
-    alt: 'Grok Logo', 
-    title: 'Grok AI' 
-  },
-  // Programming Languages & Frameworks
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Python-logo-notext.svg', 
-    alt: 'Python logo', 
-    title: 'Python programming language' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/Go_Logo_Blue.svg', 
-    alt: 'Go Logo', 
-    title: 'Go programming language' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/angular.svg', 
-    alt: 'Angular logo', 
-    title: 'Angular' 
-  },
-  { 
-    type: 'single',
-    src: '/assets/img/logos/React-icon.svg', 
-    alt: 'React logo', 
-    title: 'React' 
+  {
+    title: 'Code',
+    logos: [
+      { src: '/assets/img/logos/Python-logo-notext.svg', alt: 'Python logo', title: 'Python programming language' },
+      { src: '/assets/img/logos/Go_Logo_Blue.svg', alt: 'Go Logo', title: 'Go programming language' },
+      { src: '/assets/img/logos/React-icon.svg', alt: 'React logo', title: 'React' },
+      { src: '/assets/img/logos/angular.svg', alt: 'Angular logo', title: 'Angular' }
+    ]
   }
 ];
 
@@ -145,39 +91,45 @@ export default function Services() {
           Our Technology Stack
         </h2>
         
-        {/* Technology Grid - Responsive layout with equal-width boxes */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8 justify-items-center max-w-4xl mx-auto">
-          {technologies.map((tech, index) => (
-            <div key={index} className="tech-logo-container w-full">
-              {tech.type === 'group' ? (
-                // Microsoft grouped logos
-                <div className="bg-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-full flex flex-col justify-center items-center space-y-2 md:space-y-3 aspect-square">
-                  {tech.logos.map((logo, logoIndex) => (
-                    <div key={logoIndex} className="flex justify-center items-center flex-1 w-full">
+        {/* Technology Groups - 3 Equal Column Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
+          {technologyGroups.map((group, groupIndex) => (
+            <div 
+              key={groupIndex} 
+              className="tech-group-container"
+            >
+              {/* Group Header */}
+              <div className="text-center mb-6">
+                <h3 className="text-xl md:text-2xl font-heading font-semibold text-light/90 mb-4">
+                  {group.title}
+                </h3>
+              </div>
+              
+              {/* Group Background Container */}
+              <div className="bg-white/10 rounded-lg p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-[240px] md:h-[280px]">
+                {/* Individual Logos Grid */}
+                <div className={
+                  group.logos.length === 3 
+                    ? "grid grid-cols-1 gap-3 sm:gap-4 h-full" 
+                    : "grid grid-cols-2 gap-2 sm:gap-3 h-full"
+                }>
+                  {group.logos.map((logo, logoIndex) => (
+                    <div 
+                      key={logoIndex} 
+                      className="flex justify-center items-center"
+                    >
                       <Image
                         src={logo.src}
                         alt={logo.alt}
                         title={logo.title}
                         width={200}
-                        height={100}
-                        className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain max-w-full"
+                        height={150}
+                        className="h-10 sm:h-12 md:h-14 w-auto object-contain max-w-full hover:scale-105 transition-transform duration-200"
                       />
                     </div>
                   ))}
                 </div>
-              ) : (
-                // Individual logos
-                <div className="bg-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-full flex justify-center items-center aspect-square">
-                  <Image
-                    src={tech.src}
-                    alt={tech.alt}
-                    title={tech.title}
-                    width={200}
-                    height={150}
-                    className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto object-contain max-w-full"
-                  />
-                </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

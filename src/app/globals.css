@@ -440,46 +440,48 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
-/* Technology Logo Styling */
-.tech-logo-container {
-  aspect-ratio: 1;
-  min-height: 100px;
-}
-
-.tech-logo-container img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+/* Technology Group Styling */
+.tech-group-container {
   transition: transform 0.3s ease;
 }
 
+/* Technology Logo Item Styling */
+.tech-logo-item {
+  transition: all 0.3s ease;
+}
+
+.tech-logo-item:hover {
+  transform: translateY(-2px);
+}
+
+.tech-logo-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
 /* Ensure Microsoft SVGs use white color */
-.tech-logo-container img[src*="Microsoft"] {
+.tech-logo-item img[src*="Microsoft"] {
   filter: brightness(0) invert(1);
 }
 
 /* Handle PNG images that might need special treatment */
-.tech-logo-container img[src*=".png"] {
+.tech-logo-item img[src*=".png"] {
   mix-blend-mode: normal;
 }
 
-/* Responsive technology grid improvements */
+/* Responsive technology group improvements */
 @media (max-width: 640px) {
-  .tech-logo-container {
-    max-width: 140px;
-    min-height: 120px;
+  .tech-group-container {
+    /* Remove stagger on mobile */
+    transform: none !important;
   }
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-  .tech-logo-container {
-    max-width: 160px;
-    min-height: 140px;
-  }
-}
-
-@media (min-width: 769px) {
-  .tech-logo-container {
-    min-height: 160px;
+@media (min-width: 640px) and (max-width: 1024px) {
+  .tech-group-container {
+    /* Remove stagger on tablet */
+    transform: none !important;
   }
 }
