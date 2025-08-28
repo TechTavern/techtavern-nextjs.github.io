@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 interface NavigationItem {
@@ -9,15 +10,23 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
-  { href: '#', label: 'Home' },
-  { href: '#Services', label: 'Services' },
-  { href: '#About', label: 'About' },
-  { href: '#Contact', label: 'Contact' }
+  { href: '/#', label: 'Home' },
+  { href: '/#Services', label: 'Services' },
+  { href: '/#About', label: 'About' },
+  { href: '/#Contact', label: 'Contact' },
+  { href: '/articles', label: 'Articles' }
 ];
 
 export default function Navigation() {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Only render on the front page
+  if (!isHomePage) {
+    return null;
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,12 +49,15 @@ export default function Navigation() {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
     }`}>
-      <div className="container mx-auto px-4">
+      {/* Full-width background mask */}
+      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }} />
+      
+      <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <a 
-              href="#" 
+              href="/" 
               className={`text-xl font-bold transition-colors duration-300 ${
                 isScrolled ? 'text-gray-900' : 'text-white'
               }`}
