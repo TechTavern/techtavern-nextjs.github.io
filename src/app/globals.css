@@ -439,3 +439,47 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Technology Logo Styling */
+.tech-logo-container {
+  aspect-ratio: 1;
+  min-height: 100px;
+}
+
+.tech-logo-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Ensure Microsoft SVGs use white color */
+.tech-logo-container img[src*="Microsoft"] {
+  filter: brightness(0) invert(1);
+}
+
+/* Handle PNG images that might need special treatment */
+.tech-logo-container img[src*=".png"] {
+  mix-blend-mode: normal;
+}
+
+/* Responsive technology grid improvements */
+@media (max-width: 640px) {
+  .tech-logo-container {
+    max-width: 140px;
+    min-height: 120px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .tech-logo-container {
+    max-width: 160px;
+    min-height: 140px;
+  }
+}
+
+@media (min-width: 769px) {
+  .tech-logo-container {
+    min-height: 160px;
+  }
+}

@@ -1,33 +1,77 @@
 import Image from 'next/image';
 
-const technologies = [
-  // First row
-  [
-    { src: '/assets/img/logos/Microsoft_365.svg', alt: 'Microsoft 365 Logo', title: 'Microsoft 365', width: 120 },
-    { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure', width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', alt: 'Amazon Web Services Logo', title: 'Amazon Web Services', width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/Raisers-Edge-logo2_246x135.png', alt: "Raiser's Edge NXT logo", title: "Raiser's Edge NXT", width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/Wordpress-Logo.svg', alt: 'Wordpress logo', title: 'Wordpress', width: 120 }
-  ],
-  // Second row
-  [
-    { src: '/assets/img/logos/Python-logo-notext.svg', alt: 'Python logo', title: 'Python programming language', width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/Go_Logo_Blue.svg', alt: 'Go Logo', title: 'Go programming language', width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/angular.svg', alt: 'Angular logo', title: 'Angular', width: 120 }
-  ],
-  [
-    { src: '/assets/img/logos/React-icon.svg', alt: 'React logo', title: 'React', width: 120 }
-  ]
+interface TechLogo {
+  src: string;
+  alt: string;
+  title: string;
+}
+
+interface TechGroup {
+  type: 'group';
+  logos: TechLogo[];
+}
+
+interface TechSingle {
+  type: 'single';
+  src: string;
+  alt: string;
+  title: string;
+}
+
+type Technology = TechGroup | TechSingle;
+
+const technologies: Technology[] = [
+  // Microsoft (grouped together)
+  {
+    type: 'group',
+    logos: [
+      { src: '/assets/img/logos/Microsoft_365.svg', alt: 'Microsoft 365 Logo', title: 'Microsoft 365' },
+      { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' }
+    ]
+  },
+  // Individual technologies
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', 
+    alt: 'Amazon Web Services Logo', 
+    title: 'Amazon Web Services' 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Raisers-Edge-logo2_246x135.png', 
+    alt: "Raiser's Edge NXT logo", 
+    title: "Raiser's Edge NXT" 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Wordpress-Logo.svg', 
+    alt: 'Wordpress logo', 
+    title: 'Wordpress' 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Python-logo-notext.svg', 
+    alt: 'Python logo', 
+    title: 'Python programming language' 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Go_Logo_Blue.svg', 
+    alt: 'Go Logo', 
+    title: 'Go programming language' 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/angular.svg', 
+    alt: 'Angular logo', 
+    title: 'Angular' 
+  },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/React-icon.svg', 
+    alt: 'React logo', 
+    title: 'React' 
+  }
 ];
 
 const serviceAreas = [
@@ -76,62 +120,46 @@ export default function Services() {
   return (
     <div className="space-y-16">
       {/* Technology Logos Section */}
-      <div className="text-center">
+      <div className="text-center max-w-5xl mx-auto">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-12">
           Our Technology Stack
         </h2>
         
-        {/* First row - Microsoft logos in first column, others individual */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8 items-center justify-items-center">
-          {/* Microsoft column */}
-          <div className="flex flex-col gap-4 items-center">
-            {technologies[0].map((tech, index) => (
-              <div key={index} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
-                <Image
-                  src={tech.src}
-                  alt={tech.alt}
-                  title={tech.title}
-                  width={tech.width}
-                  height={60}
-                  className="h-12 w-auto object-contain"
-                />
-              </div>
-            ))}
-          </div>
-          
-          {/* Individual logos */}
-          {technologies.slice(1, 4).map((techGroup, groupIndex) => 
-            techGroup.map((tech, index) => (
-              <div key={`${groupIndex}-${index}`} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
-                <Image
-                  src={tech.src}
-                  alt={tech.alt}
-                  title={tech.title}
-                  width={tech.width}
-                  height={60}
-                  className="h-12 w-auto object-contain"
-                />
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Second row - Programming languages */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
-          {technologies.slice(4).map((techGroup, groupIndex) => 
-            techGroup.map((tech, index) => (
-              <div key={`lang-${groupIndex}-${index}`} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
-                <Image
-                  src={tech.src}
-                  alt={tech.alt}
-                  title={tech.title}
-                  width={tech.width}
-                  height={60}
-                  className="h-12 w-auto object-contain"
-                />
-              </div>
-            ))
-          )}
+        {/* Technology Grid - Responsive layout with equal-width boxes */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8 justify-items-center max-w-4xl mx-auto">
+          {technologies.map((tech, index) => (
+            <div key={index} className="tech-logo-container w-full">
+              {tech.type === 'group' ? (
+                // Microsoft grouped logos
+                <div className="bg-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-full flex flex-col justify-center items-center space-y-2 md:space-y-3 aspect-square">
+                  {tech.logos.map((logo, logoIndex) => (
+                    <div key={logoIndex} className="flex justify-center items-center flex-1 w-full">
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        title={logo.title}
+                        width={200}
+                        height={100}
+                        className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain max-w-full"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Individual logos
+                <div className="bg-white/10 rounded-lg p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-full flex justify-center items-center aspect-square">
+                  <Image
+                    src={tech.src}
+                    alt={tech.alt}
+                    title={tech.title}
+                    width={200}
+                    height={150}
+                    className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto object-contain max-w-full"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
