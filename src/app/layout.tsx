@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
+import Navigation from "@/components/ui/Navigation";
 
 export const metadata = {
   title: "Tech Tavern - Technology Solutions & Cybersecurity",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
+        <Navigation />
         {children}
       </body>
     </html>

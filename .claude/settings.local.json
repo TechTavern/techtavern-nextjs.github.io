@@ -1,18 +1,19 @@
 {
-    "permissions": {
-      "allow": [
-        "Bash(win-npm install)",
-        "Bash(win-npm run build)",
-        "Bash(win-npm run dev)",
-        "Bash(win-npm run test)"
-      ],
-      "deny": [
-        "Bash(npm install)",
-        "Bash(npm run build)",
-        "Bash(npm run dev)",
-        "Bash(npm run test)"
-      ],
-      "ask": [],
-      "defaultMode": "acceptEdits"
-    }
+  "permissions": {
+    "allow": [
+      "Bash(win-npm install)",
+      "Bash(win-npm run build)",
+      "Bash(win-npm run dev)",
+      "Bash(win-npm run test)",
+      "WebFetch(domain:www.tech-tavern.com)"
+    ],
+    "deny": [
+      "Bash(npm install)",
+      "Bash(npm run build)",
+      "Bash(npm run dev)",
+      "Bash(npm run test)"
+    ],
+    "ask": [],
+    "defaultMode": "acceptEdits"
   }
+}

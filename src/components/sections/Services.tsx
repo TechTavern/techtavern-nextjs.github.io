@@ -33,11 +33,37 @@ const technologies = [
 
 export default function Services() {
   return (
-    <div className="space-y-0">
+    <div className="py-16 space-y-20">
+      {/* Services Section */}
+      <div className="text-center">
+        <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-16">
+          Our Services
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <div key={index} className="group space-y-6">
+                <div className="flex items-center justify-center w-20 h-20 mx-auto bg-light/10 rounded-full mb-6 transition-transform duration-300 group-hover:scale-110">
+                  <IconComponent size={40} className="text-light" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-heading font-semibold text-light">
+                  {service.title}
+                </h3>
+                <p className="text-base md:text-lg text-light/90 leading-relaxed max-w-sm mx-auto">
+                  {service.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Technology Logos Section */}
       <div className="text-center">
-        <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-12">
-          Our Technology Stack
+        <h2 className="text-2xl md:text-4xl font-heading font-bold text-light mb-12">
+          Technologies We Work With
         </h2>
         
         {/* First row - Microsoft logos in first column, others individual */}
@@ -92,26 +118,6 @@ export default function Services() {
             ))
           )}
         </div>
-      </div>
-
-      {/* Services */}
-      <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center">
-        {services.map((service, index) => {
-          const IconComponent = service.icon;
-          return (
-            <div key={index} className="group space-y-4">
-              <div className="icon gradient-brand mb-6 mx-auto transition-transform duration-300 group-hover:scale-110">
-                <IconComponent size={48} className="text-light" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-heading font-semibold text-light">
-                {service.title}
-              </h3>
-              <p className="text-base md:text-lg text-light/90 leading-relaxed">
-                {service.description}
-              </p>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { GraduationCap, TrendingUp, Code } from 'lucide-react';
+import { Shield, TrendingUp, Code } from 'lucide-react';
 
 export interface Service {
   title: string;
@@ -9,21 +9,21 @@ export interface Service {
 
 export const services: Service[] = [
   {
-    title: 'Tap into Skills',
+    title: 'Cybersecurity',
     description:
-      'Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.',
-    icon: GraduationCap,
+      'Protecting your organization from cyber threats through comprehensive security assessments, vulnerability identification, and implementation of robust security measures to safeguard your digital assets.',
+    icon: Shield,
   },
   {
-    title: 'Tap into Impact',
+    title: 'Impact',
     description:
-      'Tech Tavern helps you execute your strategy through experience at all levels of IT. We move you forward by collaboratively developing and managing plans, measuring and monitoring outcomes, or providing IT leadership.',
+      'Strategic IT planning and technical leadership that drives real results. We help you develop and execute technology strategies that align with your business objectives and deliver measurable outcomes.',
     icon: TrendingUp,
   },
   {
-    title: 'Tap into Code',
+    title: 'Technology',
     description:
-      'In addition to strategic IT leadership, Tech Tavern provides direct hands-on support for your IT needs. Be it kick-starting an initiative with best practices, prototyping, and rapid development, or consolidating and streamlining operations, Tech Tavern has the right skills and partnerships for you.',
+      'Supporting your IT needs through expert coding, data solutions, and DevOps practices. We help organizations avoid technical debt while building scalable, maintainable technology solutions.',
     icon: Code,
   },
 ];
