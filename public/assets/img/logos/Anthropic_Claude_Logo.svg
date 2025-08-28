@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <!-- Anthropic Claude Logo -->
+  <g fill="#D97706">
+    <!-- Stylized "A" for Anthropic -->
+    <path d="M80 85 L100 45 L120 85 Z" fill="none" stroke="#D97706" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M90 70 L110 70" stroke="#D97706" stroke-width="4"/>
+    <!-- Accent dots -->
+    <circle cx="75" cy="55" r="2" fill="#D97706"/>
+    <circle cx="125" cy="55" r="2" fill="#D97706"/>
+  </g>
+  <!-- Text -->
+  <text x="100" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#D97706">Anthropic</text>
+  <text x="100" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Claude</text>
+</svg>

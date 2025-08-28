@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <!-- Google Cloud Logo -->
+  <g fill="#4285F4">
+    <!-- Cloud shape -->
+    <path d="M140 60c0-16.5-13.5-30-30-30-10.8 0-20.3 5.7-25.6 14.3C81.2 42.4 78.3 41 75 41c-11 0-20 9-20 20 0 1.1.1 2.2.3 3.2C50.1 66.5 46 71.9 46 78c0 8.8 7.2 16 16 16h78c11 0 20-9 20-20s-9-20-20-20z"/>
+  </g>
+  <!-- Google colors accent -->
+  <g>
+    <circle cx="65" cy="75" r="3" fill="#EA4335"/>
+    <circle cx="75" cy="75" r="3" fill="#FBBC04"/>
+    <circle cx="85" cy="75" r="3" fill="#34A853"/>
+    <circle cx="95" cy="75" r="3" fill="#EA4335"/>
+  </g>
+  <!-- Text -->
+  <text x="100" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="500" fill="#5F6368">Google Cloud</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <!-- Google Gemini Logo -->
+  <defs>
+    <linearGradient id="geminiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4285F4;stop-opacity:1" />
+      <stop offset="33%" style="stop-color:#34A853;stop-opacity:1" />
+      <stop offset="66%" style="stop-color:#FBBC04;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EA4335;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Gemini constellation-like design -->
+  <g>
+    <!-- Twin stars representing Gemini -->
+    <circle cx="85" cy="50" r="8" fill="url(#geminiGradient)"/>
+    <circle cx="115" cy="50" r="8" fill="url(#geminiGradient)"/>
+    <!-- Connecting lines -->
+    <path d="M85 58 L85 70 L115 70 L115 58" stroke="url(#geminiGradient)" stroke-width="3" fill="none"/>
+    <!-- Additional constellation points -->
+    <circle cx="75" cy="65" r="3" fill="#4285F4"/>
+    <circle cx="125" cy="65" r="3" fill="#EA4335"/>
+    <!-- Connecting lines for constellation -->
+    <path d="M78 65 L85 58 M122 65 L115 58" stroke="#9CA3AF" stroke-width="1"/>
+  </g>
+  <!-- Text -->
+  <text x="100" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#4285F4">Google</text>
+  <text x="100" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Gemini</text>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <!-- OpenAI Logo -->
+  <g fill="#10A37F">
+    <!-- Circular OpenAI symbol -->
+    <circle cx="100" cy="60" r="25" fill="none" stroke="#10A37F" stroke-width="3"/>
+    <!-- Inner design -->
+    <path d="M85 45 L100 35 L115 45 L115 65 L100 75 L85 65 Z" fill="#10A37F" opacity="0.8"/>
+    <circle cx="100" cy="55" r="8" fill="white"/>
+    <circle cx="100" cy="55" r="4" fill="#10A37F"/>
+  </g>
+  <!-- Text -->
+  <text x="100" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#10A37F">OpenAI</text>
+  <text x="100" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280">ChatGPT</text>
+</svg>

@@ -29,7 +29,7 @@ const technologies: Technology[] = [
       { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' }
     ]
   },
-  // Individual technologies
+  // Cloud Services
   { 
     type: 'single',
     src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', 
@@ -38,16 +38,30 @@ const technologies: Technology[] = [
   },
   { 
     type: 'single',
-    src: '/assets/img/logos/Raisers-Edge-logo2_246x135.png', 
-    alt: "Raiser's Edge NXT logo", 
-    title: "Raiser's Edge NXT" 
+    src: '/assets/img/logos/Google_Cloud_Logo.svg', 
+    alt: 'Google Cloud Logo', 
+    title: 'Google Cloud Platform' 
+  },
+  // AI Technologies
+  { 
+    type: 'single',
+    src: '/assets/img/logos/OpenAI_Logo.svg', 
+    alt: 'OpenAI ChatGPT Logo', 
+    title: 'OpenAI ChatGPT' 
   },
   { 
     type: 'single',
-    src: '/assets/img/logos/Wordpress-Logo.svg', 
-    alt: 'Wordpress logo', 
-    title: 'Wordpress' 
+    src: '/assets/img/logos/Anthropic_Claude_Logo.svg', 
+    alt: 'Anthropic Claude Logo', 
+    title: 'Anthropic Claude' 
   },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Google_Gemini_Logo.svg', 
+    alt: 'Google Gemini Logo', 
+    title: 'Google Gemini' 
+  },
+  // Programming Languages & Frameworks
   { 
     type: 'single',
     src: '/assets/img/logos/Python-logo-notext.svg', 
