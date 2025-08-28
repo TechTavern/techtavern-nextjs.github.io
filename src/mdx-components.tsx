@@ -55,7 +55,7 @@ export function getMDXComponents(components: MDXComponents): MDXComponents {
     // Enhanced link styling + policy
     a: ({ href, ...props }) => {
       const isExternal = typeof href === 'string' && /^https?:\/\//.test(href);
-      const className = "text-primary hover:text-primary-dark font-medium transition-colors duration-300 underline decoration-primary/30 hover:decoration-primary-dark underline-offset-4";
+      const className = "text-accent hover:text-accent-dark font-medium transition-colors duration-300 underline decoration-2 underline-offset-2";
       if (isExternal) {
         return (
           <a

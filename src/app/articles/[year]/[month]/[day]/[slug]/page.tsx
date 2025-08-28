@@ -183,7 +183,9 @@ export default async function ArticlePage({ params }: Props) {
               prose-h2:text-2xl prose-h2:font-semibold prose-h2:mb-4 prose-h2:mt-8
               prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-3 prose-h3:mt-6
               prose-p:text-dark/80 prose-p:leading-relaxed prose-p:mb-4
-              prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary-dark prose-a:font-medium
+              prose-a:text-accent prose-a:underline hover:prose-a:text-accent-dark prose-a:font-medium prose-a:decoration-2 prose-a:underline-offset-2
+              [&_h1_a]:no-underline [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline
+              [&_h1_a]:text-inherit [&_h2_a]:text-inherit [&_h3_a]:text-inherit [&_h4_a]:text-inherit [&_h5_a]:text-inherit [&_h6_a]:text-inherit
               prose-strong:text-dark prose-strong:font-semibold
               prose-code:text-accent prose-code:bg-secondary/10 prose-code:px-1 prose-code:rounded prose-code:text-sm prose-code:font-mono
               prose-pre:bg-dark prose-pre:text-light prose-pre:rounded-lg prose-pre:p-4
