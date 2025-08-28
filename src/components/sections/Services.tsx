@@ -61,6 +61,12 @@ const technologies: Technology[] = [
     alt: 'Google Gemini Logo', 
     title: 'Google Gemini' 
   },
+  { 
+    type: 'single',
+    src: '/assets/img/logos/Grok-2025-logo.svg', 
+    alt: 'Grok Logo', 
+    title: 'Grok AI' 
+  },
   // Programming Languages & Frameworks
   { 
     type: 'single',
