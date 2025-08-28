@@ -1,11 +1,14 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
+import { getBaseUrl } from "@/lib/site";
 
 export const metadata = {
   title: "Tech Tavern - Technology Solutions & Cybersecurity",
   description: "Empowering businesses through innovative technology solutions, cybersecurity expertise, and strategic IT leadership.",
   keywords: "technology consulting, cybersecurity, IT solutions, software development, DevOps",
+  // Helps Next.js resolve relative metadata URLs to absolute
+  metadataBase: new URL(getBaseUrl()),
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

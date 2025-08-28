@@ -5,6 +5,29 @@ import Services from '@/components/sections/Services';
 import Profile from '@/components/sections/Profile';
 import Contact from '@/components/sections/Contact';
 import SvgDivider from '@/components/ui/SvgDivider';
+import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from '@/lib/site';
+
+export const metadata = {
+  title: siteMeta.title,
+  description: siteMeta.description,
+  openGraph: {
+    title: siteMeta.title,
+    description: siteMeta.description,
+    type: 'website',
+    siteName: siteMeta.title,
+    url: getBaseUrl(),
+    images: [{ url: new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString(), alt: siteMeta.title }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteMeta.title,
+    description: siteMeta.description,
+    images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
+  },
+  alternates: {
+    canonical: getBaseUrl(),
+  },
+};
 
 export default function Home() {
   return (

@@ -1,9 +1,27 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
+import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
 
 export const metadata = { 
   title: "Articles",
-  description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC."
+  description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC.",
+  openGraph: {
+    title: "Articles",
+    description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC.",
+    type: 'website',
+    siteName: siteMeta.title,
+    url: new URL(withBasePath('/articles/')!, getBaseUrl()).toString(),
+    images: [{ url: new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString(), alt: siteMeta.title }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Articles",
+    description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC.",
+    images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
+  },
+  alternates: {
+    canonical: new URL(withBasePath('/articles/')!, getBaseUrl()).toString(),
+  }
 };
 
 function formatDate(dateString: string): string {

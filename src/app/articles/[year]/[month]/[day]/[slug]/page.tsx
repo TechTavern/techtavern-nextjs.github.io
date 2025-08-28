@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAllPosts, getPostByParams } from "@/lib/posts";
 import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
-import { getBaseUrl } from "@/lib/site";
+import { getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
 import type { Metadata } from "next";
 
 // Build all routes at export time
@@ -26,10 +26,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = post.ogTitle || post.title;
   const description = post.ogDescription || post.excerpt || `Read ${post.title} on Tech Tavern's blog`;
   const base = getBaseUrl();
+  const toAbs = (u: string) => {
+    const pathWithBase = withBasePath(u) || u;
+    try { return new URL(pathWithBase, base).toString(); } catch { return pathWithBase; }
+  };
   const chooseImage = post.ogImage || post.featuredImage;
-  const images = chooseImage
-    ? [chooseImage.startsWith('http') ? chooseImage : `${base}${chooseImage}`]
-    : undefined;
+  const imageUrl = chooseImage ? (chooseImage.startsWith('http') ? chooseImage : toAbs(chooseImage)) : undefined;
+  const images = imageUrl ? [{ url: imageUrl, alt: title }] : undefined;
+  const absoluteUrl = toAbs(post.url);
+  const canonical = post.canonicalUrl ? post.canonicalUrl : absoluteUrl;
   return {
     title,
     description,
@@ -37,17 +42,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       type: 'article',
+      siteName: siteMeta.title,
       publishedTime: post.date,
       images,
-      url: post.url,
+      url: absoluteUrl,
     },
     twitter: {
       card: images ? 'summary_large_image' : 'summary',
       title,
       description,
-      images,
+      images: imageUrl ? [imageUrl] : undefined,
     },
-    alternates: post.canonicalUrl ? { canonical: post.canonicalUrl } : undefined,
+    alternates: { canonical },
   };
 }
 
