@@ -86,7 +86,7 @@ export default function Services() {
           {/* Microsoft column */}
           <div className="flex flex-col gap-4 items-center">
             {technologies[0].map((tech, index) => (
-              <div key={index} className="bg-light rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
+              <div key={index} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
                 <Image
                   src={tech.src}
                   alt={tech.alt}
@@ -102,7 +102,7 @@ export default function Services() {
           {/* Individual logos */}
           {technologies.slice(1, 4).map((techGroup, groupIndex) => 
             techGroup.map((tech, index) => (
-              <div key={`${groupIndex}-${index}`} className="bg-light rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
+              <div key={`${groupIndex}-${index}`} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
                 <Image
                   src={tech.src}
                   alt={tech.alt}
@@ -120,7 +120,7 @@ export default function Services() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
           {technologies.slice(4).map((techGroup, groupIndex) => 
             techGroup.map((tech, index) => (
-              <div key={`lang-${groupIndex}-${index}`} className="bg-light rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
+              <div key={`lang-${groupIndex}-${index}`} className="bg-white/10 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
                 <Image
                   src={tech.src}
                   alt={tech.alt}
