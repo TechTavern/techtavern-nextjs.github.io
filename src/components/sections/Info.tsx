@@ -7,8 +7,8 @@ export default function Info() {
       <div className="order-2 lg:order-1">
         <div className="relative">
           <Image
-            src="/assets/img/annie-spratt-QckxruozjRg-unsplash.jpg"
-            alt="5 people sitting around a wooden table working on laptops and collaborating together"
+            src="/images/tech-tavern-default-featured.webp"
+            alt="Tech Tavern - Professional technology consulting and development services"
             width={600}
             height={400}
             className="w-full h-auto rounded-lg shadow-lg side-notch object-cover"
