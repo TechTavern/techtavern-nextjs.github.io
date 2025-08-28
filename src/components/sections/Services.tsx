@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import services from '@/data/services';
 
 const technologies = [
   // First row
@@ -31,39 +30,55 @@ const technologies = [
   ]
 ];
 
+const serviceAreas = [
+  {
+    title: "Tap into Skills",
+    content: "Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.",
+    features: [
+      "Designing and delivering tutorials and workshops.",
+      "Fostering community engagement through technology.",
+      "Running challenges, hackathons, and reverse pitches.",
+      "Coordinating meetups and professional exchanges."
+    ],
+    image: "/assets/img/undraw_teaching_f1cm.svg",
+    imageAlt: "line drawing of a person standing in front of a blackboard",
+    layout: "text-first"
+  },
+  {
+    title: "Tap into Impact", 
+    content: "Tech Tavern helps you execute your strategy through experience at all levels of IT. We move you forward by collaboratively developing and managing plans, measuring and monitoring outcomes, or providing IT leadership.",
+    features: [
+      "Interim CIO and IT Leadership.",
+      "Strategic IT planning support.",
+      "Proposal and grant support.",
+      "IT and data policy development."
+    ],
+    image: "/assets/img/undraw_Scrum_board_re_wk7v.svg",
+    imageAlt: "line drawing of a person in front of a scrum board",
+    layout: "image-first"
+  },
+  {
+    title: "Tap into Code",
+    content: "In addition to strategic IT leadership, Tech Tavern provides direct hands-on support for your IT needs. Be it kick-starting an initiative with best practices, prototyping, and rapid development, or consolidating and streamlining operations, Tech Tavern has the right skills and partnerships for you.",
+    features: [
+      "Software creation and support with a focus on Python, Go, Javascript/Typescript.",
+      "Data support for standard RDBMS systems, document-based or time series databases.",
+      "Data structure, simulation and processing.",
+      "Cloud operations and services."
+    ],
+    image: "/assets/img/undraw_programming_2svr.svg",
+    imageAlt: "line drawing of someone from behind working on a computer with several monitors",
+    layout: "text-first"
+  }
+];
+
 export default function Services() {
   return (
-    <div className="py-16 space-y-20">
-      {/* Services Section */}
-      <div className="text-center">
-        <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-16">
-          Our Services
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-          {services.map((service, index) => {
-            const IconComponent = service.icon;
-            return (
-              <div key={index} className="group space-y-6">
-                <div className="flex items-center justify-center w-20 h-20 mx-auto bg-light/10 rounded-full mb-6 transition-transform duration-300 group-hover:scale-110">
-                  <IconComponent size={40} className="text-light" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-heading font-semibold text-light">
-                  {service.title}
-                </h3>
-                <p className="text-base md:text-lg text-light/90 leading-relaxed max-w-sm mx-auto">
-                  {service.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
+    <div className="space-y-16">
       {/* Technology Logos Section */}
       <div className="text-center">
-        <h2 className="text-2xl md:text-4xl font-heading font-bold text-light mb-12">
-          Technologies We Work With
+        <h2 className="text-3xl md:text-5xl font-heading font-bold text-light mb-12">
+          Our Technology Stack
         </h2>
         
         {/* First row - Microsoft logos in first column, others individual */}
@@ -118,6 +133,48 @@ export default function Services() {
             ))
           )}
         </div>
+      </div>
+
+      {/* Service Areas */}
+      <div className="space-y-16 pt-12">
+        {serviceAreas.map((service, index) => (
+          <div 
+            key={index}
+            className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
+              service.layout === 'image-first' ? 'lg:grid-flow-col-dense' : ''
+            }`}
+          >
+            {/* Content */}
+            <div className={`space-y-6 ${service.layout === 'image-first' ? 'lg:col-start-2' : ''}`}>
+              <h3 className="text-3xl md:text-4xl font-heading font-bold text-light">
+                {service.title}
+              </h3>
+              
+              <p className="text-lg text-light/90 leading-relaxed">
+                {service.content}
+              </p>
+              
+              <ul className="feature-list space-y-2 text-light">
+                {service.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} className="text-base">
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Image */}
+            <div className={`${service.layout === 'image-first' ? 'lg:col-start-1' : ''}`}>
+              <Image
+                src={service.image}
+                alt={service.imageAlt}
+                width={500}
+                height={400}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
