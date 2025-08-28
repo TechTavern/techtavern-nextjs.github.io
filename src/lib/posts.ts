@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import fg from "fast-glob";
 import { z } from "zod";
+import { DEFAULT_FEATURED_IMAGE, withBasePath } from "@/lib/site";
 
 export type PostMeta = {
   title: string;
@@ -70,16 +71,18 @@ export async function getAllPosts(): Promise<PostMeta[]> {
       const fm = parsed.data;
       const { year, month, day } = splitDate(String(data.date));
       const readingTimeMinutes = computeReadingTime(content);
+      const featured = withBasePath(fm.featuredImage) || withBasePath(DEFAULT_FEATURED_IMAGE);
+      const ogImg = withBasePath(fm.ogImage) || featured;
       return {
         title: fm.title,
         date: fm.date,
         slug: fm.slug,
         excerpt: fm.excerpt,
         tags: fm.tags ?? [],
-        featuredImage: fm.featuredImage,
+        featuredImage: featured,
         ogTitle: fm.ogTitle,
         ogDescription: fm.ogDescription,
-        ogImage: fm.ogImage,
+        ogImage: ogImg,
         canonicalUrl: fm.canonicalUrl,
         draft: Boolean(fm.draft),
         readingTimeMinutes,

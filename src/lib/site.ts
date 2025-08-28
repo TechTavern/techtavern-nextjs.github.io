@@ -14,3 +14,16 @@ export const siteMeta = {
   title: 'Tech Tavern',
   description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC.",
 };
+
+// Default featured image to use across the site when none is provided
+export const DEFAULT_FEATURED_IMAGE = '/images/tech-tavern-default-featured.webp';
+
+// Prefix a root-relative path with the configured basePath (for subdirectory hosting)
+export function withBasePath(pathname: string | undefined | null): string | undefined {
+  if (!pathname) return undefined;
+  const p = String(pathname);
+  if (/^https?:\/\//i.test(p)) return p; // already absolute
+  const basePath = (env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '');
+  const normalized = p.startsWith('/') ? p : `/${p}`;
+  return `${basePath}${normalized}`;
+}
