@@ -273,7 +273,7 @@
   --color-three: #d93829;           /* Bright red */
   
   /* Special Effect Colors */
-  --color-mask: rgba(0, 0, 0, 0.7);              /* Dark overlay */
+  --color-mask: rgba(0, 0, 0, 0.5);              /* Neutral overlay */
   --color-mask-glass: rgba(38, 1, 1, 0.2);       /* Glassmorphism overlay */
   --color-gradient-start: rgb(38, 1, 1);         /* Gradient start - seal brown */
   --color-gradient-end: rgb(115, 2, 2);          /* Gradient end - maroon */
@@ -337,7 +337,7 @@
 
 /* Background Image Utilities */
 .bg-hero {
-  background-image: url('/assets/img/stephen-poore-TZUAQH7ACe4-unsplash-2400x1276.jpg');
+  background-image: url('/images/richmond-station-view.webp');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

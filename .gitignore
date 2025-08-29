@@ -45,3 +45,4 @@ next-env.d.ts
 
 # Legacy reference material.
 techtavern.github.io/
+.swc
