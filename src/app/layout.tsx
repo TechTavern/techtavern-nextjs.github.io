@@ -2,14 +2,33 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
-import { getBaseUrl } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
+import { analytics } from "@/data/site";
 
 export const metadata = {
-  title: "Tech Tavern - Technology Solutions & Cybersecurity",
-  description: "Empowering businesses through innovative technology solutions, cybersecurity expertise, and strategic IT leadership.",
-  keywords: "technology consulting, cybersecurity, IT solutions, software development, DevOps",
-  // Helps Next.js resolve relative metadata URLs to absolute
+  title: siteMeta.title,
+  description: siteMeta.description,
+  keywords: "technology consulting, AI, data security, IT solutions, software development, DevOps",
   metadataBase: new URL(getBaseUrl()),
+  openGraph: {
+    title: siteMeta.title,
+    description: siteMeta.description,
+    type: 'website',
+    siteName: siteMeta.title,
+    url: getBaseUrl(),
+    images: [
+      { url: new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString(), alt: siteMeta.title },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteMeta.title,
+    description: siteMeta.description,
+    images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
+  },
+  alternates: {
+    canonical: getBaseUrl(),
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -98,7 +117,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
-        <GoogleAnalytics measurementId="G-T9WJ69XJMF" />
+        {analytics.gaMeasurementId ? (
+          <GoogleAnalytics measurementId={analytics.gaMeasurementId} />
+        ) : null}
         <Navigation />
         {children}
       </body>

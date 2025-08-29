@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { MapPin, Mail } from 'lucide-react';
+import { contact } from '@/data/site';
 
 export default function Contact() {
   return (
@@ -7,11 +8,11 @@ export default function Contact() {
       {/* Contact Information */}
       <div className="space-y-6">
         <h2 className="text-3xl md:text-5xl font-heading font-bold text-dark">
-          Contact us:
+          {contact.heading}
         </h2>
         
         <p className="text-lg md:text-xl text-dark/80 leading-relaxed">
-          To reach out with questions, talk about how we might be able to work together, or anything else...
+          {contact.intro}
         </p>
         
         <div className="space-y-4">
@@ -20,8 +21,8 @@ export default function Contact() {
               <MapPin className="text-primary" size={20} />
             </div>
             <div className="text-dark">
-              <p className="font-medium">Glen Allen, Virginia</p>
-              <p>United States</p>
+              <p className="font-medium">{contact.city}</p>
+              <p>{contact.country}</p>
             </div>
           </div>
           
@@ -41,11 +42,11 @@ export default function Contact() {
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
               <Mail className="text-primary" size={20} />
             </div>
-            <a 
-              href="mailto:info@tech-tavern.com" 
+            <a
+              href={`mailto:${contact.email}`}
               className="text-primary hover:text-primary-dark transition-colors font-medium underline decoration-2 underline-offset-2"
             >
-              info@tech-tavern.com
+              {contact.email}
             </a>
           </div>
         </div>

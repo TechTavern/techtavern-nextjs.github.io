@@ -4,19 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
-
-interface NavigationItem {
-  href: string;
-  label: string;
-}
-
-const navigationItems: NavigationItem[] = [
-  { href: '/#', label: 'Home' },
-  { href: '/#Services', label: 'Services' },
-  { href: '/#About', label: 'About' },
-  { href: '/#Contact', label: 'Contact' },
-  { href: '/articles', label: 'Articles' }
-];
+import { brand, navigation as navigationItems } from '@/data/site';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -63,7 +51,7 @@ export default function Navigation() {
                 isScrolled ? 'text-gray-900' : 'text-white'
               }`}
             >
-              Tech Tavern
+              {brand.name}
             </Link>
           </div>
 

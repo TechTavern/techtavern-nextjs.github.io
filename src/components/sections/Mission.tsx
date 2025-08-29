@@ -1,22 +1,4 @@
-import { Shield, Smartphone, Code } from 'lucide-react';
-
-const missionItems = [
-  {
-    icon: Shield,
-    title: "Cybersecurity",
-    description: "In a digital world, strong cybersecurity measures are essential to protect against cyber attacks. Our team of experts can help identify vulnerabilities and implement security measures to keep your business safe."
-  },
-  {
-    icon: Smartphone,
-    title: "Impact", 
-    description: "Delivering returns on IT strategies can be difficult without the right planning. It takes talented technical leadership with the right mix of experience and expertise. We help you achieve maximum impact."
-  },
-  {
-    icon: Code,
-    title: "Technology",
-    description: "Building the right solutions and avoiding technical debt is critical for long-term IT success. We supplement your IT needs through best practice coding, data, and DevOps to launch you to the next level."
-  }
-];
+import { mission as missionItems } from '@/data/home';
 
 export default function Mission() {
   return (

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { info } from '@/data/home';
 
 export default function Info() {
   return (
@@ -7,8 +8,8 @@ export default function Info() {
       <div className="order-2 lg:order-1">
         <div className="relative">
           <Image
-            src="/images/tech-tavern-default-featured.webp"
-            alt="Tech Tavern - Professional technology consulting and development services"
+            src={info.image.src}
+            alt={info.image.alt}
             width={600}
             height={400}
             className="w-full h-auto rounded-lg shadow-lg side-notch object-cover"
@@ -19,22 +20,21 @@ export default function Info() {
       {/* Content Column */}
       <div className="order-1 lg:order-2 space-y-6">
         <h2 className="text-4xl md:text-5xl font-heading font-bold text-light">
-          Introducing Tech Tavern
+          {info.title}
         </h2>
         
         <p className="text-lg md:text-xl text-light/90 leading-relaxed">
-          Helping businesses and communities supercharge their workforce, 
-          achieve undeniable impact, and leverage best-in-class coding, data, and DevOps.
+          {info.intro}
         </p>
         
         <ul className="feature-list space-y-3 text-light">
-          <li className="text-lg">Develop an IT workforce with cutting-edge skills.</li>
-          <li className="text-lg">Plan and adopt technology for the highest impact.</li>
-          <li className="text-lg">Supercharge your IT development and operations with best practice implementations.</li>
+          {info.bullets.map((b, i) => (
+            <li key={i} className="text-lg">{b}</li>
+          ))}
         </ul>
         
         <p className="text-lg italic text-light/80 font-medium">
-          Tech Tavern is a veteran-owned business.
+          {info.note}
         </p>
       </div>
     </div>
