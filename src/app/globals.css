@@ -1,38 +1,6 @@
 /* Local Font Definitions */
 
-/* Lato Font Family */
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 100;
-  font-display: swap;
-  src: url('/fonts/lato/lato-100-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
-  font-style: italic;
-  font-weight: 100;
-  font-display: swap;
-  src: url('/fonts/lato/lato-100-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/lato/lato-300-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
-  font-style: italic;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/lato/lato-300-italic.ttf') format('truetype');
-}
-
+/* Lato Font Family - Optimized (only essential weights) */
 @font-face {
   font-family: 'Lato';
   font-style: normal;
@@ -43,123 +11,19 @@
 
 @font-face {
   font-family: 'Lato';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/lato/lato-400-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url('/fonts/lato/lato-700-normal.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'Lato';
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/lato/lato-700-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url('/fonts/lato/lato-900-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Lato';
-  font-style: italic;
-  font-weight: 900;
-  font-display: swap;
-  src: url('/fonts/lato/lato-900-italic.ttf') format('truetype');
-}
-
-/* Poppins Font Family */
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 100;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-100-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 100;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-100-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 200;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-200-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 200;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-200-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-300-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-300-italic.ttf') format('truetype');
-}
-
+/* Poppins Font Family - Optimized (only essential weights) */
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url('/fonts/poppins/poppins-400-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-400-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-500-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-500-italic.ttf') format('truetype');
 }
 
 @font-face {
@@ -172,58 +36,10 @@
 
 @font-face {
   font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-600-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url('/fonts/poppins/poppins-700-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-700-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-800-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 800;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-800-italic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-900-normal.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-style: italic;
-  font-weight: 900;
-  font-display: swap;
-  src: url('/fonts/poppins/poppins-900-italic.ttf') format('truetype');
 }
 
 /* Enable Tailwind */
@@ -335,12 +151,32 @@
   clip-path: polygon(20% 0%, 100% 0, 100% 80%, 80% 100%, 0 100%, 0 19%);
 }
 
-/* Background Image Utilities */
+/* Background Image Utilities - Responsive */
 .bg-hero {
-  background-image: url('/images/richmond-station-view.webp');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  /* Mobile first - smallest image */
+  background-image: url('/images/richmond-station-view-375w.webp');
+}
+
+/* Responsive background images for better performance */
+@media (min-width: 768px) {
+  .bg-hero {
+    background-image: url('/images/richmond-station-view-768w.webp');
+  }
+}
+
+@media (min-width: 1200px) {
+  .bg-hero {
+    background-image: url('/images/richmond-station-view-1200w.webp');
+  }
+}
+
+@media (min-width: 1920px) {
+  .bg-hero {
+    background-image: url('/images/richmond-station-view-1920w.webp');
+  }
 }
 
 /* Shape Dividers */
