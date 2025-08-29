@@ -150,23 +150,33 @@ jobs:
 
       - name: Configure environment
         run: |
-          if [[ "${{ needs.quality-gates.outputs.environment }}" == "production" ]]; then
-            echo "Building for production (root domain)"
-            export NEXT_PUBLIC_BASE_PATH=""
-          else
-            echo "Building for staging (subdirectory)"
-            export NEXT_PUBLIC_BASE_PATH="/techtavern-nextjs.github.io"
+          # Check if we have a custom domain configured
+          CUSTOM_DOMAIN=""
+          if [ -n '${{ vars.SITE_URL }}' ]; then
+            CUSTOM_DOMAIN='${{ vars.SITE_URL }}'
+          elif [ -n '${{ secrets.SITE_URL }}' ]; then
+            CUSTOM_DOMAIN='${{ secrets.SITE_URL }}'
           fi
+          
+          # Determine if this is a custom domain (not github.io)
+          if [[ "$CUSTOM_DOMAIN" != *"github.io"* ]] && [[ -n "$CUSTOM_DOMAIN" ]]; then
+            echo "Building for custom domain: $CUSTOM_DOMAIN"
+            echo "Using root path for assets"
+            export NEXT_PUBLIC_BASE_PATH=""
+            export SITE_URL="$CUSTOM_DOMAIN"
+          elif [[ "${{ needs.quality-gates.outputs.environment }}" == "production" ]]; then
+            echo "Building for production on default GitHub Pages domain"
+            export NEXT_PUBLIC_BASE_PATH=""
+            export SITE_URL="https://${{ github.repository_owner }}.github.io"
+          else
+            echo "Building for staging (repository subdirectory)"
+            export NEXT_PUBLIC_BASE_PATH="/techtavern-nextjs.github.io"
+            export SITE_URL="https://${{ github.repository_owner }}.github.io/techtavern-nextjs.github.io"
+          fi
+          
           echo "NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH" >> $GITHUB_ENV
-
-          # Derive SITE_URL if not provided via Actions Variables/Secrets
-          DEFAULT_ORIGIN="https://${{ github.repository_owner }}.github.io"
-          # Prefer Actions Variable, then Secret, else default to owner GitHub Pages origin
-          SITE_URL_INPUT='${{ vars.SITE_URL }}'
-          if [ -z "$SITE_URL_INPUT" ]; then SITE_URL_INPUT='${{ secrets.SITE_URL }}'; fi
-          if [ -z "$SITE_URL_INPUT" ]; then SITE_URL_INPUT="$DEFAULT_ORIGIN"; fi
-          export SITE_URL="$SITE_URL_INPUT"
           echo "SITE_URL=$SITE_URL" >> $GITHUB_ENV
+          echo "Final configuration: SITE_URL=$SITE_URL, BASE_PATH=$NEXT_PUBLIC_BASE_PATH"
 
       - name: Build static site
         run: npm run build

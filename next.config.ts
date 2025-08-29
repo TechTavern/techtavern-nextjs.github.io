@@ -19,8 +19,9 @@ const nextConfig: NextConfig = {
   ...(process.env.NODE_ENV === 'production' && {
     output: 'export',
     trailingSlash: true,
-    // Only set base path in production with explicit environment variable
-    ...(process.env.NEXT_PUBLIC_BASE_PATH && {
+    // Only set base path and asset prefix when explicitly provided and not empty
+    ...(process.env.NEXT_PUBLIC_BASE_PATH && 
+        process.env.NEXT_PUBLIC_BASE_PATH !== '' && {
       basePath: process.env.NEXT_PUBLIC_BASE_PATH,
       assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
     }),
