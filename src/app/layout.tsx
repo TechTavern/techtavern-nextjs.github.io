@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
+import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import { getBaseUrl } from "@/lib/site";
 
 export const metadata = {
@@ -23,10 +24,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="manifest" href="/site.webmanifest" />
         <meta
           httpEquiv="Content-Security-Policy"
-          content={`default-src 'self'; script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';`}
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
+        <GoogleAnalytics measurementId="G-T9WJ69XJMF" />
         <Navigation />
         {children}
       </body>
