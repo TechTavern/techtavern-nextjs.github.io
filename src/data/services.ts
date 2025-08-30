@@ -81,14 +81,13 @@ export interface ServiceArea {
 
 export const serviceAreas: ServiceArea[] = [
   {
-    title: 'Tap into Skills',
+    title: 'Tap into Insights',
     content:
       'Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.',
     features: [
-      'Designing and delivering tutorials and workshops.',
-      'Fostering community engagement through technology.',
-      'Running challenges, hackathons, and reverse pitches.',
-      'Coordinating meetups and professional exchanges.',
+      'AI readiness assessments and ethical AI workshops.',
+      'Data governance and compliance frameworks (NIST, ISO).',
+      'Facilitation of community-driven technology discussions and hackathons',
     ],
     image: '/assets/img/undraw_teaching_f1cm.svg',
     imageAlt: 'line drawing of a person standing in front of a blackboard',
@@ -99,24 +98,22 @@ export const serviceAreas: ServiceArea[] = [
     content:
       'Tech Tavern helps you execute your strategy through experience at all levels of IT. We move you forward by collaboratively developing and managing plans, measuring and monitoring outcomes, or providing IT leadership.',
     features: [
-      'Interim CIO and IT Leadership.',
-      'Strategic IT planning support.',
-      'Proposal and grant support.',
-      'IT and data policy development.',
+      'Interim AI/Data leadership and public sector/nonprofit transformation.',
+      'Strategic planning for AI, digital transformation, and grant-funded projects.',
+      'Development of AI governance policies and data compliance plans.',
     ],
     image: '/assets/img/undraw_Scrum_board_re_wk7v.svg',
     imageAlt: 'line drawing of a person in front of a scrum board',
     layout: 'image-first',
   },
   {
-    title: 'Tap into Code',
+    title: 'Tap into Solutions',
     content:
       'In addition to strategic IT leadership, Tech Tavern provides direct hands-on support for your IT needs. Be it kick-starting an initiative with best practices, prototyping, and rapid development, or consolidating and streamlining operations, Tech Tavern has the right skills and partnerships for you.',
     features: [
-      'Software creation and support with a focus on Python, Go, Javascript/Typescript.',
-      'Data support for standard RDBMS systems, document-based or time series databases.',
-      'Data structure, simulation and processing.',
-      'Cloud operations and services.',
+      'prototyping and MVP development with Python, Go, JavaScript/TypeScript.',
+      'Data engineering and analytics systems (cloud-based pipelines, RDBMS, time-series)',
+      'Cloud-native deployments and infrastructure for mission-driven applications',
     ],
     image: '/assets/img/undraw_programming_2svr.svg',
     imageAlt:

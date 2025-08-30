@@ -1,16 +1,16 @@
 import type { LucideIcon } from 'lucide-react';
-import { Shield, Smartphone, Code, Linkedin } from 'lucide-react';
+import { Shield, Brain, Rocket, Linkedin } from 'lucide-react';
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/site';
 
 export const info = {
   image: { src: DEFAULT_FEATURED_IMAGE, alt: 'Tech Tavern - Professional technology consulting and AI services' },
   title: 'Introducing Tech Tavern',
   intro:
-    'Helping businesses and communities supercharge their workforce, achieve undeniable impact, and leverage best-in-class coding, data, and DevOps.',
+    'We help you harness AI, data, and cloud to transform your mission into impact—strategically and responsibly.',
   bullets: [
-    'Develop an IT workforce with cutting-edge skills.',
-    'Plan and adopt technology for the highest impact.',
-    'Supercharge your IT development and operations with best practice implementations.',
+    'Strategic Roadmaps – Insight-driven plans for AI, data governance, and digital transformation.',
+    'Prototype to Production – We build pilots, proofs of concept, and production-ready tech.',
+    'Mission First – Technology that amplifies purpose, tailored to nonprofits, public sector, and beyond.'
   ],
   note: 'Tech Tavern is a veteran-owned business.',
 };
@@ -24,21 +24,21 @@ export type MissionItem = {
 export const mission: MissionItem[] = [
   {
     icon: Shield,
-    title: 'Cybersecurity',
+    title: 'Data Security',
     description:
-      'In a digital world, strong cybersecurity measures are essential to protect against cyber attacks. Our team of experts can help identify vulnerabilities and implement security measures to keep your business safe.',
+      'Build trust with governance, compliance, and responsible data practices.',
   },
   {
-    icon: Smartphone,
-    title: 'Impact',
+    icon: Brain,
+    title: 'Artificial Intelligence',
     description:
-      'Delivering returns on IT strategies can be difficult without the right planning. It takes talented technical leadership with the right mix of experience and expertise. We help you achieve maximum impact.',
+      'Harness the power of AI to drive innovation and efficiency - from roadmap to porotype to policy.',
   },
   {
-    icon: Code,
-    title: 'Technology',
+    icon: Rocket,
+    title: 'Digital Transformation',
     description:
-      'Building the right solutions and avoiding technical debt is critical for long-term IT success. We supplement your IT needs through best practice coding, data, and DevOps to launch you to the next level.',
+      'Reimagine how your organization delivers mission with modern infrastructure and leadership support.',
   },
 ];
 

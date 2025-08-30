@@ -7,7 +7,7 @@ export const brand = {
 export const hero = {
   title: 'Tech Tavern',
   description:
-    'Empowering businesses through innovative technology solutions, cybersecurity expertise, and strategic IT leadership.',
+    'We help you harness AI, data, and cloud to transform your mission into impact—strategically and responsibly.',
 };
 
 export const navigation: NavItem[] = [
