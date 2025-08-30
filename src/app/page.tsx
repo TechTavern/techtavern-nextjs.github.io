@@ -5,6 +5,7 @@ import Services from '@/components/sections/Services';
 import Profile from '@/components/sections/Profile';
 import Contact from '@/components/sections/Contact';
 import SvgDivider from '@/components/ui/SvgDivider';
+import Footer from '@/components/ui/Footer';
 import { siteMeta } from '@/lib/site';
 
 
@@ -66,15 +67,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="gradient-brand text-light py-12">
-        <div className="container mx-auto px-4 text-center space-y-2">
-          <p className="text-lg font-medium">Created by Tech Tavern</p>
-          <p className="text-light/80">
-            &copy; Copyright 2021-{new Date().getFullYear()}, Tech Tavern LLC
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

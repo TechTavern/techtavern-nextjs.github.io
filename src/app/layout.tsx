@@ -79,8 +79,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               .bg-hero { background-image: url('/images/richmond-station-view-1200w.webp'); }
             }
             
-            /* Navigation */
-            nav {
+            /* Navigation (scoped to header nav only) */
+            .site-nav {
               position: fixed;
               top: 0;
               left: 0;
