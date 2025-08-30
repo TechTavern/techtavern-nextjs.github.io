@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { MapPin, Mail } from 'lucide-react';
+import { MapPin, Mail, Globe } from 'lucide-react';
 
 const contact = {
   heading: 'Contact us:',
   intro:
-    'To reach out with questions, talk about how we might be able to work together, or anything else...',
+    "Let’s Tap Into Your Mission. Whether you're nearby or across time zones, I’m ready to help. Let’s start a conversation—virtually or in person—about how AI, data, and strategy can serve your purpose.",
   city: 'Glen Allen, Virginia',
   country: 'United States',
   email: 'info@tech-tavern.com',
@@ -34,17 +34,14 @@ export default function Contact() {
             </div>
           </div>
           
-          {/* <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-              <Phone className="text-primary" size={20} />
+              <Globe className="text-primary" size={20} />
             </div>
-            <a 
-              href="tel:+16788224200" 
-              className="text-dark hover:text-primary transition-colors font-medium"
-            >
-              +1 (678) 822 4200
-            </a>
-          </div> */}
+            <div className="text-dark">
+              Remote-friendly | <em>Globally available</em>
+            </div>
+          </div>
           
           <div className="flex items-center gap-4">
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
