@@ -1,5 +1,76 @@
 import Image from 'next/image';
-import { technologyGroups, serviceAreas } from '@/data/services';
+
+const technologyGroups = [
+  {
+    title: 'Cloud',
+    logos: [
+      { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' },
+      { src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', alt: 'Amazon Web Services Logo', title: 'Amazon Web Services' },
+      { src: '/assets/img/logos/Google_Cloud_Logo.svg', alt: 'Google Cloud Logo', title: 'Google Cloud Platform' },
+    ],
+  },
+  {
+    title: 'AI',
+    logos: [
+      { src: '/assets/img/logos/OpenAI_Logo.svg', alt: 'OpenAI ChatGPT Logo', title: 'OpenAI ChatGPT' },
+      { src: '/assets/img/logos/Anthropic_Claude_Logo.svg', alt: 'Anthropic Claude Logo', title: 'Anthropic Claude' },
+      { src: '/assets/img/logos/Google_Gemini_Logo.svg', alt: 'Google Gemini Logo', title: 'Google Gemini' },
+      { src: '/assets/img/logos/Grok-2025-logo.svg', alt: 'Grok Logo', title: 'Grok AI' },
+    ],
+  },
+  {
+    title: 'Code',
+    logos: [
+      { src: '/assets/img/logos/Python-logo-notext.svg', alt: 'Python logo', title: 'Python programming language' },
+      { src: '/assets/img/logos/Go_Logo_Blue.svg', alt: 'Go Logo', title: 'Go programming language' },
+      { src: '/assets/img/logos/React-icon.svg', alt: 'React logo', title: 'React' },
+      { src: '/assets/img/logos/angular.svg', alt: 'Angular logo', title: 'Angular' },
+    ],
+  },
+];
+
+const serviceAreas = [
+  {
+    title: 'Tap into Insights',
+    content:
+      'Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.',
+    features: [
+      'AI readiness assessments and ethical AI workshops.',
+      'Data governance and compliance frameworks (NIST, ISO).',
+      'Facilitation of community-driven technology discussions and hackathons',
+    ],
+    image: '/assets/img/undraw_teaching_f1cm.svg',
+    imageAlt: 'line drawing of a person standing in front of a blackboard',
+    layout: 'text-first',
+  },
+  {
+    title: 'Tap into Impact',
+    content:
+      'Tech Tavern helps you execute your strategy through experience at all levels of IT. We move you forward by collaboratively developing and managing plans, measuring and monitoring outcomes, or providing IT leadership.',
+    features: [
+      'Interim AI/Data leadership and public sector/nonprofit transformation.',
+      'Strategic planning for AI, digital transformation, and grant-funded projects.',
+      'Development of AI governance policies and data compliance plans.',
+    ],
+    image: '/assets/img/undraw_Scrum_board_re_wk7v.svg',
+    imageAlt: 'line drawing of a person in front of a scrum board',
+    layout: 'image-first',
+  },
+  {
+    title: 'Tap into Solutions',
+    content:
+      'In addition to strategic IT leadership, Tech Tavern provides direct hands-on support for your IT needs. Be it kick-starting an initiative with best practices, prototyping, and rapid development, or consolidating and streamlining operations, Tech Tavern has the right skills and partnerships for you.',
+    features: [
+      'Prototyping and MVP development with Python, Go, JavaScript/TypeScript.',
+      'Data engineering and analytics systems (cloud-based pipelines, RDBMS, time-series)',
+      'Cloud-native deployments and infrastructure for mission-driven applications',
+    ],
+    image: '/assets/img/undraw_programming_2svr.svg',
+    imageAlt:
+      'line drawing of someone from behind working on a computer with several monitors',
+    layout: 'text-first',
+  },
+];
 
 export default function Services() {
   return (

@@ -1,6 +1,14 @@
 import Image from 'next/image';
 import { MapPin, Mail } from 'lucide-react';
-import { contact } from '@/data/site';
+
+const contact = {
+  heading: 'Contact us:',
+  intro:
+    'To reach out with questions, talk about how we might be able to work together, or anything else...',
+  city: 'Glen Allen, Virginia',
+  country: 'United States',
+  email: 'info@tech-tavern.com',
+};
 
 export default function Contact() {
   return (

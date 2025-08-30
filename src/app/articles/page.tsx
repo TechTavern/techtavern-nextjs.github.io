@@ -1,13 +1,31 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
-import { articlesPage } from "@/data/articles";
+
+const ARTICLES_PAGE = {
+  title: 'Articles',
+  hero: {
+    title: 'Articles & Insights',
+    subtitle: 'Expert perspectives on technology, cybersecurity, and strategic IT solutions',
+  },
+  empty: {
+    heading: 'Coming Soon',
+    subtext:
+      'We’re working on some great content for you. Check back soon for insights on technology and cybersecurity.',
+  },
+  cta: {
+    heading: 'Need Technology Expertise?',
+    subtext:
+      'Let’s discuss how Tech Tavern can help your business with innovative technology solutions and cybersecurity expertise.',
+    buttonLabel: 'Get In Touch',
+  },
+};
 
 export const metadata = { 
-  title: articlesPage.title,
+  title: ARTICLES_PAGE.title,
   description: siteMeta.description,
   openGraph: {
-    title: articlesPage.title,
+    title: ARTICLES_PAGE.title,
     description: siteMeta.description,
     type: 'website',
     siteName: siteMeta.title,
@@ -16,7 +34,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: articlesPage.title,
+    title: ARTICLES_PAGE.title,
     description: siteMeta.description,
     images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
   },
@@ -44,10 +62,10 @@ export default async function ArticlesIndexPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
-              {articlesPage.hero.title}
+              {ARTICLES_PAGE.hero.title}
             </h1>
             <p className="text-xl md:text-2xl text-light/90 leading-relaxed">
-              {articlesPage.hero.subtitle}
+              {ARTICLES_PAGE.hero.subtitle}
             </p>
           </div>
         </div>
@@ -60,10 +78,10 @@ export default async function ArticlesIndexPage() {
             <div className="text-center py-16">
               <div className="bg-secondary/10 rounded-lg p-12 max-w-md mx-auto">
                 <h2 className="text-2xl font-heading font-semibold text-dark mb-4">
-                  {articlesPage.empty.heading}
+                  {ARTICLES_PAGE.empty.heading}
                 </h2>
                 <p className="text-dark/70">
-                  {articlesPage.empty.subtext}
+                  {ARTICLES_PAGE.empty.subtext}
                 </p>
               </div>
             </div>
@@ -153,16 +171,16 @@ export default async function ArticlesIndexPage() {
       <section className="bg-secondary/10 py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-heading font-bold text-dark mb-4">
-            {articlesPage.cta.heading}
+            {ARTICLES_PAGE.cta.heading}
           </h2>
           <p className="text-xl text-dark/70 mb-8 max-w-2xl mx-auto">
-            {articlesPage.cta.subtext}
+            {ARTICLES_PAGE.cta.subtext}
           </p>
           <Link
             href="/#Contact"
             className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl"
           >
-            {articlesPage.cta.buttonLabel}
+            {ARTICLES_PAGE.cta.buttonLabel}
           </Link>
         </div>
       </section>

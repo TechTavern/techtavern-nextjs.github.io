@@ -1,4 +1,22 @@
-import { mission as missionItems } from '@/data/home';
+import { Shield, Brain, Rocket } from 'lucide-react';
+
+const missionItems = [
+  {
+    icon: Shield,
+    title: 'Data Security',
+    description: 'Build trust with governance, compliance, and responsible data practices.',
+  },
+  {
+    icon: Brain,
+    title: 'Artificial Intelligence',
+    description: 'Harness the power of AI to drive innovation and efficiency - from roadmap to porotype to policy.',
+  },
+  {
+    icon: Rocket,
+    title: 'Digital Transformation',
+    description: 'Reimagine how your organization delivers mission with modern infrastructure and leadership support.',
+  },
+];
 
 export default function Mission() {
   return (

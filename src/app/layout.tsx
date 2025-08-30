@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
-import { analytics } from "@/data/site";
+import { env } from "@/lib/env";
 
 export const metadata = {
   title: siteMeta.title,
@@ -117,8 +117,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
-        {analytics.gaMeasurementId ? (
-          <GoogleAnalytics measurementId={analytics.gaMeasurementId} />
+        {env.NEXT_PUBLIC_GA_ID ? (
+          <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
         ) : null}
         <Navigation />
         {children}

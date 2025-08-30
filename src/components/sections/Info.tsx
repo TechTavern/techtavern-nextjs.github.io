@@ -1,5 +1,17 @@
 import Image from 'next/image';
-import { info } from '@/data/home';
+import { DEFAULT_FEATURED_IMAGE, siteMeta } from '@/lib/site';
+
+const info = {
+  image: { src: DEFAULT_FEATURED_IMAGE, alt: 'Tech Tavern - Professional technology consulting and AI services' },
+  title: 'Introducing Tech Tavern',
+  intro: siteMeta.description,
+  bullets: [
+    'Strategic Roadmaps – Insight-driven plans for AI, data governance, and digital transformation.',
+    'Prototype to Production – We build pilots, proofs of concept, and production-ready tech.',
+    'Mission First – Technology that amplifies purpose, tailored to nonprofits, public sector, and beyond.'
+  ],
+  note: 'Tech Tavern is a veteran-owned business.',
+};
 
 export default function Info() {
   return (

@@ -1,8 +1,33 @@
 import Image from 'next/image';
-import { profile } from '@/data/home';
+import { Linkedin } from 'lucide-react';
+
+const profile = {
+  heading: 'Who We Are',
+  image: { src: '/assets/img/ScottSpeakingSCC.jpg', alt: 'Scott Turnbull speaking at Smart Cities Connect', width: 700, height: 500 },
+  leaderName: 'Scott Turnbull',
+  leaderLinkedIn: 'https://www.linkedin.com/in/scott-turnbull-b2b01b8/',
+  leaderBio:
+    'a veteran tech executive with over 25 years of experience guiding mission-driven organizations — from universities and nonprofits to municipalities and federal agencies like the UN,NSF, NIST, and DoD — through digital transformation, AI strategy, and data modernization.”',
+  connectLabel: 'Connect with Scott:',
+  social: {
+    linkedin: {
+      label: "Scott Turnbull's LinkedIn Profile",
+      url: 'https://www.linkedin.com/in/scott-turnbull-b2b01b8/',
+    },
+  },
+  expertiseHeading: 'Expertise & Leadership',
+  expertise: [
+    'Bold visionary in the Smart City movement.',
+    'IT leader with numerous national infrastructure projects.',
+    'Expert on data and software engineering.',
+    'Frequent speaker on data, privacy, and economic development through technology.',
+    'Start-up mentor.',
+    'Community and business IT planner with proven results.',
+  ],
+};
 
 export default function Profile() {
-  const LinkedInIcon = profile.social.linkedin.icon;
+  const LinkedInIcon = Linkedin;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12">
       {/* Image Column - appears second on mobile, first on desktop */}

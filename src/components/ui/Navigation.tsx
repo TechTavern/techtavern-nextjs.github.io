@@ -4,9 +4,16 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
-import { brand, navigation as navigationItems } from '@/data/site';
+import { siteMeta } from '@/lib/site';
 
 export default function Navigation() {
+  const navigationItems = [
+    { href: '/#', label: 'Home' },
+    { href: '/#Services', label: 'Services' },
+    { href: '/#About', label: 'About' },
+    { href: '/#Contact', label: 'Contact' },
+    { href: '/articles', label: 'Articles' },
+  ];
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,7 +58,7 @@ export default function Navigation() {
                 isScrolled ? 'text-gray-900' : 'text-white'
               }`}
             >
-              {brand.name}
+              {siteMeta.title}
             </Link>
           </div>
 

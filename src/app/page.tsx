@@ -5,7 +5,7 @@ import Services from '@/components/sections/Services';
 import Profile from '@/components/sections/Profile';
 import Contact from '@/components/sections/Contact';
 import SvgDivider from '@/components/ui/SvgDivider';
-import { hero as heroContent } from '@/data/site';
+import { siteMeta } from '@/lib/site';
 
 
 export default function Home() {
@@ -13,8 +13,8 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <Hero 
-        title={heroContent.title}
-        description={heroContent.description}
+        title={siteMeta.title}
+        description={siteMeta.description}
       />
 
       {/* Info Section with Gradient Background */}
