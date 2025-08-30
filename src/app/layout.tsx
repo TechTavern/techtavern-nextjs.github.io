@@ -113,7 +113,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         }} />
         <meta
           httpEquiv="Content-Security-Policy"
-          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; style-src 'self' 'unsafe-inline';`}
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
