@@ -12,7 +12,7 @@ export function getBaseUrl() {
 
 export const siteMeta = {
   title: 'Tech Tavern',
-  description: "Insights and expertise on technology, cybersecurity, and IT solutions from Tech Tavern LLC.",
+  description: "We help you harness AI, data, and cloud to transform your mission into impact—strategically and responsibly.",
 };
 
 // Default featured image to use across the site when none is provided

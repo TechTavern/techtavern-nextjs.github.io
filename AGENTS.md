@@ -4,7 +4,7 @@
 - `src/app/`: App Router pages, layouts, metadata, global CSS.
 - `src/components/`: Reusable UI and section components (PascalCase files).
 - `src/lib/`: Utilities (e.g., `posts.ts`).
-- `src/data/`: Static data sources (e.g., `services.ts`).
+- One-off section/page copy is co-located with components in `src/components/**` or the page file. Keep only truly global config in `src/lib`.
 - `content/articles/`: MDX posts. Filenames `YYYY-MM-DD-slug.mdx` with frontmatter `title`, `date` (yyyy-mm-dd), `slug`.
 - `public/`: Static assets, fonts, and images.
 - `.github/workflows/`: CI for lint/typecheck/build/deploy to GitHub Pages.
@@ -49,5 +49,6 @@ CI builds on pushes/PRs; deployment runs on `main`. For staging vs production, t
 - Validation: `src/lib/env.ts` uses Zod to validate environment variables.
   - `SITE_URL`: optional; must be a valid URL if provided. Used for absolute links in sitemap/RSS and OpenGraph.
   - `NEXT_PUBLIC_BASE_PATH`: optional; defaults to empty. CI sets this for staging vs production.
+  - `NEXT_PUBLIC_GA_ID`: optional; when present, Google Analytics is enabled.
 - Base URL helper: use `getBaseUrl()` from `src/lib/site.ts` to construct absolute URLs safely (trailing slashes normalized).
 - Local setup: create `.env.local` when needed (e.g., `SITE_URL=http://localhost:3000`).

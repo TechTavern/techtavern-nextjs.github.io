@@ -7,7 +7,7 @@ const profile = {
   leaderName: 'Scott Turnbull',
   leaderLinkedIn: 'https://www.linkedin.com/in/scott-turnbull-b2b01b8/',
   leaderBio:
-    'a veteran tech executive with over 25 years of experience guiding mission-driven organizations — from universities and nonprofits to municipalities and federal agencies like the UN,NSF, NIST, and DoD — through digital transformation, AI strategy, and data modernization.”',
+    'a veteran tech executive with over 25 years of experience guiding mission-driven organizations — from universities and nonprofits to municipalities and federal agencies like the UN, NSF, NIST, and DoD — through digital transformation, AI strategy, and data modernization.',
   connectLabel: 'Connect with Scott:',
   social: {
     linkedin: {
@@ -17,13 +17,31 @@ const profile = {
   },
   expertiseHeading: 'Expertise & Leadership',
   expertise: [
-    'Bold visionary in the Smart City movement.',
-    'IT leader with numerous national infrastructure projects.',
-    'Expert on data and software engineering.',
-    'Frequent speaker on data, privacy, and economic development through technology.',
-    'Start-up mentor.',
-    'Community and business IT planner with proven results.',
+    '<strong><u>Visionary</u></strong> leader in the Smart City and civic innovation movement',
+    '<strong><u>Trusted bridge-builder</u></strong>, delivering complex national infrastructure programs',
+    '<strong><u>AI and data modernization expert</u></strong>, blending governance, systems design, and engineering',
+    'Seasoned <strong><u>public speaker</u></strong> on data strategy, privacy, and tech-fueled economic development',
+    '<strong><u>Startup mentor and advisor</u></strong> for early-stage innovation',
+    '<strong><u>Community-focused technologist</u></strong>, bridging business strategy and public impact',
   ],
+  whyWorkHeading: 'Why Work With Scott?',
+  whyWork: [
+    'Strategic execution: Balances visionary thinking with disciplined delivery (PMP-certified)',
+    'Responsible AI champion: Advocates for mission-aligned, responsible and pragmatic innovation (Gen-AI certified)',
+    'Collaborative leadership: Known for aligning stakeholders across sectors and skill levels',
+  ],
+  certifications: {
+    pmp: {
+      altText: 'Project Management Professional (PMP) Badge',
+      url: 'https://www.credly.com/badges/395bccda-4036-4d3e-8b8b-0d356df16d67/public_url',
+      badgeImage: '/images/badges/project-management-professional-pmp.webp',
+    },
+    genAiLeader: {
+      altText: 'Generative AI Leader Certification Badge',
+      url: 'https://www.credly.com/badges/6e2064c6-2270-4a4d-8c2b-0a9a3f02b57f/public_url',
+      badgeImage: '/images/badges/generative-ai-leader-certification.webp',
+    },
+  }
 };
 
 export default function Profile() {
@@ -41,6 +59,45 @@ export default function Profile() {
             className="w-full h-auto rounded-lg shadow-xl object-cover"
             loading="lazy"
           />
+        </div>
+        {/* Certifications badges */}
+        <div className="mt-6 grid grid-cols-2 gap-6 w-4/5 mx-auto">
+          <a
+            href={profile.certifications.pmp.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={profile.certifications.pmp.altText}
+            className="block"
+          >
+            <div className="relative w-full aspect-square">
+              <Image
+                src={profile.certifications.pmp.badgeImage}
+                alt={profile.certifications.pmp.altText}
+                fill
+                sizes="(min-width: 1024px) 300px, (min-width: 768px) 240px, 160px"
+                className="object-contain hover:scale-110 transition-transform duration-200"
+                priority={false}
+              />
+            </div>
+          </a>
+          <a
+            href={profile.certifications.genAiLeader.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={profile.certifications.genAiLeader.altText}
+            className="block"
+          >
+            <div className="relative w-full aspect-square">
+              <Image
+                src={profile.certifications.genAiLeader.badgeImage}
+                alt={profile.certifications.genAiLeader.altText}
+                fill
+                sizes="(min-width: 1024px) 300px, (min-width: 768px) 240px, 160px"
+                className="object-contain hover:scale-110 transition-transform duration-200"
+                priority={false}
+              />
+            </div>
+          </a>
         </div>
       </div>
 
@@ -84,7 +141,18 @@ export default function Profile() {
           </h3>
           <ul className="feature-list space-y-2 text-light">
             {profile.expertise.map((item, i) => (
-              <li key={i}>{item}</li>
+              <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-2xl font-heading font-semibold text-light mb-4">
+            {profile.whyWorkHeading}
+          </h3>
+          <ul className="feature-list space-y-2 text-light">
+            {profile.whyWork.map((item, i) => (
+              <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
             ))}
           </ul>
         </div>
