@@ -158,19 +158,11 @@ jobs:
       - name: Generate URLs for checks
         run: node scripts/ci-urls.js > ci-urls.txt && cat ci-urls.txt
 
-      - name: Run axe-core (WCAG 2.0/2.1 A/AA)
+      - name: Run axe (Puppeteer, WCAG 2.0/2.1 A/AA)
         run: |
-          echo "Running axe on URLs:"
+          echo "Running axe via Puppeteer on URLs:"
           cat ci-urls.txt
-          while IFS= read -r url; do
-            echo "\n[axe] Testing $url"
-            npx @axe-core/cli \
-              -q \
-              --exit 1 \
-              --tags wcag2a,wcag2aa \
-              --chrome-options="--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage" \
-              "$url"
-          done < ci-urls.txt
+          node scripts/axe-ci.js ci-urls.txt
 
       - name: Run Lighthouse CI (collect + assert)
         run: |
