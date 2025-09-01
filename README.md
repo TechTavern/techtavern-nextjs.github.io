@@ -208,11 +208,13 @@ CI enforces accessibility and quality on every PR and on `main` before deploy:
 
 ### Run the same checks locally
 
-1) Install deps and build a static export (disable basePath for local):
+No special env vars are required for local runs.
+
+1) Install and build a static export:
 
 ```bash
 npm ci
-NEXT_PUBLIC_BASE_PATH="" SITE_URL="http://localhost:4173" npm run build
+npm run build
 ```
 
 2) Serve the `out/` directory locally:
@@ -227,13 +229,13 @@ python3 -m http.server 4173 --directory out
 node scripts/ci-urls.js > ci-urls.txt && cat ci-urls.txt
 ```
 
-4) Run axe-core (fails on WCAG A/AA violations):
+4) Run accessibility checks (fails on WCAG A/AA violations):
 
 ```bash
-npx @axe-core/cli -q --exit 1 --tags wcag2a,wcag2aa $(paste -sd' ' ci-urls.txt)
+node scripts/axe-ci.js ci-urls.txt
 ```
 
-5) Run Lighthouse CI (collect, assert ≥ 0.95, then save reports to `./lhci-report`):
+5) Run Lighthouse CI (assert ≥ 0.95; save reports to `./lhci-report`):
 
 ```bash
 LH_ARGS=$(awk '{print "--url=" $0}' ci-urls.txt | xargs)

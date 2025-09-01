@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const { injectAxe, getViolations } = require('@axe-core/puppeteer');
+const { AxePuppeteer } = require('@axe-core/puppeteer');
 
 const urlsFile = process.argv[2] || 'ci-urls.txt';
 
@@ -69,11 +69,10 @@ async function run() {
       await page.goto(url, { waitUntil: ['domcontentloaded', 'networkidle2'] });
       // Small extra delay to settle just in case (Puppeteer v23: no page.waitForTimeout)
       await page.evaluate(() => new Promise((r) => setTimeout(r, 300)));
-      await injectAxe(page);
-      const violations = await getViolations(page, null, {
-        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
-        resultTypes: ['violations'],
-      });
+      const results = await new AxePuppeteer(page)
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      const violations = results.violations || [];
       if (violations.length) {
         console.log(`[axe] ${url} — ${violations.length} violations`);
         violations.forEach(logViolation);
