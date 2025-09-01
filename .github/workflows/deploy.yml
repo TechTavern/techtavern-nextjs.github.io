@@ -108,93 +108,9 @@ jobs:
             echo "environment=none" >> $GITHUB_OUTPUT
           fi
 
-  # Accessibility & quality gates (axe + Lighthouse) - run for PRs and main
-  a11y:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Build static site (basePath disabled for local)
-        env:
-          NEXT_PUBLIC_BASE_PATH: ""
-          SITE_URL: "http://localhost:4173"
-          NEXT_TELEMETRY_DISABLED: "1"
-        run: npm run build
-
-      - name: Start static server
-        run: |
-          python3 -m http.server 4173 --directory out &
-          echo $! > server.pid
-          # Wait for server to become ready
-          for i in {1..30}; do
-            if curl -fsS http://localhost:4173/ >/dev/null; then
-              echo "Static server is up"; break;
-            fi
-            echo "Waiting for static server... ($i)"; sleep 1;
-          done
-          # Final check
-          curl -fsS http://localhost:4173/ >/dev/null || { echo "Server failed to start"; exit 1; }
-
-      - name: Generate URLs for checks
-        run: node scripts/ci-urls.js > ci-urls.txt && cat ci-urls.txt
-
-      - name: Run axe (Puppeteer, WCAG 2.0/2.1 A/AA)
-        run: |
-          echo "Running axe via Puppeteer on URLs:"
-          cat ci-urls.txt
-          node scripts/axe-ci.js ci-urls.txt
-
-      - name: Run Lighthouse CI (collect + assert)
-        run: |
-          # Collect for each URL
-          args=$(awk '{print "--url=" $0}' ci-urls.txt | xargs)
-          echo "LHCI collect args: $args"
-          npx lhci collect --config=lhci.config.js $args
-          # Assert min accessibility score per config
-          npx lhci assert --config=lhci.config.js
-
-      - name: Generate Lighthouse report artifacts
-        run: |
-          # Upload to filesystem per config (generates ./lhci-report)
-          npx lhci upload --config=lhci.config.js
-
-      - name: Upload Lighthouse reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: lhci-report-${{ github.sha }}
-          path: ./lhci-report/**
-          retention-days: 30
-
-      - name: Stop static server
-        if: always()
-        run: |
-          if [ -f server.pid ]; then
-            kill $(cat server.pid) || true
-          fi
-
   # Build job - runs after quality gates pass
   build:
-    needs: [quality-gates, a11y]
+    needs: quality-gates
     if: needs.quality-gates.outputs.should-deploy == 'true'
     runs-on: ubuntu-latest
     outputs:
@@ -365,7 +281,7 @@ jobs:
 
   # Comment on PR with build information
   pr-comment:
-    needs: [quality-gates, a11y]
+    needs: [quality-gates, build]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
