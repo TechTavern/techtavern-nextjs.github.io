@@ -315,13 +315,46 @@
   - Prevents accidental regressions in accessibility as content or templates evolve.  
   - Maintains lightweight, zero-cost CI checks appropriate for a static GitHub Pages deployment.  
 
-## 19. Open Questions
+## 19. Structured Data & Enhanced Open Graph Tags
+
+- **Purpose:** Improve discoverability, indexing accuracy, and content sharing of Tech Tavern articles and pages by embedding structured data (JSON-LD) and enhanced Open Graph (OG) metadata. This ensures articles appear correctly in search results, are eligible for rich snippets, and are more effectively harvested by AI-driven engines and aggregators.
+
+- **Tools & Standards:**  
+  - **JSON-LD (Schema.org vocabulary):**  
+    - `Organization` schema for Tech Tavern, LLC (name, logo, URL, contact).  
+    - `Article` schema for individual posts (headline, datePublished, author, publisher, description, image, canonical URL).  
+  - **Open Graph (OG) Tags:**  
+    - Extended metadata for article type pages (`og:type=article`, `og:title`, `og:description`, `og:image`, `og:url`).  
+    - Twitter Card tags for large image previews.  
+
+- **Implementation:**  
+  - Each article page automatically generates an `Article` JSON-LD block from MDX frontmatter.  
+  - The site layout injects `Organization` JSON-LD on global pages (Home, About, Articles index).  
+  - Frontmatter fields (`ogTitle`, `ogDescription`, `ogImage`, `canonicalUrl`) override defaults when provided.  
+  - OG/Twitter tags generated dynamically at build from validated frontmatter + defaults.  
+  - Ensure canonical URLs are always absolute and correct for each page.  
+
+- **Acceptance Criteria:**  
+  - Every published article includes valid JSON-LD `Article` markup.  
+  - Site includes global JSON-LD `Organization` markup with correct logo, name, and homepage URL.  
+  - OG/Twitter tags render correctly when shared to LinkedIn, Twitter/X, and Facebook.  
+  - JSON-LD validates with [Google Rich Results Test](https://search.google.com/test/rich-results).  
+  - OG/Twitter tags verified via platform card validators.  
+
+- **Non-Goals:**  
+  - No dynamic SEO plugin or CMS integration.  
+  - No custom JSON-LD beyond `Article` and `Organization` schemas for v1.  
+
+- **Rationale:**  
+  - Enhances search engine visibility, enabling eligibility for Google rich results and improved rankings.  
+  - Increases likelihood of article harvesting and citation by AI-driven search/answer engines.  
+  - Ensures consistent, attractive previews when articles are shared on social networks.  
+
+## 20. Open Questions
 
 - Do we need tag archive pages and pagination on `/articles/` for improved discovery?
-- Should we add structured data (JSON-LD) and enhanced OG tags per article type?
-- Are contact form and CRM integration desired in a future iteration (privacy/compliance)?
 
-## 20. Appendix — Key Technical References
+## 21. Appendix — Key Technical References
 
 - Architecture:
   - Next.js App Router with static export; routes under `src/app/`.
