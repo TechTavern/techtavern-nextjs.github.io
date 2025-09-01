@@ -2,8 +2,9 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
-import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, siteOrg, withBasePath } from "@/lib/site";
 import { env } from "@/lib/env";
+import { buildOrganizationJsonLd } from "@/lib/seo";
 
 export const metadata = {
   title: siteMeta.title,
@@ -32,6 +33,13 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const baseUrl = getBaseUrl();
+  const orgJsonLd = buildOrganizationJsonLd({
+    name: siteOrg.name,
+    baseUrl,
+    logoPath: siteOrg.logoPath,
+    email: siteOrg.email,
+  });
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -114,6 +122,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta
           httpEquiv="Content-Security-Policy"
           content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+        />
+        <script
+          type="application/ld+json"
+          // JSON-LD for Organization (site-wide)
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
       </head>
       <body className="min-h-screen font-sans antialiased">

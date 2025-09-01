@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAllPosts, getPostByParams } from "@/lib/posts";
 import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
-import { getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
+import { getBaseUrl, siteMeta, siteOrg, withBasePath } from "@/lib/site";
 import type { Metadata } from "next";
 
 // Build all routes at export time
@@ -44,6 +44,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       siteName: siteMeta.title,
       publishedTime: post.date,
+      ...(post.tags && post.tags.length ? { tags: post.tags } : {}),
+      authors: [siteOrg.name],
       images,
       url: absoluteUrl,
     },

@@ -18,6 +18,14 @@ export const siteMeta = {
 // Default featured image to use across the site when none is provided
 export const DEFAULT_FEATURED_IMAGE = '/images/tech-tavern-default-featured.webp';
 
+// Organization metadata for JSON-LD and OG
+export const siteOrg = {
+  name: 'Tech Tavern, LLC',
+  email: 'info@tech-tavern.com',
+  // Use a square logo for previews and JSON-LD
+  logoPath: '/android-chrome-512x512.png',
+};
+
 // Prefix a root-relative path with the configured basePath (for subdirectory hosting)
 export function withBasePath(pathname: string | undefined | null): string | undefined {
   if (!pathname) return undefined;
