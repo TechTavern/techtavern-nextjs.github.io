@@ -145,17 +145,32 @@ jobs:
         run: |
           python3 -m http.server 4173 --directory out &
           echo $! > server.pid
-          # Give server a moment to start
-          sleep 2
+          # Wait for server to become ready
+          for i in {1..30}; do
+            if curl -fsS http://localhost:4173/ >/dev/null; then
+              echo "Static server is up"; break;
+            fi
+            echo "Waiting for static server... ($i)"; sleep 1;
+          done
+          # Final check
+          curl -fsS http://localhost:4173/ >/dev/null || { echo "Server failed to start"; exit 1; }
 
       - name: Generate URLs for checks
         run: node scripts/ci-urls.js > ci-urls.txt && cat ci-urls.txt
 
       - name: Run axe-core (WCAG 2.0/2.1 A/AA)
         run: |
-          urls=$(paste -sd' ' ci-urls.txt)
-          echo "Running axe on: $urls"
-          npx @axe-core/cli -q --exit 1 --tags wcag2a,wcag2aa $urls
+          echo "Running axe on URLs:"
+          cat ci-urls.txt
+          while IFS= read -r url; do
+            echo "\n[axe] Testing $url"
+            npx @axe-core/cli \
+              -q \
+              --exit 1 \
+              --tags wcag2a,wcag2aa \
+              --chrome-options="--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage" \
+              "$url"
+          done < ci-urls.txt
 
       - name: Run Lighthouse CI (collect + assert)
         run: |
