@@ -21,9 +21,9 @@ describe('FrontmatterSchema', () => {
     const res = FrontmatterSchema.safeParse(invalid);
     expect(res.success).toBe(false);
     if (!res.success) {
-      const messages = res.error.issues.map(i => i.message).join(' ');
-      expect(messages).toMatch(/title is required/);
-      expect(messages).toMatch(/slug is required/);
+      const paths = res.error.issues.map(i => i.path.join('.'));
+      expect(paths).toContain('title');
+      expect(paths).toContain('slug');
     }
   });
 

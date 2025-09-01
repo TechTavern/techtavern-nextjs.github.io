@@ -8,7 +8,8 @@ const createJestConfig = nextJest({
 /** @type {import('jest').Config} */
 const customJestConfig = {
   testEnvironment: 'jsdom',
-  testMatch: ['**/*.test.(ts|tsx)'],
+  // Use explicit patterns compatible with Jest 30
+  testMatch: ['**/*.test.ts', '**/*.test.tsx'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -22,4 +23,3 @@ const customJestConfig = {
 };
 
 module.exports = createJestConfig(customJestConfig);
-

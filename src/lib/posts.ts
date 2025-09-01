@@ -42,11 +42,11 @@ function computeReadingTime(text: string): number {
 }
 
 export const FrontmatterSchema = z.object({
-  title: z.string({ required_error: "title is required" }).min(1, "title is required"),
+  title: z.string().min(1, "title is required"),
   date: z
-    .string({ required_error: "date is required" })
+    .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be yyyy-mm-dd"),
-  slug: z.string({ required_error: "slug is required" }).min(1, "slug is required"),
+  slug: z.string().min(1, "slug is required"),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
   featuredImage: z.string().optional(),

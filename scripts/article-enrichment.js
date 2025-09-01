@@ -8,7 +8,6 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const matter = require('gray-matter');
-const { OpenAI } = require('openai');
 
 const rootDir = path.resolve(__dirname, '..');
 const articlesDir = path.join(rootDir, 'content', 'articles');
@@ -37,16 +36,14 @@ async function loadEnvLocal() {
   }
 }
 
-// Initialize OpenAI client
-async function createOpenAIClient() {
+// Resolve OpenAI API key
+async function resolveOpenAIKey() {
   const env = await loadEnvLocal();
   const apiKey = process.env.OPENAI_API_KEY || env.OPENAI_API_KEY;
-  
   if (!apiKey) {
     throw new Error('OpenAI API key not found. Please add OPENAI_API_KEY to your .env.local file or environment variables.');
   }
-  
-  return new OpenAI({ apiKey });
+  return apiKey;
 }
 
 // System prompt for OpenAI
@@ -98,7 +95,7 @@ Return a JSON object with exactly this structure:
 Remember: The goal is to help technology professionals quickly understand the article's value and find relevant content through effective categorization.`;
 
 // Analyze article with OpenAI
-async function analyzeArticle(openai, title, content) {
+async function analyzeArticle(apiKey, title, content) {
   try {
     const userPrompt = `Please analyze this technology article and provide an excerpt and tags.
 
@@ -109,17 +106,30 @@ ${content}
 
 Return your analysis as a JSON object with "excerpt" and "tags" fields.`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.3,
-      max_tokens: 500,
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.3,
+        max_tokens: 500,
+      }),
     });
 
-    const result = response.choices[0].message.content.trim();
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`OpenAI API error: ${res.status} ${res.statusText} - ${text}`);
+    }
+
+    const data = await res.json();
+    const result = (data.choices?.[0]?.message?.content || '').trim();
     
     // Try to parse JSON response
     let analysis;
@@ -151,7 +161,7 @@ Return your analysis as a JSON object with "excerpt" and "tags" fields.`;
 }
 
 // Process a single article file
-async function processArticle(openai, filePath) {
+async function processArticle(apiKey, filePath) {
   try {
     const fileContent = await fs.readFile(filePath, 'utf8');
     const parsed = matter(fileContent);
@@ -172,7 +182,7 @@ async function processArticle(openai, filePath) {
     const title = frontmatter.title || path.basename(filePath, '.mdx');
     
     // Analyze with OpenAI
-    const analysis = await analyzeArticle(openai, title, content);
+    const analysis = await analyzeArticle(apiKey, title, content);
 
     // Update frontmatter
     let updated = false;
@@ -217,9 +227,9 @@ async function main() {
   try {
     console.log('🚀 Starting article enrichment process...\n');
 
-    // Initialize OpenAI client
-    const openai = await createOpenAIClient();
-    console.log('✅ OpenAI client initialized\n');
+    // Resolve OpenAI credentials
+    const apiKey = await resolveOpenAIKey();
+    console.log('✅ OpenAI API configured\n');
 
     // Get all article files
     const articleFiles = await getArticleFiles();
@@ -238,7 +248,7 @@ async function main() {
     for (const filePath of articleFiles) {
       try {
         const initialContent = await fs.readFile(filePath, 'utf8');
-        await processArticle(openai, filePath);
+        await processArticle(apiKey, filePath);
         
         // Check if file was actually modified
         const finalContent = await fs.readFile(filePath, 'utf8');
