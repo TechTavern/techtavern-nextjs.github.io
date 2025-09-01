@@ -198,6 +198,52 @@ Lastly, I add permissions explicitly to the claude local settings.
 - The workflow sets `NEXT_PUBLIC_BASE_PATH` for staging (subdirectory) vs production (root) and derives `SITE_URL` automatically. You can override `SITE_URL` via an Actions Variable/Secret.
 - Static export artifacts are in `out/` and are uploaded to GitHub Pages by the workflow.
 
+## Accessibility & CI Quality Gates
+
+CI enforces accessibility and quality on every PR and on `main` before deploy:
+
+- axe-core: Runs WCAG 2.0/2.1 A/AA checks against representative pages.
+- Lighthouse CI: Asserts minimum accessibility score ≥ 0.95 and uploads reports as artifacts.
+- Type safety & linting: `npm run typecheck` and `npm run lint` gate builds.
+
+### Run the same checks locally
+
+1) Install deps and build a static export (disable basePath for local):
+
+```bash
+npm ci
+NEXT_PUBLIC_BASE_PATH="" SITE_URL="http://localhost:4173" npm run build
+```
+
+2) Serve the `out/` directory locally:
+
+```bash
+python3 -m http.server 4173 --directory out
+```
+
+3) In a separate shell, generate target URLs (Home, Articles, latest Article):
+
+```bash
+node scripts/ci-urls.js > ci-urls.txt && cat ci-urls.txt
+```
+
+4) Run axe-core (fails on WCAG A/AA violations):
+
+```bash
+npx @axe-core/cli -q --exit 1 --tags wcag2a,wcag2aa $(paste -sd' ' ci-urls.txt)
+```
+
+5) Run Lighthouse CI (collect, assert ≥ 0.95, then save reports to `./lhci-report`):
+
+```bash
+LH_ARGS=$(awk '{print "--url=" $0}' ci-urls.txt | xargs)
+npx lhci collect --config=lhci.config.js $LH_ARGS
+npx lhci assert --config=lhci.config.js
+npx lhci upload --config=lhci.config.js
+```
+
+Reports are written to `./lhci-report`. In CI, they are attached to the workflow as artifacts for inspection.
+
 ## Security & CSP
 
 - A CSP meta tag is enabled in `src/app/layout.tsx`.
