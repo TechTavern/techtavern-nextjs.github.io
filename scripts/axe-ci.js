@@ -67,8 +67,8 @@ async function run() {
       page.setDefaultTimeout(60000);
       console.log(`\n[axe] Navigating to ${url}`);
       await page.goto(url, { waitUntil: ['domcontentloaded', 'networkidle2'] });
-      // Small extra delay to settle just in case
-      await page.waitForTimeout(300);
+      // Small extra delay to settle just in case (Puppeteer v23: no page.waitForTimeout)
+      await page.evaluate(() => new Promise((r) => setTimeout(r, 300)));
       await injectAxe(page);
       const violations = await getViolations(page, null, {
         runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
@@ -100,4 +100,3 @@ run().catch((err) => {
   console.error(err && err.stack ? err.stack : err);
   process.exit(1);
 });
-
