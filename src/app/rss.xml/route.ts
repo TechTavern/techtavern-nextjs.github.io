@@ -1,5 +1,6 @@
 import { getAllPosts } from '@/lib/posts'
-import { getBaseUrl, siteMeta } from '@/lib/site'
+import { siteMeta } from '@/lib/site'
+import { getBaseUrl } from '@/lib/site.server'
 
 // Ensure static generation for static export
 export const dynamic = 'force-static';

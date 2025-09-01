@@ -2,7 +2,8 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import Navigation from "@/components/ui/Navigation";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
-import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, siteOrg, withBasePath } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
+import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import { env } from "@/lib/env";
 import { buildOrganizationJsonLd } from "@/lib/seo";
 

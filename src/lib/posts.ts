@@ -3,7 +3,8 @@ import path from "node:path";
 import matter from "gray-matter";
 import fg from "fast-glob";
 import { z } from "zod";
-import { DEFAULT_FEATURED_IMAGE, withBasePath } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE } from "@/lib/site";
+import { withBasePath } from "@/lib/site.server";
 
 export type PostMeta = {
   title: string;

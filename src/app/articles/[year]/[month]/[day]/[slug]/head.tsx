@@ -1,5 +1,6 @@
 import { getPostByParams } from '@/lib/posts';
-import { getBaseUrl, siteOrg } from '@/lib/site';
+import { siteOrg } from '@/lib/site';
+import { getBaseUrl } from '@/lib/site.server';
 import { buildArticleJsonLd } from '@/lib/seo';
 
 type HeadProps = { params: Promise<{ year: string; month: string; day: string; slug: string }> };
@@ -26,4 +27,3 @@ export default async function Head({ params }: HeadProps) {
     </>
   );
 }
-

@@ -234,6 +234,7 @@
 - `next/image` optimization is disabled (`unoptimized: true`) for static export compatibility.
 - All content is authored as MDX with validated frontmatter; invalid content fails the build.
 - CSP set via meta tag; inline styles are permitted; script policy allows GA domain.
+ - CSP safeguard: client bundles must not require `unsafe-eval`. Zod and env-based helpers are server-only; a webpack alias (`zod: false`) blocks accidental client imports. New client dependencies should not rely on `eval`/`new Function`.
 - No backend or server APIs; any future dynamic features require alternative hosting.
 
 ## 13. Risks and Mitigations

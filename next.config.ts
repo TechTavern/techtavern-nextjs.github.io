@@ -38,6 +38,18 @@ const nextConfig: NextConfig = {
   },
   
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+
+  // Hard-block zod from client bundles to enforce CSP
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        zod: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default withMDX(nextConfig);

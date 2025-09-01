@@ -202,4 +202,12 @@ Lastly, I add permissions explicitly to the claude local settings.
 
 - A CSP meta tag is enabled in `src/app/layout.tsx`.
 - If you embed remote images in MDX or use remote OG images, update the policy to include `img-src 'self' data: https:` or specify an allowlist of domains.
+
+### CSP Safeguard (no `unsafe-eval` on client)
+
+- The app avoids `unsafe-eval` by ensuring validation libraries like Zod are server‑only.
+- A webpack client alias hard‑blocks `zod` in browser bundles: see `next.config.ts` (`resolve.alias.zod = false`).
+- Server‑only helpers that read validated env live in `src/lib/site.server.ts` and must be imported from there in server components/routes.
+- When adding new client‑side dependencies, avoid libraries that rely on `eval`, `new Function`, or string‑based `setTimeout`/`setInterval`.
+- If you absolutely must enable string evaluation, you would add `unsafe-eval` to the CSP `script-src`, but this is strongly discouraged.
 ```

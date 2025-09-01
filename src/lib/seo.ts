@@ -1,4 +1,4 @@
-import { withBasePath } from '@/lib/site';
+import { withBasePath } from '@/lib/site.server';
 import type { PostMeta } from '@/lib/posts';
 
 export type OrganizationJsonLd = {

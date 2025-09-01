@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 // Ensure static generation for static export
 export const dynamic = 'force-static';
 import { getAllPosts } from '@/lib/posts'
-import { getBaseUrl } from '@/lib/site'
+import { getBaseUrl } from '@/lib/site.server'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getBaseUrl()

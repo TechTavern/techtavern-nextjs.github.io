@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
-import { DEFAULT_FEATURED_IMAGE, getBaseUrl, siteMeta, withBasePath } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE, siteMeta } from "@/lib/site";
+import { getBaseUrl, withBasePath } from "@/lib/site.server";
 
 const ARTICLES_PAGE = {
   title: 'Articles',

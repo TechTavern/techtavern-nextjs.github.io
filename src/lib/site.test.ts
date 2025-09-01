@@ -1,4 +1,4 @@
-import { getBaseUrlWith } from './site';
+import { getBaseUrlWith } from './site.server';
 
 describe('getBaseUrl', () => {
   it('combines SITE_URL and NEXT_PUBLIC_BASE_PATH', () => {
