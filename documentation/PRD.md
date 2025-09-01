@@ -283,16 +283,45 @@
   - Enrich articles: `npm run article-enrichment` (requires `OPENAI_API_KEY`).
 - Deployment
   - Merge to `main` triggers build + staging deploy to repo subdirectory.
-  - Manual `workflow_dispatch` can deploy to production; custom domain supported via Actions Var/Secret `SITE_URL`.
+  - Manual `workflow_dispatch` can deploy to production; custom domain supported via Actions Var/Secret `SITE_URL
 
-## 18. Open Questions
+## 18. Accessibility & Quality Gates in CI
+
+- **Purpose:** Ensure that Tech Tavern’s static site maintains a high standard of accessibility and does not regress over time. Automated accessibility and performance checks are added to the CI/CD pipeline using free, open-source tools.  
+
+- **Tools:**  
+  - **axe-core CLI** (open-source): runs WCAG 2.0/2.1 A/AA checks on representative URLs (Home, Articles index, one Article).  
+  - **Lighthouse CI** (open-source): validates Lighthouse accessibility score and provides audit reports as build artifacts.  
+
+- **Implementation:**  
+  - In GitHub Actions workflow, after the static site build:  
+    - Serve the `out/` directory locally.  
+    - Run axe CLI against a defined set of URLs; build fails on WCAG violations.  
+    - Run Lighthouse CI with configuration in `lhci.config.js`; assert minimum accessibility score ≥ 0.95.  
+  - Upload Lighthouse CI reports to temporary public storage (or GitHub Actions artifacts).  
+
+- **Acceptance Criteria:**  
+  - Every PR and `main` branch build runs axe + Lighthouse checks.  
+  - Build fails if axe detects WCAG 2.0/2.1 A/AA violations on target pages.  
+  - Build fails if Lighthouse accessibility score < 0.95.  
+  - Successful builds attach Lighthouse reports to CI artifacts for inspection.  
+
+- **Non-Goals:**  
+  - Paid versions of Axe or Lighthouse; dashboard/enterprise integrations.  
+  - Full crawl of all articles (sampled subset only).  
+
+- **Rationale:**  
+  - Keeps site aligned with WCAG standards.  
+  - Prevents accidental regressions in accessibility as content or templates evolve.  
+  - Maintains lightweight, zero-cost CI checks appropriate for a static GitHub Pages deployment.  
+
+## 19. Open Questions
 
 - Do we need tag archive pages and pagination on `/articles/` for improved discovery?
 - Should we add structured data (JSON-LD) and enhanced OG tags per article type?
 - Are contact form and CRM integration desired in a future iteration (privacy/compliance)?
-- Should we introduce an accessibility audit gate (axe/lighthouse) in CI?
 
-## 19. Appendix — Key Technical References
+## 20. Appendix — Key Technical References
 
 - Architecture:
   - Next.js App Router with static export; routes under `src/app/`.
