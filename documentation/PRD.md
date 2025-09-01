@@ -350,9 +350,45 @@
   - Increases likelihood of article harvesting and citation by AI-driven search/answer engines.  
   - Ensures consistent, attractive previews when articles are shared on social networks.  
 
-## 20. Open Questions
+## 20. Articles Pagination
 
-- Do we need tag archive pages and pagination on `/articles/` for improved discovery?
+- **Purpose:** Improve usability and content discovery on the `/articles/` index page by adding pagination. This prevents overly long scrolling, provides a clearer sense of site depth, and supports efficient navigation on both desktop and mobile.
+
+- **Scope:**  
+  - **Pagination Only:** Tag archive pages are not required; tags remain purely metadata for signaling article topics.  
+  - **Configurable Page Size:** Number of articles per page is centrally defined in the site config file.  
+
+- **Implementation:**  
+  - Add server-side static pagination to `/articles/`, generating pages such as:  
+    - `/articles/` → page 1  
+    - `/articles/page/2/`, `/articles/page/3/`, etc.  
+  - Pagination controls displayed at bottom of the articles index:  
+    - "Previous" and "Next" buttons.  
+    - Page number links (e.g., 1, 2, 3 … n).  
+    - Accessible labels for screen readers (`aria-label` attributes).  
+  - Ensure responsive design: pagination controls adapt to small screens (mobile-friendly spacing, tap targets ≥44px).  
+  - Central configuration:  
+    - Add `ARTICLES_PER_PAGE` constant in site config file.  
+    - Changing this value regenerates pagination automatically at build.  
+
+- **Acceptance Criteria:**  
+  - `/articles/` displays the most recent N articles as configured.  
+  - Additional pages are generated statically with proper routing.  
+  - Pagination UI is fully accessible and keyboard-navigable.  
+  - Mobile view renders pagination buttons/links with adequate touch target size.  
+  - SEO best practices:  
+    - Canonical URLs set for each page.  
+    - `rel="prev"` and `rel="next"` attributes included in `<head>` where applicable.  
+    - Sitemap includes all paginated pages.  
+
+- **Non-Goals:**  
+  - No tag archive pages or category landing pages in this iteration.  
+  - No infinite scroll; traditional pagination only.  
+
+- **Rationale:**  
+  - Improves content navigation without requiring tag-based browsing.  
+  - Supports long-term scalability as the number of published articles grows.  
+  - Maintains strong SEO and accessibility practices for static site architecture.  
 
 ## 21. Appendix — Key Technical References
 
@@ -368,4 +404,3 @@
   - Sections: `src/components/sections/*`, UI: `src/components/ui/*`.
 - CI/CD:
   - `.github/workflows/deploy.yml` (quality gates, build, deploy to Pages).
-
