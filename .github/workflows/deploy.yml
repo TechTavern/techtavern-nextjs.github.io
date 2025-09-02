@@ -178,6 +178,21 @@ jobs:
           echo "SITE_URL=$SITE_URL" >> $GITHUB_ENV
           echo "Final configuration: SITE_URL=$SITE_URL, BASE_PATH=$NEXT_PUBLIC_BASE_PATH"
 
+          # Configure Google Analytics (optional)
+          GA_ID=""
+          if [ -n '${{ vars.NEXT_PUBLIC_GA_ID }}' ]; then
+            GA_ID='${{ vars.NEXT_PUBLIC_GA_ID }}'
+          elif [ -n '${{ secrets.NEXT_PUBLIC_GA_ID }}' ]; then
+            GA_ID='${{ secrets.NEXT_PUBLIC_GA_ID }}'
+          fi
+          export NEXT_PUBLIC_GA_ID="$GA_ID"
+          echo "NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID" >> $GITHUB_ENV
+          if [ -n "$NEXT_PUBLIC_GA_ID" ]; then
+            echo "Google Analytics enabled (NEXT_PUBLIC_GA_ID set)"
+          else
+            echo "Google Analytics not configured; proceeding without GA"
+          fi
+
       - name: Build static site
         run: npm run build
 
