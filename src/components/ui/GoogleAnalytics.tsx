@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
+type Gtag = (...args: unknown[]) => void;
+
 interface GoogleAnalyticsProps {
   measurementId: string;
 }
@@ -18,7 +20,7 @@ export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps)
     const page_path = `${pathname}${search ? `?${search}` : ""}`;
 
     const send = () => {
-      const gtag = (window as any).gtag as ((...args: any[]) => void) | undefined;
+      const gtag = (window as Window & { gtag?: Gtag }).gtag;
       if (!gtag) return false;
       gtag("config", measurementId, {
         page_path,
