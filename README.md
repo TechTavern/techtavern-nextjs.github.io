@@ -1,67 +1,41 @@
 # Tech Tavern
 
-This is a project for website of Tech Tavern, LLC.
+Static site for Tech Tavern, LLC built with Next.js (App Router) and MDX, deployed to GitHub Pages as a static export.
 
 ## Prerequisites
 
 - Node.js 20.x (recommended) or >= 18.17
 - npm 9+
 
-## Install & Run
+## Quick Start
 
-Install dependencies and start the dev server:
+Choose the command set that matches your environment.
 
-```bash
-npm install
-npm run dev
-```
+- macOS/Linux/Windows:
+  ```bash
+  npm install
+  npm run dev
+  ```
+- Windows with WSL: use the `win-npm` wrapper so the dev server runs on the Windows host for reliable file watching. See Windows + WSL section below, then:
+  ```bash
+  win-npm install
+  win-npm run dev
+  ```
 
 Build a static export (outputs to `out/`):
 
 ```bash
-npm run build
+npm run build   # or: win-npm run build (WSL)
 ```
 
-## Environment Configuration
+## Project Structure
 
-The site generates absolute links in the sitemap and RSS using `SITE_URL`.
-
-- SITE_URL: The public origin of the site (no trailing slash). Examples:
-  - GitHub Pages user/org domain: `https://techtavern-nextjs.github.io`
-  - Custom domain: `https://example.com`
-- NEXT_PUBLIC_BASE_PATH: Already handled by CI for staging vs production; you usually don’t set this locally.
-
-### Env Validation (Zod)
-
-Environment variables are validated at runtime using Zod (see `src/lib/env.ts`).
-
-- Validation: `SITE_URL` must be a valid URL if provided; `NEXT_PUBLIC_BASE_PATH` defaults to an empty string.
-- Normalization: trailing slashes are removed when computing the base URL.
-- Failure mode: an invalid `SITE_URL` value (e.g., `not-a-url`) will throw an error early during startup/build.
-- Defaults: if `SITE_URL` is unset in local dev, the app falls back to `http://localhost:3000` for sitemap/RSS previews only.
-
-Quick example: computing absolute URLs
-
-```ts
-// src/anywhere.ts
-import { getBaseUrl } from '@/lib/site';
-
-// Preferred: let URL handle slashes
-const absolute = new URL('/articles/2025/08/24/hello-world/', getBaseUrl()).toString();
-
-// Or simple string concat (getBaseUrl() has no trailing slash)
-const absolute2 = `${getBaseUrl()}/articles/2025/08/24/hello-world/`;
-```
-
-Where to set `SITE_URL`:
-- Local development: create `.env.local` at the repository root
-  - Example: `SITE_URL=http://localhost:3000`
-  - Optional; if unset, it defaults to `http://localhost:3000` for local-only sitemap/RSS preview.
-- GitHub Actions (production/staging builds): now set automatically.
-  - The workflow derives `SITE_URL` from your repository owner (defaults to `https://<owner>.github.io`).
-  - You can override this by defining an Actions Variable or Secret named `SITE_URL` in your repo or org settings.
-
-Sitemap is available at `/sitemap.xml` and RSS at `/rss.xml`.
+- `src/app/`: App Router pages, layouts, metadata, global CSS
+- `src/components/`: Reusable UI and section components
+- `src/lib/`: Utilities (e.g., `env.ts`, `posts.ts`, `site(.server).ts`)
+- `content/articles/`: MDX posts (`YYYY-MM-DD-slug.mdx`)
+- `public/`: Static assets, fonts, images
+- `.github/workflows/`: CI for lint/typecheck/build/deploy
 
 ## Project Scripts
 
@@ -70,72 +44,57 @@ Sitemap is available at `/sitemap.xml` and RSS at `/rss.xml`.
 - `start`: Next.js start (rarely needed; static export is default)
 - `lint`: ESLint (Next + TS rules)
 - `typecheck`: TypeScript `--noEmit`
-- `new-article`: Interactive script to scaffold a new MDX article
-- `article-enrichment`: AI-powered script to generate excerpts and tags for articles
-- `dev:watch`: Run dev and print MDX file change notifications (optional)
+- `new-article`: Scaffold a new MDX article
+- `article-enrichment`: Generate excerpts and tags for MDX files
+- `dev:watch`: Dev server + MDX change notifications (optional)
 
 ## Dev & Build
 
-- Dev: `npm run dev` (Next.js dev with MDX)
-- Build: `npm run build` (Next.js static export build)
+- Dev: `npm run dev` (or `win-npm run dev` on WSL)
+- Build: `npm run build` (or `win-npm run build` on WSL)
 
 ## Content & Authoring
 
 - Articles live in `content/articles/` as MDX. Filenames: `YYYY-MM-DD-slug.mdx` with frontmatter.
 - Frontmatter (required): `title`, `date` (yyyy-mm-dd), `slug`
 - Frontmatter (optional): `excerpt`, `tags`, `featuredImage`, `ogTitle`, `ogDescription`, `ogImage`, `canonicalUrl`, `draft`
-- Add a new post with: `npm run new-article` (prompts for title, date, and optional excerpt/tags/featuredImage)
-- MDX content is compiled during dev/build automatically; no manual import map needed.
+- Add a new post: `npm run new-article` (or `win-npm run new-article` on WSL)
+- MDX is compiled during dev/build automatically; no import map to maintain.
 
-Reading time is computed automatically (~200 wpm) and displayed on the index and article pages.
+Reading time is computed automatically (~200 wpm) and shown on index and article pages.
 
-### Article Enrichment (AI-Powered)
+### Article Enrichment (optional)
 
-The project includes an automated article enrichment system that uses OpenAI's API to generate excerpts and tags for articles:
+Generate excerpts and tags for existing articles using OpenAI:
 
 ```bash
 npm run article-enrichment
 ```
 
-**Requirements:**
-- OpenAI API key in `.env.local`: `OPENAI_API_KEY=your_key_here`
-- Articles in `content/articles/` directory with `.mdx` extension
+Requirements:
+- `OPENAI_API_KEY` in `.env.local`
+- `.mdx` files in `content/articles/`
 
-**What it does:**
-- Scans all `.mdx` files in `content/articles/`
-- Skips articles that already have good excerpts and tags
-- Uses GPT-4o to analyze article content and generate:
-  - **Excerpts**: 100-160 character summaries capturing key insights
-  - **Tags**: 2-5 relevant categorization tags (e.g., "AI Regulation", "Cloud Computing", "Best Practices")
-- Updates frontmatter automatically with generated content
-- Provides detailed progress reporting
-
-**Use cases:**
-- Bulk processing of existing articles missing excerpts/tags
-- Ensuring consistent quality and SEO optimization
-- Saving time on manual content categorization
-
-The script intelligently identifies articles that need enrichment and preserves existing quality content. It uses a specialized prompt designed for technology-focused business articles to ensure relevant, professional results.
+What it does:
+- Scans MDX files, skips ones that already have good metadata
+- Uses GPT‑4o to produce a 100–160 char excerpt and 2–5 tags
+- Updates frontmatter in place and prints a summary
 
 ### MDX Links & Images
 
-- Links: internal links render via `next/link`; external links open in a new tab with `rel="nofollow noopener noreferrer external"`.
+- Links: internal links use `next/link`; external links open in a new tab with `rel="nofollow noopener noreferrer external"`.
 - Images:
-  - Preferred: `<Image src="/path.jpg" width={1200} height={630} alt="..." />` in MDX for best layout.
-  - Markdown images `![Alt](/path.jpg)` work too (fall back to `<img>` if dimensions are unknown or URL is remote).
+  - Preferred: `<Image src="/path.jpg" width={1200} height={630} alt="..." />`
+  - Markdown images `![Alt](/path.jpg)` also work (falls back to `<img>` when needed)
 
 ### Routes
 
 - Articles index: `/articles/`
 - Article URLs: `/articles/YYYY/MM/DD/slug/`
 
-## Note on Windows Dev Setup
+## Windows + WSL setup
 
-Because I seem to like the way of pain, I'm developing this on a Windows machine while using WSL.
-Which causes problems with commanes like `npm run dev` and such.  So I've setup npm commands to
-run through a win-npm wrapper instead.
-
-The setup is as follows:
+If you develop in WSL, run the dev server on Windows for reliable file watching using a simple wrapper:
 
 ```bash
 # Create wrapper scripts directory
@@ -155,42 +114,46 @@ chmod +x ~/bin/win-npm
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 ```
 
-From there I just put the following my CLAUDE.md file
+Then use `win-npm` for package commands from WSL:
 
-```markdown
-# NextJS Windows Project
-
-This project uses Windows npm through PowerShell. 
-
-**Use `win-npm` instead of `npm` for all package management:**
-- `win-npm install`
-- `win-npm run dev` 
-- `win-npm run build`
-
-The development server runs on Windows for proper file watching.
+```bash
+win-npm install
+win-npm run dev
+win-npm run build
 ```
 
-Lastly, I add permissions explicitly to the claude local settings.
+## Environment Configuration
 
-```json
-{
-    "permissions": {
-      "allow": [
-        "Bash(npm-win install)",
-        "Bash(npm-win run build)",
-        "Bash(npm-win run dev)",
-        "Bash(npm-win run test)"
-      ],
-      "deny": [
-        "Bash(npm install)",
-        "Bash(npm run build)",
-        "Bash(npm run dev)",
-        "Bash(npm run test)"
-      ],
-      "ask": [],
-      "defaultMode": "acceptEdits"
-  }
-}
+The site generates absolute links (sitemap, RSS, OpenGraph) using `SITE_URL`. Variables are validated with Zod in `src/lib/env.ts`.
+
+- SITE_URL: The public origin of the site (no trailing slash). Examples:
+  - GitHub Pages default (staging in this repo): `https://<owner>.github.io/techtavern-nextjs.github.io`
+  - Custom domain: `https://example.com`
+- NEXT_PUBLIC_BASE_PATH: Set by CI for staging vs production; rarely needed locally.
+- NEXT_PUBLIC_GA_ID: Optional Google Analytics measurement ID.
+
+Validation and defaults:
+- `SITE_URL` must be a valid URL if provided; missing locally defaults to `http://localhost:3000` for previewing sitemap/RSS.
+- `NEXT_PUBLIC_BASE_PATH` defaults to empty and helpers normalize trailing slashes.
+
+Quick example: computing absolute URLs
+
+```ts
+// src/anywhere.ts
+import { getBaseUrl } from '@/lib/site.server';
+
+// Preferred: let URL handle slashes
+const absolute = new URL('/articles/2025/08/24/hello-world/', getBaseUrl()).toString();
+
+// Or simple string concat (getBaseUrl() has no trailing slash)
+const absolute2 = `${getBaseUrl()}/articles/2025/08/24/hello-world/`;
+```
+
+Where to set `SITE_URL`:
+- Local development: optional `.env.local` (e.g., `SITE_URL=http://localhost:3000`).
+- GitHub Actions: set automatically by the workflow; override via an Actions Variable or Secret named `SITE_URL`.
+
+Sitemap: `/sitemap.xml` • RSS: `/rss.xml`.
 
 ## Deployment (GitHub Pages)
 
@@ -200,14 +163,16 @@ Lastly, I add permissions explicitly to the claude local settings.
 
 ## Security & CSP
 
-- A CSP meta tag is enabled in `src/app/layout.tsx`.
-- If you embed remote images in MDX or use remote OG images, update the policy to include `img-src 'self' data: https:` or specify an allowlist of domains.
+- CSP meta tag lives in `src/app/layout.tsx`.
+- Dev builds add `unsafe-eval` to simplify tooling; production builds do not.
+- Zod is hard‑blocked from client bundles (`next.config.ts` sets `resolve.alias.zod = false`).
+- If you embed remote images, extend `img-src` to include `https:` or add specific domains.
 
-### CSP Safeguard (no `unsafe-eval` on client)
+Server-only helpers that read validated env live in `src/lib/site.server.ts` and should be imported from server components/routes.
 
-- The app avoids `unsafe-eval` by ensuring validation libraries like Zod are server‑only.
-- A webpack client alias hard‑blocks `zod` in browser bundles: see `next.config.ts` (`resolve.alias.zod = false`).
-- Server‑only helpers that read validated env live in `src/lib/site.server.ts` and must be imported from there in server components/routes.
-- When adding new client‑side dependencies, avoid libraries that rely on `eval`, `new Function`, or string‑based `setTimeout`/`setInterval`.
-- If you absolutely must enable string evaluation, you would add `unsafe-eval` to the CSP `script-src`, but this is strongly discouraged.
-```
+## Testing
+
+- Unit tests: Jest + React Testing Library (`npm run test`)
+- Type safety: `npm run typecheck`
+- Linting: `npm run lint`
+
