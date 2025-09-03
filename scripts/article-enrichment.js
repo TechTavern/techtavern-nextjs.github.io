@@ -36,14 +36,16 @@ async function loadEnvLocal() {
   }
 }
 
-// Resolve OpenAI API key
-async function resolveOpenAIKey() {
+// Resolve OpenAI configuration from env/.env.local
+async function resolveOpenAIConfig() {
   const env = await loadEnvLocal();
   const apiKey = process.env.OPENAI_API_KEY || env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OpenAI API key not found. Please add OPENAI_API_KEY to your .env.local file or environment variables.');
   }
-  return apiKey;
+  const model = (process.env.OPENAI_MODEL || env.OPENAI_MODEL || 'gpt-5-mini').trim();
+  const reasoningEffort = (process.env.OPENAI_REASONING || env.OPENAI_REASONING || 'medium').trim();
+  return { apiKey, model, reasoningEffort };
 }
 
 // System prompt for OpenAI
@@ -95,7 +97,7 @@ Return a JSON object with exactly this structure:
 Remember: The goal is to help technology professionals quickly understand the article's value and find relevant content through effective categorization.`;
 
 // Analyze article with OpenAI
-async function analyzeArticle(apiKey, title, content) {
+async function analyzeArticle(api, title, content) {
   try {
     const userPrompt = `Please analyze this technology article and provide an excerpt and tags.
 
@@ -110,10 +112,12 @@ Return your analysis as a JSON object with "excerpt" and "tags" fields.`;
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${api.apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: api.model,
+        // For reasoning-capable models (e.g., gpt-5-mini), allow tuning effort
+        reasoning: { effort: api.reasoningEffort },
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: userPrompt },
@@ -161,7 +165,7 @@ Return your analysis as a JSON object with "excerpt" and "tags" fields.`;
 }
 
 // Process a single article file
-async function processArticle(apiKey, filePath) {
+async function processArticle(api, filePath) {
   try {
     const fileContent = await fs.readFile(filePath, 'utf8');
     const parsed = matter(fileContent);
@@ -182,7 +186,7 @@ async function processArticle(apiKey, filePath) {
     const title = frontmatter.title || path.basename(filePath, '.mdx');
     
     // Analyze with OpenAI
-    const analysis = await analyzeArticle(apiKey, title, content);
+    const analysis = await analyzeArticle(api, title, content);
 
     // Update frontmatter
     let updated = false;
@@ -228,8 +232,10 @@ async function main() {
     console.log('🚀 Starting article enrichment process...\n');
 
     // Resolve OpenAI credentials
-    const apiKey = await resolveOpenAIKey();
-    console.log('✅ OpenAI API configured\n');
+    const api = await resolveOpenAIConfig();
+    console.log(`✅ OpenAI API configured (model: ${api.model}, reasoning: ${api.reasoningEffort})\n`);
+
+    const isDryRun = process.argv.includes('--dry-run') || process.env.DRY_RUN === '1';
 
     // Get all article files
     const articleFiles = await getArticleFiles();
@@ -237,6 +243,16 @@ async function main() {
 
     if (articleFiles.length === 0) {
       console.log('No articles found in content/articles directory');
+      return;
+    }
+
+    if (isDryRun) {
+      console.log('🧪 Dry run enabled — not calling OpenAI API.');
+      // Print a preview of the first few files
+      const preview = articleFiles.slice(0, 5).map(p => path.basename(p));
+      if (preview.length) {
+        console.log('Preview files:', preview.join(', '));
+      }
       return;
     }
 
@@ -248,7 +264,7 @@ async function main() {
     for (const filePath of articleFiles) {
       try {
         const initialContent = await fs.readFile(filePath, 'utf8');
-        await processArticle(apiKey, filePath);
+        await processArticle(api, filePath);
         
         // Check if file was actually modified
         const finalContent = await fs.readFile(filePath, 'utf8');

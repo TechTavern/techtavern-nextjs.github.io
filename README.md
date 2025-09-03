@@ -77,8 +77,20 @@ Requirements:
 
 What it does:
 - Scans MDX files, skips ones that already have good metadata
-- Uses GPT‑4o to produce a 100–160 char excerpt and 2–5 tags
+- Uses `gpt-5-mini` with medium reasoning by default to produce a 100–160 char excerpt and 2–5 tags
 - Updates frontmatter in place and prints a summary
+
+Model configuration (via `.env.local`):
+- `OPENAI_MODEL` (default `gpt-5-mini`)
+- `OPENAI_REASONING` (default `medium`; one of `low|medium|high`)
+See `sample.env.local` for a template.
+
+Tip: run a dry run (no API calls) to verify config:
+
+```bash
+npm run article-enrichment -- --dry-run
+# On WSL: win-npm run article-enrichment -- --dry-run
+```
 
 ### MDX Links & Images
 
@@ -175,4 +187,3 @@ Server-only helpers that read validated env live in `src/lib/site.server.ts` and
 - Unit tests: Jest + React Testing Library (`npm run test`)
 - Type safety: `npm run typecheck`
 - Linting: `npm run lint`
-
