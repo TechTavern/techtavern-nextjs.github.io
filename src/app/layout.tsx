@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import Navigation from "@/components/ui/Navigation";
+import Header from "@/components/ui/Header";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
@@ -68,27 +68,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif; 
             }
             
-            /* Hero background - responsive */
-            .bg-hero {
-              background-image: url('/images/richmond-station-view-375w.webp');
-              background-position: center;
-              background-repeat: no-repeat;
-              background-size: cover;
-              min-height: 100vh;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              position: relative;
-            }
-            
-            @media (min-width: 768px) {
-              .bg-hero { background-image: url('/images/richmond-station-view-768w.webp'); }
-            }
-            
-            @media (min-width: 1200px) {
-              .bg-hero { background-image: url('/images/richmond-station-view-1200w.webp'); }
-            }
-            
             /* Navigation (scoped to header nav only) */
             .site-nav {
               position: fixed;
@@ -123,7 +102,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         }} />
         <meta
           httpEquiv="Content-Security-Policy"
-          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self' data: https:; font-src 'self'; style-src 'self' 'unsafe-inline';`}
         />
         <script
           type="application/ld+json"
@@ -137,7 +116,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
           </Suspense>
         ) : null}
-        <Navigation />
+        <Header variant="home" />
         {children}
       </body>
     </html>

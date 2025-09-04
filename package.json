@@ -13,7 +13,8 @@
     "new-article": "node scripts/new-article.js",
     "article-enrichment": "node scripts/article-enrichment.js",
     "watch:content": "chokidar \"content/articles/**/*.mdx\" -c \"echo [content] change detected\"",
-    "dev:watch": "concurrently -k -n dev,content -c green,cyan \"next dev\" \"npm:watch:content\""
+    "dev:watch": "concurrently -k -n dev,content -c green,cyan \"next dev\" \"npm:watch:content\"",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
@@ -33,6 +34,7 @@
     "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.5.2",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.12",
     "@tailwindcss/typography": "^0.5.16",

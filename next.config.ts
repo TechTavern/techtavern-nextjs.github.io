@@ -1,18 +1,16 @@
 import createMDX from "@next/mdx";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import bundleAnalyzer from "@next/bundle-analyzer";
+import { remarkPlugins, rehypePlugins } from "./src/lib/mdx-options";
 import type { NextConfig } from "next";
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [
-      rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: "wrap" }],
-    ],
+    remarkPlugins,
+    rehypePlugins,
   },
 });
+
+const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
 const nextConfig: NextConfig = {
   // Only use export mode in production builds
@@ -52,4 +50,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default withBundleAnalyzer(withMDX(nextConfig));

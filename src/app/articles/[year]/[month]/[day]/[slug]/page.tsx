@@ -6,6 +6,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import type { Metadata } from "next";
+import { remarkPlugins, rehypePlugins } from "@/lib/mdx-options";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -76,18 +77,13 @@ export default async function ArticlePage({ params }: Props) {
 
   const fs = await import('node:fs/promises');
   const source = await fs.readFile(post.filePath, 'utf8');
-  const [{ default: remarkGfm }, { default: rehypeSlug }, { default: rehypeAutolinkHeadings }] = await Promise.all([
-    import('remark-gfm'),
-    import('rehype-slug'),
-    import('rehype-autolink-headings'),
-  ]);
   const { content } = await compileMDX({
     source,
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]],
+        remarkPlugins,
+        rehypePlugins,
       },
     },
     components: getMDXComponents({}),
