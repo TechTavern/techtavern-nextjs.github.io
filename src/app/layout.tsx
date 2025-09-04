@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 import Navigation from "@/components/ui/Navigation";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     email: siteOrg.email,
   });
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -132,7 +133,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-screen font-sans antialiased">
         {env.NEXT_PUBLIC_GA_ID ? (
-          <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
+          <Suspense fallback={null}>
+            <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
+          </Suspense>
         ) : null}
         <Navigation />
         {children}
