@@ -8,3 +8,14 @@ export const remarkPlugins: PluggableList = [remarkGfm];
 
 const autolink: Pluggable = [rehypeAutolinkHeadings, { behavior: "wrap" }];
 export const rehypePlugins: PluggableList = [rehypeSlug, autolink];
+
+// Centralized options object to satisfy STANDARDS.md guidance
+export type MdxOptions = {
+  remarkPlugins: PluggableList;
+  rehypePlugins: PluggableList;
+};
+
+export const mdxOptions: MdxOptions = {
+  remarkPlugins,
+  rehypePlugins,
+};

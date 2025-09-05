@@ -6,7 +6,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import type { Metadata } from "next";
-import { remarkPlugins, rehypePlugins } from "@/lib/mdx-options";
+import { mdxOptions } from "@/lib/mdx-options";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -81,10 +81,7 @@ export default async function ArticlePage({ params }: Props) {
     source,
     options: {
       parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins,
-        rehypePlugins,
-      },
+      mdxOptions,
     },
     components: getMDXComponents({}),
   });

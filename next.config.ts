@@ -1,14 +1,9 @@
 import createMDX from "@next/mdx";
 import bundleAnalyzer from "@next/bundle-analyzer";
-import { remarkPlugins, rehypePlugins } from "./src/lib/mdx-options";
+import { mdxOptions } from "./src/lib/mdx-options";
 import type { NextConfig } from "next";
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins,
-    rehypePlugins,
-  },
-});
+const withMDX = createMDX({ options: mdxOptions });
 
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 

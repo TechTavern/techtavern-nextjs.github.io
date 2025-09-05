@@ -74,7 +74,7 @@ flowchart LR
   - TypeScript (strict), ESLint (Next core-web-vitals + TS), Jest + RTL for unit tests, PostCSS + Tailwind.
 
 - Build tools and configuration:
-  - `next.config.ts` applies MDX, export mode, `unoptimized` images, `pageExtensions` incl. `mdx`, and aliases `zod=false` on client to honor CSP.
+  - `next.config.ts` applies MDX, export mode, `unoptimized` images, `pageExtensions` incl. `mdx`, and aliases `zod=false` on client to honor CSP. MDX options are centralized in `src/lib/mdx-options.ts` and imported by both the Next MDX loader and runtime `compileMDX`.
   - `eslint.config.mjs` flat config with Next presets and ignores.
   - `jest.config.js` via `next/jest`, JSDOM environment, module aliases for `@/*`.
 
@@ -167,19 +167,19 @@ flowchart LR
 ### Architecture Analysis
 
 - SOLID/DRY observations:
-  - MDX pipeline configuration is duplicated: both in `next.config.ts` (via `@next/mdx`) and in the article page (`compileMDX` with its own plugin list). Risk of drift.
+  - MDX plugin configuration is centralized in `src/lib/mdx-options.ts` and used by both `next.config.ts` (via `@next/mdx`) and the article page's `compileMDX`, eliminating drift risk.
   - CSS for `.bg-hero` exists both inline in `layout.tsx` (critical CSS block) and in `globals.css`. Potential duplication, harder maintenance.
   - Navigation is implemented twice (homepage `Navigation` vs header inside `articles/layout.tsx`). Intentional UX divergence is fine, but consider a shared header component with variants to reduce repetition.
   - CSP currently allows only GA/Tag Manager for `img-src`. External images embedded via MDX will be blocked. This is a deliberate restriction, but it conflicts with the MDXImage fallback capability for external sources if authors ever use them.
 
 ### Specific Recommendations
 
-1) MDX configuration centralization
-- Current State: MDX plugins are specified in both `next.config.ts` and in `compileMDX` within the article page.
-- Proposed Change: Extract MDX options into a single module, e.g., `src/lib/mdx-options.ts`, exporting shared `remarkPlugins` and `rehypePlugins`. Import in both places.
-- Rationale: Ensures DRY config and consistent rendering between pipeline and ad‑hoc compilation.
-- Impact: Low effort; high consistency benefits.
-- Implementation Priority: High.
+1) MDX configuration centralization — Implemented
+- Status: Implemented (centralized configuration now in use).
+- Current State: MDX options are centralized in `src/lib/mdx-options.ts`, exporting `remarkPlugins`, `rehypePlugins`, and a typed `mdxOptions` object. These options are imported by `next.config.ts` (for `@next/mdx`) and by the article page when calling `compileMDX`.
+- Rationale: Ensures DRY config and consistent rendering between the Next MDX loader and ad‑hoc compilation paths.
+- Impact: No behavioral change; reduces maintenance overhead and eliminates configuration drift risk.
+- Follow‑up: Additional MDX/rehype plugins (e.g., external link handling) should be added only in this module.
 
 2) Consolidate critical CSS and global styles
 - Current State: Inline critical CSS in `layout.tsx` duplicates background image rules for `.bg-hero`, also present in `globals.css`.
@@ -224,8 +224,8 @@ flowchart LR
 - Implementation Priority: Medium.
 
 8) Optional: Unify MDX strategy
-- Current State: Both `@next/mdx` and `next-mdx-remote/rsc` are in place. The site compiles MDX from files at runtime on the server; MDX page extensions are enabled but not currently used for content.
-- Proposed Change: Either keep both (for flexibility) or simplify to one approach (e.g., continue with `compileMDX` only). If keeping both, ensure shared options (Recommendation #1).
+- Current State: Both `@next/mdx` and `next-mdx-remote/rsc` are in place. Shared options are already centralized in `src/lib/mdx-options.ts`. MDX page extensions are enabled but not currently used for content.
+- Proposed Change: Either keep both (for flexibility) or simplify to one approach (e.g., continue with `compileMDX` only). Shared options are already handled centrally.
 - Rationale: Reduce complexity and potential confusion.
 - Impact: Low.
 - Implementation Priority: Low.
