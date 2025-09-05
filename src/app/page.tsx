@@ -1,3 +1,4 @@
+import Header from '@/components/ui/Header';
 import Hero from '@/components/sections/Hero';
 import Mission from '@/components/sections/Mission';
 import Info from '@/components/sections/Info';
@@ -12,6 +13,9 @@ import { siteMeta } from '@/lib/site';
 export default function Home() {
   return (
     <>
+      {/* Header Navigation (home variant) */}
+      <Header variant="home" />
+
       {/* Hero Section */}
       <Hero 
         title={siteMeta.title}

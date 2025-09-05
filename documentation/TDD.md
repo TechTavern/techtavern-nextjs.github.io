@@ -169,7 +169,7 @@ flowchart LR
 - SOLID/DRY observations:
   - MDX plugin configuration is centralized in `src/lib/mdx-options.ts` and used by both `next.config.ts` (via `@next/mdx`) and the article page's `compileMDX`, eliminating drift risk.
   - Critical CSS in `layout.tsx` has been trimmed; `.bg-hero` styles live solely in `globals.css` to avoid duplication and drift.
-  - Navigation is implemented twice (homepage `Navigation` vs header inside `articles/layout.tsx`). Intentional UX divergence is fine, but consider a shared header component with variants to reduce repetition.
+  - Header/Nav reuse: Implemented via `Header` component variants. Home uses the `Navigation` client component through `<Header variant="home" />`; interior pages use `<Header variant="interior" />`. This removes duplication while preserving UX differences.
   - CSP currently allows only GA/Tag Manager for `img-src`. External images embedded via MDX will be blocked. This is a deliberate restriction, but it conflicts with the MDXImage fallback capability for external sources if authors ever use them.
 
 ### Specific Recommendations
@@ -188,12 +188,12 @@ flowchart LR
 - Impact: No visual change expected; relies on existing global CSS and Tailwind utilities. Preload hints for hero images remain.
 - Follow‑up: If needed later, introduce a generated `critical.css` for above‑the‑fold styles instead of inline blocks.
 
-3) Header/Nav reuse with variants
-- Current State: Home uses `Navigation` (fixed, translucent overlay), articles use a separate header in `articles/layout.tsx`.
-- Proposed Change: Create a single `Header` component supporting variants (home vs interior) with prop‑controlled styles and links.
-- Rationale: DRY and consistency; simplifies future updates to nav items and accessibility.
-- Impact: Medium; update both layouts to use the shared component.
-- Implementation Priority: Medium.
+3) Header/Nav reuse with variants — Implemented
+- Status: Implemented (single `Header` component used with variants).
+- Current State: `src/components/ui/Header.tsx` provides a `variant` prop (`home` | `interior`). The home page renders `<Header variant="home" />` (delegates to the `Navigation` client component with scroll behavior). Articles layout renders `<Header variant="interior" />` with a solid branded header. Root layout no longer injects a header to avoid loading client navigation on non‑home routes.
+- Rationale: DRY and consistency; simplifies updates to nav items and accessibility. Also minimizes client JS on interior pages by not mounting the home `Navigation` globally.
+- Impact: No UX change; improved maintainability and a small performance win on non‑home pages.
+- Follow‑up: If desired, extract a shared navigation items list used by both variants to further reduce duplication.
 
 4) CSP `img-src` policy refinement
 - Current State: `img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com`.

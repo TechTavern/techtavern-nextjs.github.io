@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import Header from "@/components/ui/Header";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
@@ -71,7 +70,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
           </Suspense>
         ) : null}
-        <Header variant="home" />
         {children}
       </body>
     </html>
