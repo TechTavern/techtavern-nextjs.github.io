@@ -13,6 +13,17 @@ describe('FrontmatterSchema', () => {
     expect(FrontmatterSchema.parse(valid)).toBeTruthy();
   });
 
+  it('accepts optional lastModified in yyyy-mm-dd', () => {
+    const valid = {
+      title: 'Hello',
+      date: '2025-08-24',
+      lastModified: '2025-09-05',
+      slug: 'hello',
+    };
+    const res = FrontmatterSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+
   it('rejects missing required fields', () => {
     const invalid = {
       date: '2025-08-24',
@@ -31,6 +42,17 @@ describe('FrontmatterSchema', () => {
     const invalid = {
       title: 'Hello',
       date: '08/24/2025',
+      slug: 'hello',
+    };
+    const res = FrontmatterSchema.safeParse(invalid);
+    expect(res.success).toBe(false);
+  });
+
+  it('rejects invalid lastModified format', () => {
+    const invalid = {
+      title: 'Hello',
+      date: '2025-08-24',
+      lastModified: '09/05/2025',
       slug: 'hello',
     };
     const res = FrontmatterSchema.safeParse(invalid);

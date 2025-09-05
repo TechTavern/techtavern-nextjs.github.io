@@ -24,6 +24,7 @@ describe('seo JSON-LD builders', () => {
     const p: PostMeta = {
       title: 'Hello World',
       date: '2025-08-24',
+      lastModified: '2025-08-24',
       slug: 'hello-world',
       excerpt: 'A short summary',
       tags: ['AI', 'Best Practices'],
@@ -89,4 +90,3 @@ describe('seo JSON-LD builders', () => {
     expect(toAbsoluteUrl('not a url', baseUrl)).toBe('not a url');
   });
 });
-

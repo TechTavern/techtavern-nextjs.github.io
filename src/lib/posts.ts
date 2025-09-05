@@ -9,6 +9,7 @@ import { withBasePath } from "@/lib/site.server";
 export type PostMeta = {
   title: string;
   date: string;   // yyyy-mm-dd
+  lastModified: string; // yyyy-mm-dd (falls back to date)
   slug: string;
   excerpt?: string;
   tags?: string[];
@@ -47,6 +48,10 @@ export const FrontmatterSchema = z.object({
   date: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be yyyy-mm-dd"),
+  lastModified: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "lastModified must be yyyy-mm-dd")
+    .optional(),
   slug: z.string().min(1, "slug is required"),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
@@ -74,9 +79,11 @@ export async function getAllPosts(): Promise<PostMeta[]> {
       const readingTimeMinutes = computeReadingTime(content);
       const featured = withBasePath(fm.featuredImage) || withBasePath(DEFAULT_FEATURED_IMAGE);
       const ogImg = withBasePath(fm.ogImage) || featured;
+      const lastModified = fm.lastModified ?? fm.date;
       return {
         title: fm.title,
         date: fm.date,
+        lastModified,
         slug: fm.slug,
         excerpt: fm.excerpt,
         tags: fm.tags ?? [],

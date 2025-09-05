@@ -57,7 +57,7 @@ npm run build   # or: win-npm run build (WSL)
 
 - Articles live in `content/articles/` as MDX. Filenames: `YYYY-MM-DD-slug.mdx` with frontmatter.
 - Frontmatter (required): `title`, `date` (yyyy-mm-dd), `slug`
-- Frontmatter (optional): `excerpt`, `tags`, `featuredImage`, `ogTitle`, `ogDescription`, `ogImage`, `canonicalUrl`, `draft`
+- Frontmatter (optional): `lastModified` (yyyy-mm-dd), `excerpt`, `tags`, `featuredImage`, `ogTitle`, `ogDescription`, `ogImage`, `canonicalUrl`, `draft`
 - Add a new post: `npm run new-article` (or `win-npm run new-article` on WSL)
 - MDX is compiled during dev/build automatically; no import map to maintain.
 

@@ -13,6 +13,7 @@ describe('getAllPosts (integration with content)', () => {
       expect(p.title.length).toBeGreaterThan(0);
       expect(p.slug.length).toBeGreaterThan(0);
       expect(/\d{4}-\d{2}-\d{2}/.test(p.date)).toBe(true);
+      expect(/\d{4}-\d{2}-\d{2}/.test(p.lastModified)).toBe(true);
 
       // Derived fields
       const expectedUrl = `/articles/${p.year}/${p.month}/${p.day}/${p.slug}/`;
