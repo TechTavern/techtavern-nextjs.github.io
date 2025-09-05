@@ -168,7 +168,7 @@ flowchart LR
 
 - SOLID/DRY observations:
   - MDX plugin configuration is centralized in `src/lib/mdx-options.ts` and used by both `next.config.ts` (via `@next/mdx`) and the article page's `compileMDX`, eliminating drift risk.
-  - CSS for `.bg-hero` exists both inline in `layout.tsx` (critical CSS block) and in `globals.css`. Potential duplication, harder maintenance.
+  - Critical CSS in `layout.tsx` has been trimmed; `.bg-hero` styles live solely in `globals.css` to avoid duplication and drift.
   - Navigation is implemented twice (homepage `Navigation` vs header inside `articles/layout.tsx`). Intentional UX divergence is fine, but consider a shared header component with variants to reduce repetition.
   - CSP currently allows only GA/Tag Manager for `img-src`. External images embedded via MDX will be blocked. This is a deliberate restriction, but it conflicts with the MDXImage fallback capability for external sources if authors ever use them.
 
@@ -181,12 +181,12 @@ flowchart LR
 - Impact: No behavioral change; reduces maintenance overhead and eliminates configuration drift risk.
 - Follow‑up: Additional MDX/rehype plugins (e.g., external link handling) should be added only in this module.
 
-2) Consolidate critical CSS and global styles
-- Current State: Inline critical CSS in `layout.tsx` duplicates background image rules for `.bg-hero`, also present in `globals.css`.
-- Proposed Change: Keep only essential “critical path” styles inline (e.g., minimal base and above‑the‑fold layout), and delegate all duplicated rules (like `.bg-hero`) to `globals.css`. Alternatively, generate `critical.css` at build and inline just that.
+2) Consolidate critical CSS and global styles — Implemented
+- Status: Implemented (inline duplication removed; globals own background rules).
+- Current State: The inline critical CSS block in `src/app/layout.tsx` has been removed. Reusable utilities (`.glass`, `.gradient-brand`) and background utilities (`.bg-hero`) are defined once in `src/app/globals.css`. Tailwind utilities handle positioning, spacing, and typography.
 - Rationale: Reduces duplication and avoids style drift; improves maintainability.
-- Impact: Low to medium; small refactor with visual regression check.
-- Implementation Priority: Medium.
+- Impact: No visual change expected; relies on existing global CSS and Tailwind utilities. Preload hints for hero images remain.
+- Follow‑up: If needed later, introduce a generated `critical.css` for above‑the‑fold styles instead of inline blocks.
 
 3) Header/Nav reuse with variants
 - Current State: Home uses `Navigation` (fixed, translucent overlay), articles use a separate header in `articles/layout.tsx`.
