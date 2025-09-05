@@ -196,6 +196,9 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Validate sitemap and RSS
+        run: node scripts/validate-outputs.js
+
       - name: Remove source maps from production
         if: needs.quality-gates.outputs.environment == 'production'
         run: |

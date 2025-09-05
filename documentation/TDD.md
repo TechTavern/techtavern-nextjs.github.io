@@ -209,12 +209,13 @@ flowchart LR
 - Impact: Low; dev‑only aid.
 - Implementation Priority: Low.
 
-6) Robots.txt and structured SEO checks
-- Current State: No `robots.txt`; strong metadata/OG/JSON‑LD is present.
-- Proposed Change: Add `src/app/robots.txt/route.ts` or static `public/robots.txt` tailored to environment; optionally add automated checks for sitemap and RSS validity in CI.
-- Rationale: Completes SEO baseline; early detection of regressions.
-- Impact: Low.
-- Implementation Priority: Medium.
+6) Robots.txt and structured SEO checks — Implemented
+- Status: Implemented (dynamic robots + CI validation).
+- Current State: `src/app/robots.ts` generates robots.txt using the environment-aware base URL from `getBaseUrl()`, setting `sitemap: ${base}/sitemap.xml` and `host: base`. A static fallback exists at `public/robots.txt`, but the App Router metadata route takes precedence during build/export.
+- CI Checks: Added `scripts/validate-outputs.js` and a workflow step to assert presence and basic structure of `out/robots.txt`, `out/sitemap.xml`, and `out/rss.xml` after build.
+- Rationale: Completes SEO baseline and adds early detection for regressions in sitemap/RSS generation.
+- Impact: Low; no runtime cost. Ensures correct sitemap URL under subdirectory hosting.
+- Follow‑up: Expand validation to verify absolute URLs and canonical coverage as content grows.
 
 7) Pagination for Articles (PRD “Future Enhancements”)
 - Current State: `/articles/` lists all posts; pagination is not implemented.
