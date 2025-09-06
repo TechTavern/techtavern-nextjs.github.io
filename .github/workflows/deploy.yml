@@ -156,6 +156,16 @@ jobs:
             CUSTOM_DOMAIN='${{ vars.SITE_URL }}'
           elif [ -n '${{ secrets.SITE_URL }}' ]; then
             CUSTOM_DOMAIN='${{ secrets.SITE_URL }}'
+          elif [ -f CNAME ]; then
+            # Read CNAME file and build full URL
+            CN=$(cat CNAME | tr -d '\r' | tr -d '\n')
+            if [ -n "$CN" ]; then
+              if [[ "$CN" == http*://* ]]; then
+                CUSTOM_DOMAIN="$CN"
+              else
+                CUSTOM_DOMAIN="https://$CN"
+              fi
+            fi
           fi
           
           # Determine if this is a custom domain (not github.io)
@@ -195,6 +205,16 @@ jobs:
 
       - name: Build static site
         run: npm run build
+
+      - name: Add CNAME and .nojekyll (if present)
+        run: |
+          # Include CNAME for custom domains if present at repo root
+          if [ -f CNAME ]; then
+            cp CNAME ./out/CNAME
+            echo "Copied CNAME into build output"
+          fi
+          # Disable Jekyll processing to avoid README/index issues
+          touch ./out/.nojekyll
 
       - name: Validate sitemap and RSS
         run: node scripts/validate-outputs.js
