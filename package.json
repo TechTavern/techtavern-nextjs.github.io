@@ -54,6 +54,6 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.12",
     "typescript": "^5",
-    "whatwg-url": "^14.0.0"
+    "whatwg-url": "^15.0.0"
   }
 }
