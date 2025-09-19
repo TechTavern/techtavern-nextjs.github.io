@@ -262,34 +262,6 @@
   justify-content: center;
 }
 
-/* LinkedIn Specific */
-.linkedin-color {
-  color: var(--color-linkedin);
-}
-
-.li-icon {
-  text-align: center;
-  width: 2em;
-  line-height: inherit;
-}
-
-/* Parallax Window */
-.parallax-window {
-  min-height: 500px;
-  background: transparent;
-}
-
-/* Image Frame */
-.bg-image-frame {
-  height: 60vh;
-}
-
-/* Page Header */
-.page-header {
-  margin-top: var(--spacing-header-offset);
-  font-size: 1.25rem;
-  color: var(--color-light);
-}
 
 /* ===== GLOBAL STYLES ===== */
 body {
@@ -300,20 +272,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
 
-/* Line clamping utilities */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
 /* Technology Group Styling */
 .tech-group-container {
