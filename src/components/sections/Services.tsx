@@ -2,84 +2,10 @@
 
 import Image from 'next/image';
 
-// Logo type classification for adaptive styling
-type LogoType = 'text-heavy' | 'icon-colorful' | 'icon-monochrome' | 'mixed';
-
 interface LogoConfig {
   src: string;
   alt: string;
   title: string;
-  type?: LogoType;
-}
-
-// Classify logo based on filename and known characteristics
-function getLogoType(logoSrc: string): LogoType {
-  const filename = logoSrc.toLowerCase();
-
-  // Text-heavy logos that need light backgrounds for readability
-  if (filename.includes('azure') ||
-      filename.includes('aws') ||
-      filename.includes('amazon_web_services') ||
-      filename.includes('google_cloud') ||
-      filename.includes('openai') ||
-      filename.includes('anthropic') ||
-      filename.includes('gemini') ||
-      filename.includes('grok')) {
-    return 'text-heavy';
-  }
-
-  // Colorful icon logos that work better with subtle dark backgrounds
-  if (filename.includes('react') ||
-      filename.includes('angular') ||
-      filename.includes('python') ||
-      filename.includes('go_logo_blue')) {
-    return 'icon-colorful';
-  }
-
-  // Monochrome icons that need contrast
-  if (filename.includes('notext') ||
-      filename.includes('icon') ||
-      filename.includes('symbol')) {
-    return 'icon-monochrome';
-  }
-
-  // Default to mixed for unknown logos
-  return 'mixed';
-}
-
-// Get appropriate styling classes based on logo type with WCAG AA compliance
-function getLogoStyling(logoType: LogoType) {
-  switch (logoType) {
-    case 'text-heavy':
-      // High contrast white background for text-based logos (4.5:1+ contrast ratio)
-      return {
-        container: 'bg-white/90 hover:bg-white/95 shadow-sm hover:shadow-md border border-white/40 backdrop-blur-sm',
-        image: 'filter-none',
-        ariaDescription: 'Logo on high-contrast light background for optimal text readability'
-      };
-    case 'icon-colorful':
-      // Subtle dark background that doesn't interfere with colorful icons
-      return {
-        container: 'bg-slate-900/50 hover:bg-slate-900/65 shadow-md hover:shadow-lg border border-slate-600/50 backdrop-blur-sm',
-        image: 'filter-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]',
-        ariaDescription: 'Colorful icon logo on subtle dark background'
-      };
-    case 'icon-monochrome':
-      // Enhanced contrast for monochrome icons
-      return {
-        container: 'bg-gradient-to-br from-slate-800/70 to-slate-900/70 hover:from-slate-800/85 hover:to-slate-900/85 shadow-md hover:shadow-lg border border-slate-500/60',
-        image: 'brightness-115 contrast-115 drop-shadow-[0_2px_4px_rgba(255,255,255,0.2)]',
-        ariaDescription: 'Monochrome icon logo with enhanced contrast'
-      };
-    case 'mixed':
-    default:
-      // Balanced approach for unknown logos
-      return {
-        container: 'bg-white/80 hover:bg-white/90 shadow-sm hover:shadow-md border border-white/50 backdrop-blur-sm',
-        image: 'filter-none drop-shadow-sm',
-        ariaDescription: 'Technology logo with balanced contrast treatment'
-      };
-  }
 }
 
 interface TechnologyGroup {

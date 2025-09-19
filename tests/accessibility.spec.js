@@ -7,7 +7,7 @@ const { test, expect } = require('@playwright/test');
 const AxeBuilder = require('@axe-core/playwright').default;
 
 test.describe('Accessibility Tests', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async () => {
     // Start development server before running tests if not already running
     // Note: This assumes the dev server is running on localhost:3000
   });
