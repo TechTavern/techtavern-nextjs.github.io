@@ -114,7 +114,7 @@ export default function Profile() {
               href={profile.leaderLinkedIn}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-light hover:text-accent transition-colors underline decoration-2 underline-offset-2 focus-ring-light"
+              className="text-accent hover:text-accent-dark transition-colors underline decoration-2 underline-offset-2 focus-ring-light"
               aria-label={`${profile.leaderName}'s LinkedIn profile`}
             >
               {profile.leaderName}

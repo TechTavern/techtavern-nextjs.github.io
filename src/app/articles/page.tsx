@@ -109,7 +109,7 @@ export default async function ArticlesIndexPage() {
                       <div className="flex items-center gap-2 text-sm text-accent font-medium">
                         <time dateTime={post.date}>{formatDate(post.date)}</time>
                         {post.readingTimeMinutes ? (
-                          <span className="text-dark/50">· {post.readingTimeMinutes} min</span>
+                          <span className="text-dark/70">· {post.readingTimeMinutes} min</span>
                         ) : null}
                       </div>
                       {post.tags && post.tags.length > 0 && (

@@ -52,25 +52,25 @@
 @theme {
   /* ===== COLOR SYSTEM ===== */
   /* Primary Brand Colors */
-  --color-primary: #89685d;           /* Beaver - warm earth tone */
-  --color-primary-dark: #6b5049;     /* Darker beaver */
-  --color-primary-light: #a08074;    /* Lighter beaver */
-  
+  --color-primary: #6b5049;           /* Beaver - darker for WCAG AA compliance (4.5:1) */
+  --color-primary-dark: #5a4239;     /* Darker beaver */
+  --color-primary-light: #89685d;    /* Lighter beaver - original primary color */
+
   /* Secondary Colors */
   --color-secondary: #c1c6ce;        /* Ghost - subtle gray */
   --color-secondary-dark: #9da2aa;   /* Darker ghost */
   --color-secondary-light: #e1e4ea;  /* Lighter ghost */
-  
+
   /* Accent Colors */
-  --color-accent: #5d8089;           /* Info blue-gray */
-  --color-accent-dark: #4a656c;     /* Darker info */
-  --color-accent-light: #7a9ba3;    /* Lighter info */
+  --color-accent: #4a656c;           /* Info blue-gray - darker for WCAG AA compliance (4.5:1) */
+  --color-accent-dark: #3e555b;     /* Darker info */
+  --color-accent-light: #5d8089;    /* Lighter info - original accent color */
   
   /* State Colors */
   --color-danger: #954035;           /* El Salvador red */
   --color-warning: #958f35;         /* Warning yellow-olive */
   --color-success: #35953a;         /* Success green */
-  --color-info: #5d8089;            /* Info blue-gray */
+  --color-info: #4a656c;            /* Info blue-gray - matches accent for WCAG AA compliance */
   
   /* Brand Specific */
   --color-linkedin: #0072b1;        /* LinkedIn blue */
@@ -153,11 +153,13 @@
 
 /* Touch Target - minimum 44px for accessibility */
 .touch-target {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 44px !important;
+  min-width: 44px !important;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.75rem 1rem !important; /* Ensure adequate padding for text links */
+  box-sizing: border-box !important; /* Ensure padding is included in size calculation */
 }
 
 /* Skip Link for keyboard navigation */

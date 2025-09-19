@@ -137,9 +137,12 @@ test.describe('Accessibility Tests', () => {
   test('Color contrast meets WCAG AA requirements', async ({ page }) => {
     await page.goto('http://localhost:3000');
 
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
+
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2aa'])
-      .include(['color-contrast'])
+      .include('color-contrast')
       .analyze();
 
     // Should have no color contrast violations

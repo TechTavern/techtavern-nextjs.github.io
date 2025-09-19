@@ -7,7 +7,12 @@ interface HeroProps {
 
 export default function Hero({ title, description }: HeroProps) {
   return (
-    <header className="bg-hero relative min-h-screen flex items-center justify-center" id="main-content">
+    <header
+      className="bg-hero relative min-h-screen flex items-center justify-center"
+      id="main-content"
+      tabIndex={-1}
+      aria-label="Main content"
+    >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-mask" />
       
