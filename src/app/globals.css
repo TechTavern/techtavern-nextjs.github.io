@@ -345,7 +345,58 @@ h1, h2, h3, h4, h5, h6 {
   transition: transform 0.3s ease;
 }
 
-/* Technology Logo Item Styling */
+/* Technology Logo Container Enhanced Styling */
+.tech-logo-container {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tech-logo-container:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Technology Logo Image Styling */
+.tech-logo-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: all 0.2s ease;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* Specific logo optimizations */
+.tech-logo-container img[src*="Microsoft"],
+.tech-logo-container img[src*="Azure"] {
+  filter: none;
+}
+
+.tech-logo-container img[src*="AWS"],
+.tech-logo-container img[src*="Amazon"] {
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.tech-logo-container img[src*="Google"] {
+  filter: none;
+}
+
+.tech-logo-container img[src*="OpenAI"] {
+  filter: none;
+}
+
+.tech-logo-container img[src*="Python"] {
+  filter: none;
+}
+
+.tech-logo-container img[src*="React"] {
+  filter: none;
+}
+
+/* Legacy tech-logo-item styles (for backwards compatibility) */
 .tech-logo-item {
   transition: all 0.3s ease;
 }
@@ -359,11 +410,6 @@ h1, h2, h3, h4, h5, h6 {
   max-height: 100%;
   object-fit: contain;
   transition: all 0.3s ease;
-}
-
-/* Ensure Microsoft SVGs use white color */
-.tech-logo-item img[src*="Microsoft"] {
-  filter: brightness(0) invert(1);
 }
 
 /* Handle PNG images that might need special treatment */

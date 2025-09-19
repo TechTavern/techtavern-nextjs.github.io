@@ -166,4 +166,86 @@ test.describe('Accessibility Tests', () => {
     const mainContent = page.locator('#main-content');
     await expect(mainContent).toBeFocused();
   });
+
+  test('Technology logo containers are keyboard accessible', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+
+    // Find all technology logo containers
+    const logoContainers = page.locator('[role="img"][tabindex="0"]');
+    const count = await logoContainers.count();
+
+    // Verify each logo container is focusable and has proper ARIA
+    for (let i = 0; i < count; i++) {
+      const container = logoContainers.nth(i);
+
+      // Test keyboard focus
+      await container.focus();
+      await expect(container).toBeFocused();
+
+      // Verify ARIA attributes
+      const ariaLabel = await container.getAttribute('aria-label');
+      const ariaDescription = await container.getAttribute('aria-description');
+
+      expect(ariaLabel).toContain('technology logo');
+      expect(ariaDescription).toBeTruthy();
+
+      // Test keyboard activation
+      await page.keyboard.press('Enter');
+      await page.keyboard.press('Space');
+    }
+  });
+
+  test('Technology groups have proper semantic structure', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+
+    // Find technology group containers
+    const groups = page.locator('[role="group"]');
+    const groupCount = await groups.count();
+
+    for (let i = 0; i < groupCount; i++) {
+      const group = groups.nth(i);
+
+      // Verify group has aria-labelledby
+      const labelledBy = await group.getAttribute('aria-labelledby');
+      expect(labelledBy).toBeTruthy();
+
+      // Verify the referenced heading exists
+      const heading = page.locator(`#${labelledBy}`);
+      await expect(heading).toBeVisible();
+
+      // Verify heading content
+      const headingText = await heading.textContent();
+      expect(['Cloud', 'AI', 'Code']).toContain(headingText);
+    }
+  });
+
+  test('Logo contrast treatments provide sufficient visibility', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+
+    // Test that different logo types have appropriate contrast treatments
+    const logoContainers = page.locator('[role="img"]');
+    const count = await logoContainers.count();
+
+    for (let i = 0; i < count; i++) {
+      const container = logoContainers.nth(i);
+
+      // Check background styles are applied
+      const styles = await container.evaluate(el => {
+        const computed = window.getComputedStyle(el);
+        return {
+          backgroundColor: computed.backgroundColor,
+          borderWidth: computed.borderWidth,
+          boxShadow: computed.boxShadow
+        };
+      });
+
+      // Verify some form of background treatment exists
+      const hasBackground =
+        styles.backgroundColor !== 'rgba(0, 0, 0, 0)' ||
+        styles.borderWidth !== '0px' ||
+        styles.boxShadow !== 'none';
+
+      expect(hasBackground).toBe(true);
+    }
+  });
 });

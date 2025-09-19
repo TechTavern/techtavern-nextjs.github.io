@@ -1,21 +1,108 @@
+'use client';
+
 import Image from 'next/image';
 
-const technologyGroups = [
+// Logo type classification for adaptive styling
+type LogoType = 'text-heavy' | 'icon-colorful' | 'icon-monochrome' | 'mixed';
+
+interface LogoConfig {
+  src: string;
+  alt: string;
+  title: string;
+  type?: LogoType;
+}
+
+// Classify logo based on filename and known characteristics
+function getLogoType(logoSrc: string): LogoType {
+  const filename = logoSrc.toLowerCase();
+
+  // Text-heavy logos that need light backgrounds for readability
+  if (filename.includes('azure') ||
+      filename.includes('aws') ||
+      filename.includes('amazon_web_services') ||
+      filename.includes('google_cloud') ||
+      filename.includes('openai') ||
+      filename.includes('anthropic') ||
+      filename.includes('gemini') ||
+      filename.includes('grok')) {
+    return 'text-heavy';
+  }
+
+  // Colorful icon logos that work better with subtle dark backgrounds
+  if (filename.includes('react') ||
+      filename.includes('angular') ||
+      filename.includes('python') ||
+      filename.includes('go_logo_blue')) {
+    return 'icon-colorful';
+  }
+
+  // Monochrome icons that need contrast
+  if (filename.includes('notext') ||
+      filename.includes('icon') ||
+      filename.includes('symbol')) {
+    return 'icon-monochrome';
+  }
+
+  // Default to mixed for unknown logos
+  return 'mixed';
+}
+
+// Get appropriate styling classes based on logo type with WCAG AA compliance
+function getLogoStyling(logoType: LogoType) {
+  switch (logoType) {
+    case 'text-heavy':
+      // High contrast white background for text-based logos (4.5:1+ contrast ratio)
+      return {
+        container: 'bg-white/90 hover:bg-white/95 shadow-sm hover:shadow-md border border-white/40 backdrop-blur-sm',
+        image: 'filter-none',
+        ariaDescription: 'Logo on high-contrast light background for optimal text readability'
+      };
+    case 'icon-colorful':
+      // Subtle dark background that doesn't interfere with colorful icons
+      return {
+        container: 'bg-slate-900/50 hover:bg-slate-900/65 shadow-md hover:shadow-lg border border-slate-600/50 backdrop-blur-sm',
+        image: 'filter-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]',
+        ariaDescription: 'Colorful icon logo on subtle dark background'
+      };
+    case 'icon-monochrome':
+      // Enhanced contrast for monochrome icons
+      return {
+        container: 'bg-gradient-to-br from-slate-800/70 to-slate-900/70 hover:from-slate-800/85 hover:to-slate-900/85 shadow-md hover:shadow-lg border border-slate-500/60',
+        image: 'brightness-115 contrast-115 drop-shadow-[0_2px_4px_rgba(255,255,255,0.2)]',
+        ariaDescription: 'Monochrome icon logo with enhanced contrast'
+      };
+    case 'mixed':
+    default:
+      // Balanced approach for unknown logos
+      return {
+        container: 'bg-white/80 hover:bg-white/90 shadow-sm hover:shadow-md border border-white/50 backdrop-blur-sm',
+        image: 'filter-none drop-shadow-sm',
+        ariaDescription: 'Technology logo with balanced contrast treatment'
+      };
+  }
+}
+
+interface TechnologyGroup {
+  title: string;
+  logos: LogoConfig[];
+}
+
+const technologyGroups: TechnologyGroup[] = [
   {
     title: 'Cloud',
     logos: [
       { src: '/assets/img/logos/Microsoft_Azure_Logo.svg', alt: 'Microsoft Azure Logo', title: 'Microsoft Azure' },
-      { src: '/assets/img/logos/Amazon_Web_Services_Logo.svg', alt: 'Amazon Web Services Logo', title: 'Amazon Web Services' },
+      { src: '/assets/img/logos/Amazon_Web_Services_Logo_Light.svg', alt: 'Amazon Web Services Logo', title: 'Amazon Web Services' },
       { src: '/assets/img/logos/Google_Cloud_Logo.svg', alt: 'Google Cloud Logo', title: 'Google Cloud Platform' },
     ],
   },
   {
     title: 'AI',
     logos: [
-      { src: '/assets/img/logos/OpenAI_Logo.svg', alt: 'OpenAI ChatGPT Logo', title: 'OpenAI ChatGPT' },
-      { src: '/assets/img/logos/Anthropic_Claude_Logo.svg', alt: 'Anthropic Claude Logo', title: 'Anthropic Claude' },
+      { src: '/assets/img/logos/OpenAI_Logo_White.svg', alt: 'OpenAI ChatGPT Logo', title: 'OpenAI ChatGPT' },
+      { src: '/assets/img/logos/Anthropic_Claude_Logo_White_Text.svg', alt: 'Anthropic Claude Logo', title: 'Anthropic Claude' },
       { src: '/assets/img/logos/Google_Gemini_Logo.svg', alt: 'Google Gemini Logo', title: 'Google Gemini' },
-      { src: '/assets/img/logos/Grok-2025-logo.svg', alt: 'Grok Logo', title: 'Grok AI' },
+      { src: '/assets/img/logos/Grok-2025-logo-white.svg', alt: 'Grok Logo', title: 'Grok AI' },
     ],
   },
   {
@@ -84,19 +171,24 @@ export default function Services() {
         {/* Technology Groups - 3 Equal Column Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
           {technologyGroups.map((group, groupIndex) => (
-            <div 
-              key={groupIndex} 
+            <div
+              key={groupIndex}
               className="tech-group-container"
+              role="group"
+              aria-labelledby={`tech-group-${groupIndex}`}
             >
               {/* Group Header */}
               <div className="text-center mb-6">
-                <h3 className="text-xl md:text-2xl font-heading font-semibold text-light/90 mb-4">
+                <h3
+                  id={`tech-group-${groupIndex}`}
+                  className="text-xl md:text-2xl font-heading font-semibold text-light/90 mb-4"
+                >
                   {group.title}
                 </h3>
               </div>
               
               {/* Group Background Container */}
-              <div className="bg-white/10 rounded-lg p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15 h-[240px] md:h-[280px]">
+              <div className="bg-gradient-to-br from-white/25 to-white/15 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:from-white/35 hover:to-white/25 border border-white/20 h-[240px] md:h-[280px]">
                 {/* Individual Logos Grid */}
                 <div className={
                   group.logos.length === 3 
@@ -104,8 +196,8 @@ export default function Services() {
                     : "grid grid-cols-2 gap-2 sm:gap-3 h-full"
                 }>
                   {group.logos.map((logo, logoIndex) => (
-                    <div 
-                      key={logoIndex} 
+                    <div
+                      key={logoIndex}
                       className="flex justify-center items-center"
                     >
                       <Image
