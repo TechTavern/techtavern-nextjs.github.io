@@ -13,12 +13,12 @@ export default function Footer() {
 
           {/* Right: Quick navigation */}
           <div className="text-center md:text-right">
-            <nav className="space-y-2" aria-label="Footer navigation">
-              <Link href="/" className="block text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Home">Home</Link>
-              <Link href="/#Services" className="block text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Services section">Services</Link>
-              <Link href="/#About" className="block text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to About section">About</Link>
-              <Link href="/articles" className="block text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Articles page">Articles</Link>
-              <Link href="/#Contact" className="block text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Contact section">Contact</Link>
+            <nav className="flex flex-col md:flex-row md:flex-wrap md:justify-end gap-2 md:gap-x-6 md:gap-y-2" aria-label="Footer navigation">
+              <Link href="/" className="text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Home">Home</Link>
+              <Link href="/#Services" className="text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Services section">Services</Link>
+              <Link href="/#About" className="text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to About section">About</Link>
+              <Link href="/articles" className="text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Articles page">Articles</Link>
+              <Link href="/#Contact" className="text-[color:var(--color-light-80)] hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Contact section">Contact</Link>
             </nav>
           </div>
         </div>
