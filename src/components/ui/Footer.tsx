@@ -13,12 +13,12 @@ export default function Footer() {
 
           {/* Right: Quick navigation */}
           <div className="text-center md:text-right">
-            <nav className="space-y-2">
-              <Link href="/" className="block text-light/80 hover:text-light transition-colors duration-300">Home</Link>
-              <Link href="/#Services" className="block text-light/80 hover:text-light transition-colors duration-300">Services</Link>
-              <Link href="/#About" className="block text-light/80 hover:text-light transition-colors duration-300">About</Link>
-              <Link href="/articles" className="block text-light/80 hover:text-light transition-colors duration-300">Articles</Link>
-              <Link href="/#Contact" className="block text-light/80 hover:text-light transition-colors duration-300">Contact</Link>
+            <nav className="space-y-2" aria-label="Footer navigation">
+              <Link href="/" className="block text-light/80 hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Home">Home</Link>
+              <Link href="/#Services" className="block text-light/80 hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Services section">Services</Link>
+              <Link href="/#About" className="block text-light/80 hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to About section">About</Link>
+              <Link href="/articles" className="block text-light/80 hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Articles page">Articles</Link>
+              <Link href="/#Contact" className="block text-light/80 hover:text-light transition-colors duration-300 focus-ring-light touch-target" aria-label="Navigate to Contact section">Contact</Link>
             </nav>
           </div>
         </div>

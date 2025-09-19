@@ -7,7 +7,7 @@ interface HeroProps {
 
 export default function Hero({ title, description }: HeroProps) {
   return (
-    <header className="bg-hero relative min-h-screen flex items-center justify-center" id="Home">
+    <header className="bg-hero relative min-h-screen flex items-center justify-center" id="main-content">
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-mask" />
       
@@ -25,23 +25,26 @@ export default function Hero({ title, description }: HeroProps) {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link 
+                <Link
                   href="#Services"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-dark bg-secondary hover:bg-secondary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-dark bg-secondary hover:bg-secondary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl focus-ring touch-target"
+                  aria-label="View our services"
                 >
                   Services
                 </Link>
-                
-                <Link 
+
+                <Link
                   href="/articles"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg focus-ring-light touch-target"
+                  aria-label="Read our articles"
                 >
                   Articles
                 </Link>
-                
-                <Link 
+
+                <Link
                   href="#Contact"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light border-2 border-secondary hover:border-secondary-light hover:bg-secondary/10 transition-all duration-300 rounded-lg focus-ring-light touch-target"
+                  aria-label="Contact us"
                 >
                   Contact
                 </Link>

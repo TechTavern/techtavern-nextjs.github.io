@@ -127,9 +127,10 @@ export default async function ArticlesIndexPage() {
                     </div>
                     
                     <h2 className="text-xl font-heading font-semibold text-dark mb-3 line-clamp-2">
-                      <Link 
+                      <Link
                         href={post.url}
-                        className="hover:text-primary transition-colors duration-300"
+                        className="hover:text-primary transition-colors duration-300 focus-ring"
+                        aria-label={`Read article: ${post.title}`}
                       >
                         {post.title}
                       </Link>
@@ -143,7 +144,8 @@ export default async function ArticlesIndexPage() {
                     
                     <Link
                       href={post.url}
-                      className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors duration-300"
+                      className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors duration-300 focus-ring touch-target group"
+                      aria-label={`Read more about ${post.title}`}
                     >
                       Read More
                       <svg
@@ -151,6 +153,7 @@ export default async function ArticlesIndexPage() {
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"
@@ -179,7 +182,8 @@ export default async function ArticlesIndexPage() {
           </p>
           <Link
             href="/#Contact"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl focus-ring touch-target"
+            aria-label={ARTICLES_PAGE.cta.buttonLabel}
           >
             {ARTICLES_PAGE.cta.buttonLabel}
           </Link>

@@ -67,7 +67,7 @@ export default function Profile() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={profile.certifications.pmp.altText}
-            className="block"
+            className="block focus-ring touch-target"
           >
             <div className="relative w-full aspect-square">
               <Image
@@ -85,7 +85,7 @@ export default function Profile() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={profile.certifications.genAiLeader.altText}
-            className="block"
+            className="block focus-ring touch-target"
           >
             <div className="relative w-full aspect-square">
               <Image
@@ -110,11 +110,12 @@ export default function Profile() {
         <div className="text-lg text-light/90 leading-relaxed space-y-4">
           <p>
             Tech Tavern is led by{' '}
-            <a 
+            <a
               href={profile.leaderLinkedIn}
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-light hover:text-accent transition-colors underline decoration-2 underline-offset-2"
+              className="text-accent-light hover:text-accent transition-colors underline decoration-2 underline-offset-2 focus-ring-light"
+              aria-label={`${profile.leaderName}'s LinkedIn profile`}
             >
               {profile.leaderName}
             </a>
@@ -127,7 +128,7 @@ export default function Profile() {
               href={profile.social.linkedin.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-linkedin hover:bg-linkedin/90 text-white transition-colors"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-linkedin hover:bg-linkedin/90 text-white transition-colors focus-ring-light touch-target"
               aria-label={profile.social.linkedin.label}
             >
               <LinkedInIcon size={20} />
