@@ -1,4 +1,5 @@
 import { Shield, Brain, Rocket } from 'lucide-react';
+import styles from './Mission.module.css';
 
 const missionItems = [
   {
@@ -28,7 +29,7 @@ export default function Mission() {
             return (
               <div key={index} className="group">
                 {/* Icon with gradient background */}
-                <div className="icon bg-gradient-to-br from-seal-brown to-maroon mb-6 mx-auto transition-transform duration-300 group-hover:scale-110">
+                <div className={`${styles.icon} bg-gradient-to-br from-seal-brown to-maroon mb-6 mx-auto transition-transform duration-300 group-hover:scale-110`}>
                   <IconComponent size={48} className="text-light" />
                 </div>
                 

@@ -1,0 +1,81 @@
+/* Technology Group and Logo Container Styles for Services Component */
+
+/* Technology Group Styling */
+.techGroupContainer {
+  transition: transform 0.3s ease;
+}
+
+/* Technology Logo Container Enhanced Styling */
+.techLogoContainer {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.techLogoContainer:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Technology Logo Image Styling */
+.techLogoContainer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: all 0.2s ease;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* Specific logo optimizations */
+.techLogoContainer img[src*="Microsoft"],
+.techLogoContainer img[src*="Azure"] {
+  filter: none;
+}
+
+.techLogoContainer img[src*="AWS"],
+.techLogoContainer img[src*="Amazon"] {
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.techLogoContainer img[src*="Google"],
+.techLogoContainer img[src*="OpenAI"],
+.techLogoContainer img[src*="Python"],
+.techLogoContainer img[src*="React"] {
+  filter: none;
+}
+
+/* Legacy compatibility for existing class names */
+.techLogoItem {
+  transition: all 0.3s ease;
+}
+
+.techLogoItem:hover {
+  transform: translateY(-2px);
+}
+
+.techLogoItem img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.techLogoItem img[src*=".png"] {
+  mix-blend-mode: normal;
+}
+
+/* Responsive optimizations */
+@media (max-width: 640px) {
+  .techGroupContainer {
+    transform: none !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .techGroupContainer {
+    transform: none !important;
+  }
+}

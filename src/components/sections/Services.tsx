@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import styles from './Services.module.css';
 
 interface LogoConfig {
   src: string;
@@ -99,7 +100,7 @@ export default function Services() {
           {technologyGroups.map((group, groupIndex) => (
             <div
               key={groupIndex}
-              className="tech-group-container"
+              className={styles.techGroupContainer}
               role="group"
               aria-labelledby={`tech-group-${groupIndex}`}
             >

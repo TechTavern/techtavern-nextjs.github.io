@@ -137,15 +137,15 @@
 .focus-ring:focus,
 .focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--focus-ring-color);
   border-radius: 0.375rem;
+  box-shadow: 0 0 0 2px var(--focus-ring-color);
 }
 
 .focus-ring-light:focus,
 .focus-ring-light:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--focus-ring-color-light);
   border-radius: 0.375rem;
+  box-shadow: 0 0 0 2px var(--focus-ring-color-light);
 }
 
 .focus-within-highlight:focus-within {
@@ -155,13 +155,13 @@
 
 /* Touch Target - minimum 44px for accessibility */
 .touch-target {
-  min-height: 44px !important;
-  min-width: 44px !important;
+  min-height: 44px;
+  min-width: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1rem !important; /* Ensure adequate padding for text links */
-  box-sizing: border-box !important; /* Ensure padding is included in size calculation */
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
 }
 
 /* Skip Link for keyboard navigation */
@@ -190,77 +190,20 @@
   clip-path: polygon(20% 0%, 100% 0, 100% 80%, 80% 100%, 0 100%, 0 19%);
 }
 
-/* Background Image Utilities - Responsive */
-.bg-hero {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* Mobile first - smallest image */
-  background-image: url('/images/richmond-station-view-375w.webp');
-}
-
-/* Responsive background images for better performance */
-@media (min-width: 768px) {
-  .bg-hero {
-    background-image: url('/images/richmond-station-view-768w.webp');
-  }
-}
-
-@media (min-width: 1200px) {
-  .bg-hero {
-    background-image: url('/images/richmond-station-view-1200w.webp');
-  }
-}
-
-@media (min-width: 1920px) {
-  .bg-hero {
-    background-image: url('/images/richmond-station-view-1920w.webp');
-  }
-}
-
-/* Shape Dividers */
-.shape-divider-top {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  transform: rotate(180deg);
-}
-
-.shape-divider svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: var(--size-shape-divider);
-}
-
-/* Feature List Styling */
+/* Feature List Styling - Used across multiple components */
 .feature-list {
   padding-left: 2rem;
-  list-style-type: none;
+  list-style: none;
 }
 
 .feature-list li {
   padding-left: 2rem;
-  background-image: url('/assets/img/check.svg');
-  background-repeat: no-repeat;
   line-height: 1.5rem;
   margin-bottom: 1rem;
+  background-image: url('/assets/img/check.svg');
+  background-repeat: no-repeat;
 }
 
-/* Icon Styling */
-.icon {
-  color: var(--color-light);
-  height: var(--size-icon);
-  width: var(--size-icon);
-  font-size: 1.75rem;
-  border-radius: var(--radius-icon);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
 
 
 /* ===== GLOBAL STYLES ===== */
@@ -273,94 +216,3 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* Technology Group Styling */
-.tech-group-container {
-  transition: transform 0.3s ease;
-}
-
-/* Technology Logo Container Enhanced Styling */
-.tech-logo-container {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(4px);
-  transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.tech-logo-container:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Technology Logo Image Styling */
-.tech-logo-container img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  transition: all 0.2s ease;
-  filter: none;
-  mix-blend-mode: normal;
-}
-
-/* Specific logo optimizations */
-.tech-logo-container img[src*="Microsoft"],
-.tech-logo-container img[src*="Azure"] {
-  filter: none;
-}
-
-.tech-logo-container img[src*="AWS"],
-.tech-logo-container img[src*="Amazon"] {
-  filter: brightness(1.1) contrast(1.1);
-}
-
-.tech-logo-container img[src*="Google"] {
-  filter: none;
-}
-
-.tech-logo-container img[src*="OpenAI"] {
-  filter: none;
-}
-
-.tech-logo-container img[src*="Python"] {
-  filter: none;
-}
-
-.tech-logo-container img[src*="React"] {
-  filter: none;
-}
-
-/* Legacy tech-logo-item styles (for backwards compatibility) */
-.tech-logo-item {
-  transition: all 0.3s ease;
-}
-
-.tech-logo-item:hover {
-  transform: translateY(-2px);
-}
-
-.tech-logo-item img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  transition: all 0.3s ease;
-}
-
-/* Handle PNG images that might need special treatment */
-.tech-logo-item img[src*=".png"] {
-  mix-blend-mode: normal;
-}
-
-/* Responsive technology group improvements */
-@media (max-width: 640px) {
-  .tech-group-container {
-    /* Remove stagger on mobile */
-    transform: none !important;
-  }
-}
-
-@media (min-width: 640px) and (max-width: 1024px) {
-  .tech-group-container {
-    /* Remove stagger on tablet */
-    transform: none !important;
-  }
-}

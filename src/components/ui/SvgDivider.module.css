@@ -1,0 +1,28 @@
+/* SVG Shape Divider Component Styles */
+
+.shapeDividerTop {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: scaleX(-1) scaleY(-1);
+}
+
+.shapeDivider {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.shapeDividerTop svg,
+.shapeDivider svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: var(--size-shape-divider);
+}

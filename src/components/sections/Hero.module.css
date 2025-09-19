@@ -1,0 +1,28 @@
+/* Hero Component Background Styles */
+
+.bgHero {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* Mobile first - smallest image */
+  background-image: url('/images/richmond-station-view-375w.webp');
+}
+
+/* Responsive background images for better performance */
+@media (min-width: 768px) {
+  .bgHero {
+    background-image: url('/images/richmond-station-view-768w.webp');
+  }
+}
+
+@media (min-width: 1200px) {
+  .bgHero {
+    background-image: url('/images/richmond-station-view-1200w.webp');
+  }
+}
+
+@media (min-width: 1920px) {
+  .bgHero {
+    background-image: url('/images/richmond-station-view-1920w.webp');
+  }
+}

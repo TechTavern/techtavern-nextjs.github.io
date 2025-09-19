@@ -1,18 +1,20 @@
+import styles from './SvgDivider.module.css';
+
 interface SvgDividerProps {
   position: 'top' | 'bottom';
   fill?: string;
   className?: string;
 }
 
-export default function SvgDivider({ 
-  position, 
+export default function SvgDivider({
+  position,
   fill = 'currentColor',
-  className = '' 
+  className = ''
 }: SvgDividerProps) {
   const isTop = position === 'top';
-  
+
   return (
-    <div className={`relative ${isTop ? 'shape-divider-top' : 'shape-divider'} ${className}`}>
+    <div className={`relative ${isTop ? styles.shapeDividerTop : styles.shapeDivider} ${className}`}>
       <svg 
         data-name={`tri-asym-${position}`}
         xmlns="http://www.w3.org/2000/svg" 

@@ -1,0 +1,12 @@
+/* Mission Component Icon Styles */
+
+.icon {
+  color: var(--color-light);
+  height: var(--size-icon);
+  width: var(--size-icon);
+  font-size: 1.75rem;
+  border-radius: var(--radius-icon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

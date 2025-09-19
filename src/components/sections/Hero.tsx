@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import styles from './Hero.module.css';
 
 interface HeroProps {
   title: string;
@@ -8,7 +9,7 @@ interface HeroProps {
 export default function Hero({ title, description }: HeroProps) {
   return (
     <header
-      className="bg-hero relative min-h-screen flex items-center justify-center"
+      className={`${styles.bgHero} relative min-h-screen flex items-center justify-center`}
       id="main-content"
       tabIndex={-1}
       aria-label="Main content"
