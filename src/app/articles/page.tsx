@@ -173,20 +173,22 @@ export default async function ArticlesIndexPage() {
 
       {/* Call to Action */}
       <section className="bg-secondary/10 py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-heading font-bold text-dark mb-4">
-            {ARTICLES_PAGE.cta.heading}
-          </h2>
-          <p className="text-xl text-dark/70 mb-8 max-w-2xl mx-auto">
-            {ARTICLES_PAGE.cta.subtext}
-          </p>
-          <Link
-            href="/#Contact"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl focus-ring touch-target"
-            aria-label={ARTICLES_PAGE.cta.buttonLabel}
-          >
-            {ARTICLES_PAGE.cta.buttonLabel}
-          </Link>
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-heading font-bold text-dark mb-4">
+              {ARTICLES_PAGE.cta.heading}
+            </h2>
+            <p className="text-xl text-dark/70 mb-8 max-w-2xl mx-auto">
+              {ARTICLES_PAGE.cta.subtext}
+            </p>
+            <Link
+              href="/#Contact"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg hover:shadow-xl focus-ring touch-target"
+              aria-label={ARTICLES_PAGE.cta.buttonLabel}
+            >
+              {ARTICLES_PAGE.cta.buttonLabel}
+            </Link>
+          </div>
         </div>
       </section>
     </>
