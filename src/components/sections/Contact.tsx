@@ -60,7 +60,7 @@ export default function Contact() {
       {/* Illustration */}
       <div className="flex justify-center">
         <Image
-          src="/assets/img/undraw_contact_us_15o2.svg"
+          src="/assets/img/undraw_contact_us_15o2_white_circles.svg"
           alt="line art of people sitting around social media icons"
           width={500}
           height={400}
