@@ -23,7 +23,7 @@ export default function Home() {
       />
 
       {/* Info Section with Gradient Background */}
-      <section className="gradient-brand text-light pt-6 pb-0" id="Info">
+      <section className="bg-gradient-to-br from-seal-brown to-maroon text-light pt-6 pb-0" id="Info">
         <div className="container mx-auto px-4 mt-12">
           <Info />
         </div>
@@ -36,7 +36,7 @@ export default function Home() {
       <Mission />
 
       {/* Services Section */}
-      <section className="gradient-brand text-light py-0" id="Services">
+      <section className="bg-gradient-to-br from-seal-brown to-maroon text-light py-0" id="Services">
         {/* Top Divider */}
         <SvgDivider position="top" fill="white" />
         

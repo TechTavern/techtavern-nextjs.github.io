@@ -20,7 +20,7 @@ export default function Hero({ title, description }: HeroProps) {
       <div className="relative z-10 container mx-auto px-4 pt-3">
         <div className="flex items-center justify-center min-h-screen">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="glass rounded-lg p-8 md:p-12 text-light animate-fade-in">
+            <div className="backdrop-blur-lg bg-seal-brown/20 rounded-lg p-8 md:p-12 text-light animate-fade-in">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 text-light">
                 {title}
               </h1>

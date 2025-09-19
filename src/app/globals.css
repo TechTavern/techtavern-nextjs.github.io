@@ -50,7 +50,9 @@
 
 /* Tech Tavern Custom Theme Configuration */
 @theme {
-  /* ===== COLOR SYSTEM ===== */
+  /* ===== TAILWIND CSS v4 COLOR SYSTEM ===== */
+  /* Colors are defined using Tailwind CSS v4 syntax for utility class generation */
+
   /* Primary Brand Colors */
   --color-primary: #6b5049;           /* Beaver - darker for WCAG AA compliance (4.5:1) */
   --color-primary-dark: #5a4239;     /* Darker beaver */
@@ -65,16 +67,16 @@
   --color-accent: #4a656c;           /* Info blue-gray - darker for WCAG AA compliance (4.5:1) */
   --color-accent-dark: #3e555b;     /* Darker info */
   --color-accent-light: #5d8089;    /* Lighter info - original accent color */
-  
+
   /* State Colors */
   --color-danger: #954035;           /* El Salvador red */
   --color-warning: #958f35;         /* Warning yellow-olive */
   --color-success: #35953a;         /* Success green */
   --color-info: #4a656c;            /* Info blue-gray - matches accent for WCAG AA compliance */
-  
+
   /* Brand Specific */
   --color-linkedin: #0072b1;        /* LinkedIn blue */
-  
+
   /* Neutral Scale */
   --color-light: #f2f7ff;           /* Very light blue */
   --color-light-80: #c2d1e6;        /* Light with 80% effective opacity for contrast compliance */
@@ -83,13 +85,13 @@
   --color-nero: #1f1e1e;            /* Nearly black */
   --color-seal-brown: #260101;      /* Deep brown */
   --color-maroon: #730202;          /* Deep red */
-  
+
   /* Blue Scale */
   --color-beau-blue: #c2e0f2;       /* Light blue */
   --color-beau-blue-light: #e6f5ff; /* Even lighter blue */
   --color-two: #9bb1bf;             /* Mid blue-gray */
   --color-three: #d93829;           /* Bright red */
-  
+
   /* Special Effect Colors */
   --color-mask: rgba(0, 0, 0, 0.5);              /* Neutral overlay */
   --color-mask-glass: rgba(38, 1, 1, 0.2);       /* Glassmorphism overlay */
@@ -182,33 +184,6 @@
   box-shadow: 0 0 0 2px var(--focus-ring-color);
 }
 
-/* Glassmorphism Effect */
-.glass {
-  backdrop-filter: var(--backdrop-blur-glass);
-  background-color: var(--color-mask-glass);
-}
-
-/* Brand Gradients */
-.gradient-brand {
-  background: var(--color-gradient-start);
-  background: linear-gradient(
-    135deg,
-    var(--color-gradient-start) 0%,
-    var(--color-gradient-end) 100%
-  );
-}
-
-/* Divider Styles */
-.divider {
-  height: 2px;
-  width: 80%;
-  background: linear-gradient(
-    90deg, 
-    hsl(0, 0%, 20%), 
-    hsl(0, 0%, 70%), 
-    hsl(0, 0%, 20%)
-  );
-}
 
 /* Custom Clip Paths */
 .side-notch {

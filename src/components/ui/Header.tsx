@@ -13,7 +13,7 @@ export default function Header({ variant }: HeaderProps) {
 
   // Interior header for articles and other inner pages
   return (
-    <header className="gradient-brand text-light">
+    <header className="bg-gradient-to-br from-seal-brown to-maroon text-light">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link

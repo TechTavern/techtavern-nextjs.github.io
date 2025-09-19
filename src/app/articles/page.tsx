@@ -59,7 +59,7 @@ export default async function ArticlesIndexPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="gradient-brand text-light py-16">
+      <section className="bg-gradient-to-br from-seal-brown to-maroon text-light py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Color Test</title>
+    <script src="https://cdn.tailwindcss.com/4.1.12"></script>
+    <style>
+        @theme {
+            --color-primary: #6b5049;
+            --color-primary-dark: #5a4239;
+            --color-primary-light: #89685d;
+            --color-secondary: #c1c6ce;
+            --color-secondary-dark: #9da2aa;
+            --color-secondary-light: #e1e4ea;
+            --color-accent: #4a656c;
+            --color-light: #f2f7ff;
+            --color-dark: #232326;
+            --color-nero: #1f1e1e;
+            --color-seal-brown: #260101;
+            --color-maroon: #730202;
+        }
+    </style>
+</head>
+<body class="p-8 bg-light">
+    <h1 class="text-2xl font-bold mb-6 text-dark">Tailwind Color Utility Test</h1>
+
+    <div class="space-y-4">
+        <!-- Primary Colors -->
+        <div class="bg-primary text-light p-4 rounded">bg-primary text-light</div>
+        <div class="bg-primary-dark text-light p-4 rounded">bg-primary-dark text-light</div>
+        <div class="bg-primary-light text-dark p-4 rounded">bg-primary-light text-dark</div>
+
+        <!-- Secondary Colors -->
+        <div class="bg-secondary text-dark p-4 rounded">bg-secondary text-dark</div>
+        <div class="bg-secondary-dark text-light p-4 rounded">bg-secondary-dark text-light</div>
+        <div class="bg-secondary-light text-dark p-4 rounded">bg-secondary-light text-dark</div>
+
+        <!-- Gradients -->
+        <div class="bg-gradient-to-br from-seal-brown to-maroon text-light p-4 rounded">
+            bg-gradient-to-br from-seal-brown to-maroon
+        </div>
+
+        <!-- Text Colors -->
+        <div class="bg-nero p-4 rounded">
+            <p class="text-light">text-light on bg-nero</p>
+            <p class="text-primary">text-primary on bg-nero</p>
+            <p class="text-secondary">text-secondary on bg-nero</p>
+        </div>
+
+        <!-- Border Colors -->
+        <div class="border-2 border-primary p-4 rounded">border-primary</div>
+        <div class="border-2 border-secondary p-4 rounded">border-secondary</div>
+    </div>
+</body>
+</html>
