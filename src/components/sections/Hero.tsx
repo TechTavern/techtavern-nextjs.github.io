@@ -20,7 +20,7 @@ export default function Hero({ title, description }: HeroProps) {
                 {title}
               </h1>
               
-              <p className="text-lg md:text-xl lg:text-2xl mb-8 text-light/90 leading-relaxed">
+              <p className="text-lg md:text-xl lg:text-2xl mb-8 text-[color:var(--color-light-80)] leading-relaxed">
                 {description}
               </p>
               

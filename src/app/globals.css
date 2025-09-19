@@ -77,7 +77,9 @@
   
   /* Neutral Scale */
   --color-light: #f2f7ff;           /* Very light blue */
+  --color-light-80: #c2d1e6;        /* Light with 80% effective opacity for contrast compliance */
   --color-dark: #232326;            /* Shark dark */
+  --color-dark-80: #4a4d52;         /* Dark with 80% effective opacity for contrast compliance */
   --color-nero: #1f1e1e;            /* Nearly black */
   --color-seal-brown: #260101;      /* Deep brown */
   --color-maroon: #730202;          /* Deep red */

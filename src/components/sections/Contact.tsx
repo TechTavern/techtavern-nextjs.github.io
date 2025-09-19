@@ -19,7 +19,7 @@ export default function Contact() {
           {contact.heading}
         </h2>
         
-        <p className="text-lg md:text-xl text-dark/80 leading-relaxed">
+        <p className="text-lg md:text-xl text-[color:var(--color-dark-80)] leading-relaxed">
           {contact.intro}
         </p>
         
