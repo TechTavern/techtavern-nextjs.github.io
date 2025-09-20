@@ -13,7 +13,7 @@
     "test:a11y": "playwright test tests/accessibility.spec.js",
     "test:a11y-static": "node accessibility-test.js",
     "new-article": "node scripts/new-article.js",
-    "article-enrichment": "node scripts/article-enrichment.js",
+    "article-enrichment": "node scripts/enrich-article.js",
     "watch:content": "chokidar \"content/articles/**/*.mdx\" -c \"echo [content] change detected\"",
     "dev:watch": "concurrently -k -n dev,content -c green,cyan \"next dev\" \"npm:watch:content\"",
     "analyze": "ANALYZE=true next build"

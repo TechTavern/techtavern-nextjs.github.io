@@ -45,7 +45,7 @@ npm run build   # or: win-npm run build (WSL)
 - `lint`: ESLint (Next + TS rules)
 - `typecheck`: TypeScript `--noEmit`
 - `new-article`: Scaffold a new MDX article
-- `article-enrichment`: Generate excerpts and tags for MDX files
+- `article-enrichment`: Enrich MDX frontmatter excerpts/tags via OpenAI
 - `dev:watch`: Dev server + MDX change notifications (optional)
 
 ## Dev & Build
@@ -63,35 +63,6 @@ npm run build   # or: win-npm run build (WSL)
 
 Reading time is computed automatically (~200 wpm) and shown on index and article pages.
 
-### Article Enrichment (optional)
-
-Generate excerpts and tags for existing articles using OpenAI:
-
-```bash
-npm run article-enrichment
-```
-
-Requirements:
-- `OPENAI_API_KEY` in `.env.local`
-- `.mdx` files in `content/articles/`
-
-What it does:
-- Scans MDX files, skips ones that already have good metadata
-- Uses `gpt-5-mini` with medium reasoning by default to produce a 100–160 char excerpt and 2–5 tags
-- Updates frontmatter in place and prints a summary
-
-Model configuration (via `.env.local`):
-- `OPENAI_MODEL` (default `gpt-5-mini`)
-- `OPENAI_REASONING` (default `medium`; one of `low|medium|high`)
-See `sample.env.local` for a template.
-
-Tip: run a dry run (no API calls) to verify config:
-
-```bash
-npm run article-enrichment -- --dry-run
-# On WSL: win-npm run article-enrichment -- --dry-run
-```
-
 ### MDX Links & Images
 
 - Links: internal links use `next/link`; external links open in a new tab with `rel="nofollow noopener noreferrer external"`.
@@ -104,35 +75,12 @@ npm run article-enrichment -- --dry-run
 - Articles index: `/articles/`
 - Article URLs: `/articles/YYYY/MM/DD/slug/`
 
-## Windows + WSL setup
+### AI Article Enrichment
 
-If you develop in WSL, run the dev server on Windows for reliable file watching using a simple wrapper:
-
-```bash
-# Create wrapper scripts directory
-mkdir -p ~/bin
-
-# Create the win-npm wrapper
-cat > ~/bin/win-npm << 'EOF'
-#!/bin/bash
-WIN_PATH=$(wslpath -w "$(pwd)")
-powershell.exe -Command "cd '$WIN_PATH'; npm $*"
-EOF
-
-# Make it executable
-chmod +x ~/bin/win-npm
-
-# Add to PATH
-echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
-```
-
-Then use `win-npm` for package commands from WSL:
-
-```bash
-win-npm install
-win-npm run dev
-win-npm run build
-```
+- Configure `.env.local` with `OPENAI_API_KEY` (required) and optionally `OPENAI_MODEL` (defaults to `gpt-5-mini`).
+- Run `npm run article-enrichment` to enrich every `.mdx` file in `content/articles/` that lacks `excerpt` or `tags`.
+- Optional path scoping: `npm run article-enrichment -- content/articles/2025-10-31-sample.mdx`.
+- Use `--dry-run` (or `DRY_RUN=1`) to preview the files that would be updated without making API calls or writes.
 
 ## Environment Configuration
 
