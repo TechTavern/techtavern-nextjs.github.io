@@ -1,6 +1,6 @@
 /* @jest-environment node */
 import { buildOrganizationJsonLd, buildArticleJsonLd, toAbsoluteUrl } from './seo';
-import type { PostMeta } from './posts';
+import { createPostMeta } from '@/tests/test-utils';
 
 describe('seo JSON-LD builders', () => {
   const baseUrl = 'https://example.com';
@@ -20,33 +20,8 @@ describe('seo JSON-LD builders', () => {
     expect(json.contactPoint?.[0].email).toBe('info@tech-tavern.com');
   });
 
-  function makePost(overrides: Partial<PostMeta> = {}): PostMeta {
-    const p: PostMeta = {
-      title: 'Hello World',
-      date: '2025-08-24',
-      lastModified: '2025-08-24',
-      slug: 'hello-world',
-      excerpt: 'A short summary',
-      tags: ['AI', 'Best Practices'],
-      featuredImage: '/images/tech-tavern-default-featured.webp',
-      ogTitle: undefined,
-      ogDescription: undefined,
-      ogImage: undefined,
-      canonicalUrl: undefined,
-      draft: false,
-      readingTimeMinutes: 3,
-      year: '2025',
-      month: '08',
-      day: '24',
-      url: '/articles/2025/08/24/hello-world/',
-      filePath: '/abs/path/to/file.mdx',
-      ...overrides,
-    };
-    return p;
-  }
-
   it('builds Article JSON-LD using overrides (ogTitle/ogDescription/ogImage/canonical)', () => {
-    const post = makePost({
+    const post = createPostMeta({
       ogTitle: 'OG Title',
       ogDescription: 'OG Desc',
       ogImage: '/images/og.png',
@@ -70,7 +45,7 @@ describe('seo JSON-LD builders', () => {
   });
 
   it('builds Article JSON-LD with sensible defaults when og fields missing', () => {
-    const post = makePost();
+    const post = createPostMeta();
     const json = buildArticleJsonLd({
       post,
       baseUrl,
