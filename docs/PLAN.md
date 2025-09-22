@@ -244,3 +244,83 @@ Based on comprehensive analysis by tailwind-ui-designer agent, the following pha
 - **User Experience**: Improved navigation, better mobile experience
 
 This phased approach ensures systematic improvement while maintaining site functionality and provides clear checkpoints for quality assurance.
+
+## M3 - Test Hardening & Coverage Uplift
+
+**Objective**: Strengthen confidence in static generation, routing, and UI behavior by expanding automated test coverage from ~24% statements to ≥75% while aligning with Tech Tavern testing standards.
+
+### Current State Snapshot
+- Coverage (2025-09-22 via `npm run test:coverage`): statements 23.85%, branches 19.67%, funcs 17.30%, lines 24.81%; testing concentrated in `src/lib` utilities and `MDXImage` component.
+- Gaps: App Router pages, homepage sections, layout metadata/CSP, navigation/CTA behavior, MDX pipeline, variants system, and RSS/robots routes lack coverage. Minimal regression protection for SEO schema and content transforms.
+- Tooling: Jest + Testing Library, Playwright accessibility smoke tests; no coverage thresholds or contract tests for critical data processing.
+- Risks: Undetected regressions in build-time data shaping, route handlers, and interactive components; inability to measure progress against coverage targets; missing fixtures for MDX content scenarios (drafts, missing metadata, error paths).
+
+### Phase 1: Foundation & Critical Paths (Week 1)
+1. **Test Architecture Audit**
+   - Document current Jest config, setup files, and utilities in `docs/testing.md` (or update existing guidance).
+   - Identify reusable test helpers (render wrapper with providers, factory for posts) and add to `src/tests/`.
+2. **Critical Flow Coverage**
+   - Add tests for `src/app/sitemap.ts`, `src/app/rss.xml/route.ts`, and `src/app/robots.ts` covering happy path + error handling.
+   - Cover `src/lib/posts.ts` edge cases: drafts, missing fields, base path normalization, sorted order.
+   - Verify `src/lib/seo.ts` outputs JSON-LD + OG tags respecting overrides and defaults.
+3. **CI Guards**
+   - Introduce coverage thresholds in Jest (`coverageThreshold`) targeting 60% statements/lines as initial gate.
+   - Update GitHub Actions workflow to run `npm run test:coverage` and archive `coverage/` as artifact.
+
+**Acceptance Criteria**
+- Documentation reflects agreed testing patterns.
+- Critical lib + route modules reach ≥70% coverage individually.
+- CI fails when coverage slips below thresholds; coverage artifact available per run.
+
+### Phase 2: UI & Interaction Coverage (Week 2)
+1. **App Router Rendering Tests**
+   - Use Jest + Testing Library to exercise `src/app/page.tsx`, `src/app/articles/page.tsx`, and article detail page components via component-level rendering with mocked data loaders.
+   - Validate metadata exports (including CSP and analytics toggles) using Next.js testing utilities or manual invocation.
+2. **Component Interaction Tests**
+   - Add tests for `Navigation`, `Header`, `Button`, `Card`, `Typography`, and `Services` sections verifying variants, responsive classes, and CTA links.
+   - Cover `GoogleAnalytics` toggling based on env values and base path handling in `Footer`/`Contact` components.
+3. **MDX Pipeline Fixtures**
+   - Create fixture MDX files (valid, missing excerpt/tags, draft) to test rendering via `mdx-components` and article pages.
+   - Ensure `MDXImage` + markdown elements render with correct semantics and accessibility attributes.
+
+**Acceptance Criteria**
+- UI components with conditional variants have deterministic tests; regressions in classnames or link targets surfaced.
+- Article routes render expected headings, metadata, and fallback states under multiple fixture scenarios.
+- Coverage jumps to ≥70% statements overall; branch coverage ≥60%.
+
+### Phase 3: Resilience & Regression Safeguards (Week 3)
+1. **Error & Edge Case Simulation**
+   - Add tests ensuring graceful failures for missing environment variables (`env.ts`), empty content directories, and malformed frontmatter.
+   - Cover `src/lib/variants.ts` with targeted cases for the most-used components to ensure design tokens remain intact.
+2. **Playwright Regression Layer**
+   - Expand Playwright suite to include smoke flows: homepage navigation, article page render, contact CTA, Lighthouse accessibility snapshot.
+   - Integrate `npm run test:a11y` into CI nightly or weekly job with reporting.
+3. **Performance Budgets & Snapshots**
+   - Implement Jest DOM snapshot tests for critical layout sections where structural changes must be reviewed (Hero, Services cards) while keeping snapshots focused and reviewed regularly.
+   - Add bundle-size check or analyze script validation tied to tests for design system components if feasible.
+
+**Acceptance Criteria**
+- Coverage thresholds raised to ≥75% statements / ≥65% branches; PRs cannot merge below target.
+- Playwright suite captures primary user journeys and runs in CI on demand (manual trigger or schedule).
+- Regression artifacts (coverage, Playwright reports) stored for troubleshooting.
+
+### Tooling & Process Enhancements
+- Add `npm run test:ci` that chains `typecheck`, `lint`, `test`, and `test:coverage` for local pre-flight.
+- Configure VSCode tasks or shared workspace settings to encourage running coverage locally.
+- Establish test review checklist: new features require unit tests, accessibility tests, and coverage delta summary in PR description.
+- Monitor coverage trend via badge in README (generated from `coverage-summary.json`).
+
+### Risks & Mitigations
+- **Build time increase**: Mitigate by scoping Playwright to CI schedule and caching Jest results.
+- **Snapshot brittleness**: Limit to structural components, update intentionally with reviewer sign-off.
+- **Fixture maintenance**: Centralize in `tests/fixtures/` with generators to keep content synchronized with schema.
+
+### Metrics & Reporting
+- Weekly coverage report posted to team channel (automate via GitHub Action reading `coverage-summary.json`).
+- Track failed test causes in issue labels (`test-flake`, `coverage-regression`) to drive process improvements.
+- Target zero-flake policy: flaky tests quarantined within 24 hours with dedicated fix task.
+
+### Success Criteria
+- ≥75% coverage sustained for three consecutive releases.
+- No critical regressions escape into production related to sitemap/SEO metadata, navigation, or article rendering.
+- Test suite runtime ≤4 minutes locally with documented fast/slow subsets.
