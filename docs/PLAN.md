@@ -272,21 +272,21 @@ This phased approach ensures systematic improvement while maintaining site funct
 - [x] Critical lib + route modules reach ≥70% coverage individually (current scoped coverage ~81% statements / 86% lines).
 - [x] CI fails when coverage slips below thresholds; coverage artifact available per run.
 
-### Phase 2: UI & Interaction Coverage (Week 2)
-1. **App Router Rendering Tests**
-   - Use Jest + Testing Library to exercise `src/app/page.tsx`, `src/app/articles/page.tsx`, and article detail page components via component-level rendering with mocked data loaders.
-   - Validate metadata exports (including CSP and analytics toggles) using Next.js testing utilities or manual invocation.
-2. **Component Interaction Tests**
-   - Add tests for `Navigation`, `Header`, `Button`, `Card`, `Typography`, and `Services` sections verifying variants, responsive classes, and CTA links.
-   - Cover `GoogleAnalytics` toggling based on env values and base path handling in `Footer`/`Contact` components.
-3. **MDX Pipeline Fixtures**
-   - Create fixture MDX files (valid, missing excerpt/tags, draft) to test rendering via `mdx-components` and article pages.
-   - Ensure `MDXImage` + markdown elements render with correct semantics and accessibility attributes.
+### Phase 2: UI & Interaction Coverage (Week 2) ✅ Completed
+1. **App Router Rendering Tests** ✅
+   - ✅ Use Jest + Testing Library to exercise `src/app/page.tsx`, `src/app/articles/page.tsx`, and article detail page components via component-level rendering with mocked data loaders.
+   - ✅ Validate metadata exports (including CSP and analytics toggles) using Next.js testing utilities or manual invocation.
+2. **Component Interaction Tests** ✅
+   - ✅ Add tests for `Navigation`, `Header`, `Button`, `Card`, `Typography`, and `Services` sections verifying variants, responsive classes, and CTA links.
+   - ✅ Cover `GoogleAnalytics` toggling based on env values and base path handling in `Footer`/`Contact` components.
+3. **MDX Pipeline Fixtures** ✅
+   - ✅ Create fixture MDX files (valid, missing excerpt/tags, draft) to test rendering via `mdx-components` and article pages.
+   - ✅ Ensure `MDXImage` + markdown elements render with correct semantics and accessibility attributes.
 
 **Acceptance Criteria**
-- UI components with conditional variants have deterministic tests; regressions in classnames or link targets surfaced.
-- Article routes render expected headings, metadata, and fallback states under multiple fixture scenarios.
-- Coverage jumps to ≥70% statements overall; branch coverage ≥60%.
+- [x] UI components with conditional variants have deterministic tests; regressions in classnames or link targets surfaced.
+- [x] Article routes render expected headings, metadata, and fallback states under multiple fixture scenarios.
+- [x] Coverage jumps to ≥70% statements overall; branch coverage ≥60%.
 
 ### Phase 3: Resilience & Regression Safeguards (Week 3)
 1. **Error & Edge Case Simulation**
