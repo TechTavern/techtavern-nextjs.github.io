@@ -48,4 +48,9 @@ describe('Services section', () => {
       screen.getByText(/ai readiness assessments/i)
     ).toBeInTheDocument();
   });
+
+  it('captures structural snapshot for the first service card', () => {
+    const { getByTestId } = render(<Services />);
+    expect(getByTestId('service-area-0')).toMatchSnapshot();
+  });
 });

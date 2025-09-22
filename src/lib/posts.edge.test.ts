@@ -106,6 +106,16 @@ describe('getAllPosts edge cases', () => {
     expect(posts[1].readingTimeMinutes).toBeGreaterThanOrEqual(1);
   });
 
+  it('returns an empty array when no MDX files are present', async () => {
+    fgMock.mockResolvedValue([]);
+
+    const posts = await getAllPosts();
+
+    expect(posts).toEqual([]);
+    expect(readFileFn).not.toHaveBeenCalled();
+    expect(matterMock).not.toHaveBeenCalled();
+  });
+
   it('throws descriptive errors when frontmatter fails validation', async () => {
     fgMock.mockResolvedValue(['/content/broken.mdx']);
     queueMatter([
@@ -120,6 +130,32 @@ describe('getAllPosts edge cases', () => {
     ]);
 
     await expect(getAllPosts()).rejects.toThrow(/Invalid frontmatter.*slug: Required/);
+  });
+
+  it('aggregates validation errors for malformed frontmatter data', async () => {
+    fgMock.mockResolvedValue(['/content/invalid.mdx']);
+    queueMatter([
+      {
+        data: {
+          title: '',
+          date: '2024/06/01',
+          slug: '',
+        },
+        content: 'body',
+      },
+    ]);
+
+    await expect(async () => {
+      try {
+        await getAllPosts();
+      } catch (error) {
+        const message = (error as Error).message;
+        expect(message).toContain('title: title is required');
+        expect(message).toContain('date: date must be yyyy-mm-dd');
+        expect(message).toContain('slug: slug is required');
+        throw error;
+      }
+    }).rejects.toThrow(/Invalid frontmatter/);
   });
 
   it('normalizes asset paths via withBasePath and preserves canonical URL overrides', async () => {

@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Services section captures structural snapshot for the first service card 1`] = `
+<div
+  class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center "
+  data-testid="service-area-0"
+>
+  <div
+    class="space-y-6 "
+  >
+    <h3
+      class="text-3xl md:text-4xl font-heading font-bold text-light"
+    >
+      Tap into Insights
+    </h3>
+    <p
+      class="text-lg text-light/90 leading-relaxed"
+    >
+      Effective recruitment, collaborative tutorials, formal training, and development challenges are all effective ways to grow your workforce. Tech Tavern has a long history of facilitating growth and achieving real-world impact.
+    </p>
+    <ul
+      class="feature-list space-y-2 text-light"
+    >
+      <li
+        class="text-base"
+      >
+        AI readiness assessments and ethical AI workshops.
+      </li>
+      <li
+        class="text-base"
+      >
+        Data governance and compliance frameworks (NIST, ISO).
+      </li>
+      <li
+        class="text-base"
+      >
+        Facilitation of community-driven technology discussions and hackathons
+      </li>
+    </ul>
+  </div>
+  <div
+    class=""
+  >
+    <img
+      alt="line drawing of a person standing in front of a blackboard"
+      class="w-full h-auto object-contain"
+      height="400"
+      src="/assets/img/undraw_teaching_f1cm.svg"
+      width="500"
+    />
+  </div>
+</div>
+`;

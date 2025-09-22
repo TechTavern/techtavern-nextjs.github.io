@@ -12,6 +12,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:a11y": "playwright test tests/accessibility.spec.js",
+    "test:smoke": "playwright test tests/smoke.spec.ts",
+    "test:playwright": "playwright test",
     "test:a11y-static": "node accessibility-test.js",
     "new-article": "node scripts/new-article.js",
     "article-enrichment": "node scripts/enrich-article.js",
