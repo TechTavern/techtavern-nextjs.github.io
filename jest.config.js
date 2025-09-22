@@ -20,6 +20,8 @@ const customJestConfig = {
     '!src/**/*.d.ts',
     '!src/**/_*.{ts,tsx}',
   ],
+  coverageDirectory: '<rootDir>/coverage',
+  coverageReporters: ['json', 'lcov', 'text', 'clover'],
 };
 
 module.exports = createJestConfig(customJestConfig);
