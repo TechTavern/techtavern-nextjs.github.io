@@ -15,6 +15,7 @@
 ## Commands
 - `npm run test`: unit/integration suite (Jest)
 - `npm run test:coverage`: Jest with coverage enabled; produces `coverage-summary.json`
+- `npm run test:ci`: sequential pre-flight (`typecheck`, `lint`, `test`, `test:coverage`)
 - `npm run test:a11y`: Playwright accessibility smoke suite (`tests/accessibility.spec.js`)
 - `npm run test:a11y-static`: Node-based axe audit for static export
 
