@@ -289,20 +289,20 @@ This phased approach ensures systematic improvement while maintaining site funct
 - [x] Coverage jumps to ≥70% statements overall; branch coverage ≥60%.
 
 ### Phase 3: Resilience & Regression Safeguards (Week 3)
-1. **Error & Edge Case Simulation**
-   - Add tests ensuring graceful failures for missing environment variables (`env.ts`), empty content directories, and malformed frontmatter.
-   - Cover `src/lib/variants.ts` with targeted cases for the most-used components to ensure design tokens remain intact.
-2. **Playwright Regression Layer**
-   - Expand Playwright suite to include smoke flows: homepage navigation, article page render, contact CTA, Lighthouse accessibility snapshot.
-   - Integrate `npm run test:a11y` into CI nightly or weekly job with reporting.
-3. **Performance Budgets & Snapshots**
-   - Implement Jest DOM snapshot tests for critical layout sections where structural changes must be reviewed (Hero, Services cards) while keeping snapshots focused and reviewed regularly.
-   - Add bundle-size check or analyze script validation tied to tests for design system components if feasible.
+1. **✅ Error & Edge Case Simulation**
+   - ✅ Add tests ensuring graceful failures for missing environment variables (`env.ts`), empty content directories, and malformed frontmatter.
+   - ✅ Cover `src/lib/variants.ts` with targeted cases for the most-used components to ensure design tokens remain intact.
+2. **✅ Playwright Regression Layer**
+   - ✅ Expand Playwright suite to include smoke flows: homepage navigation, article page render, contact CTA, Lighthouse accessibility snapshot.
+   - ✅ Integrate `npm run test:a11y` into CI nightly or weekly job with reporting.
+3. **✅ Performance Budgets & Snapshots**
+   - ✅ Implement Jest DOM snapshot tests for critical layout sections where structural changes must be reviewed (Hero, Services cards) while keeping snapshots focused and reviewed regularly.
+   - ✅ Add bundle-size check or analyze script validation tied to tests for design system components if feasible.
 
 **Acceptance Criteria**
-- Coverage thresholds raised to ≥75% statements / ≥65% branches; PRs cannot merge below target.
-- Playwright suite captures primary user journeys and runs in CI on demand (manual trigger or schedule).
-- Regression artifacts (coverage, Playwright reports) stored for troubleshooting.
+- [x] Coverage thresholds raised to ≥75% statements / ≥65% branches; PRs cannot merge below target.
+- [x] Playwright suite captures primary user journeys and runs in CI on demand (manual trigger or schedule).
+- [x] Regression artifacts (coverage, Playwright reports) stored for troubleshooting.
 
 ### Tooling & Process Enhancements
 - Add `npm run test:ci` that chains `typecheck`, `lint`, `test`, and `test:coverage` for local pre-flight.
