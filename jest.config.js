@@ -14,23 +14,30 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(next-mdx-remote)/)',
+  ],
   // Keep tests fast and focused; extend as needed
   collectCoverageFrom: [
+    'src/app/**/*.{ts,tsx}',
+    'src/components/**/*.{ts,tsx}',
     'src/lib/**/*.{ts,tsx}',
-    'src/app/sitemap.ts',
-    'src/app/rss.xml/route.ts',
-    'src/app/robots.ts',
-    '!src/lib/**/*.d.ts',
-    '!src/lib/**/_*.{ts,tsx}',
-    '!src/lib/**/*.test.{ts,tsx}',
-    '!src/lib/variants.ts',
+    '!src/app/**/not-found.tsx',
+    '!src/app/**/loading.tsx',
+    '!src/app/**/error.tsx',
+    '!src/app/**/head.tsx',
+    '!src/**/*.{test,spec}.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/tests/**/*',
   ],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
   coverageThreshold: {
     global: {
-      statements: 60,
-      lines: 60,
+      statements: 70,
+      branches: 60,
+      functions: 65,
+      lines: 70,
     },
   },
 };
