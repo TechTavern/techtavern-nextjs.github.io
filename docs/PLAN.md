@@ -305,8 +305,8 @@ This phased approach ensures systematic improvement while maintaining site funct
 - [x] Regression artifacts (coverage, Playwright reports) stored for troubleshooting.
 
 ### Tooling & Process Enhancements
-- Add `npm run test:ci` that chains `typecheck`, `lint`, `test`, and `test:coverage` for local pre-flight.
-- Configure VSCode tasks or shared workspace settings to encourage running coverage locally.
+- ✅ Add `npm run test:ci` that chains `typecheck`, `lint`, `test`, and `test:coverage` for local pre-flight.
+- ✅ Configure VSCode tasks or shared workspace settings to encourage running coverage locally.
 - Establish test review checklist: new features require unit tests, accessibility tests, and coverage delta summary in PR description.
 - Monitor coverage trend via badge in README (generated from `coverage-summary.json`).
 
