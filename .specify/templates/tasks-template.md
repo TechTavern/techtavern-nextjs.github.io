@@ -43,38 +43,38 @@
 - Paths shown below assume single project - adjust based on plan.md structure
 
 ## Phase 3.1: Setup
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 Create NextJS App Router structure per implementation plan (src/app/, src/components/, src/lib/)
+- [ ] T002 Initialize project dependencies ensuring static export compatibility
+- [ ] T003 [P] Configure ESLint, TypeScript, and Tailwind CSS
+- [ ] T004 [P] Setup Jest + React Testing Library test environment
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Contract test POST /api/users in tests/contract/test_users_post.py
-- [ ] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.py
-- [ ] T006 [P] Integration test user registration in tests/integration/test_registration.py
-- [ ] T007 [P] Integration test auth flow in tests/integration/test_auth.py
+- [ ] T005 [P] Unit tests for utility functions in src/lib/*.test.ts
+- [ ] T006 [P] Component tests for new UI components in src/components/ui/*.test.tsx
+- [ ] T007 [P] Integration tests for MDX processing in src/test/mdx.test.ts
+- [ ] T008 [P] Page metadata generation tests in src/test/metadata.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T008 [P] User model in src/models/user.py
-- [ ] T009 [P] UserService CRUD in src/services/user_service.py
-- [ ] T010 [P] CLI --create-user in src/cli/user_commands.py
-- [ ] T011 POST /api/users endpoint
-- [ ] T012 GET /api/users/{id} endpoint
-- [ ] T013 Input validation
-- [ ] T014 Error handling and logging
+- [ ] T009 [P] Utility functions in src/lib/ with Zod validation
+- [ ] T010 [P] UI components in src/components/ui/ with TypeScript props
+- [ ] T011 [P] Page components in src/app/ following App Router patterns
+- [ ] T012 Static generation functions (generateStaticParams, generateMetadata)
+- [ ] T013 MDX processing and content validation
+- [ ] T014 SEO metadata and JSON-LD structured data
 
-## Phase 3.4: Integration
-- [ ] T015 Connect UserService to DB
-- [ ] T016 Auth middleware
-- [ ] T017 Request/response logging
-- [ ] T018 CORS and security headers
+## Phase 3.4: Static Export Integration
+- [ ] T015 Verify static export compatibility (output: 'export')
+- [ ] T016 Base path configuration for GitHub Pages
+- [ ] T017 Image optimization settings (unoptimized: true)
+- [ ] T018 CSP implementation and security headers
 
-## Phase 3.5: Polish
-- [ ] T019 [P] Unit tests for validation in tests/unit/test_validation.py
-- [ ] T020 Performance tests (<200ms)
-- [ ] T021 [P] Update docs/api.md
-- [ ] T022 Remove duplication
-- [ ] T023 Run manual-testing.md
+## Phase 3.5: Polish & Quality Gates
+- [ ] T019 [P] Lighthouse performance optimization (≥90 mobile score)
+- [ ] T020 [P] Accessibility audit with axe-core CLI
+- [ ] T021 [P] Update sitemap.xml and rss.xml generation
+- [ ] T022 Remove any server-side dependencies
+- [ ] T023 Validate constitution compliance (Static-First, TDD, SEO-First, Performance, Security)
 
 ## Dependencies
 - Tests (T004-T007) before implementation (T008-T014)

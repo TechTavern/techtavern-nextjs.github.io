@@ -47,7 +47,13 @@
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Static-First Architecture**: ✅/❌ Feature works with `output: 'export'` and GitHub Pages  
+**Test-Driven Development**: ✅/❌ TDD approach planned with Jest + RTL, tests before implementation  
+**SEO-First Design**: ✅/❌ Metadata, structured data, and semantic HTML considerations included  
+**Performance-by-Design**: ✅/❌ Lighthouse performance ≥90 maintained, no render-blocking resources  
+**Security-by-Design**: ✅/❌ CSP compliance, Zod validation, no client-side security risks  
+
+*Violations must be documented in Complexity Tracking with explicit justification or feature must be redesigned.*
 
 ## Project Structure
 
@@ -152,7 +158,7 @@ directories captured above]
    - Quickstart test = story validation steps
 
 5. **Update agent file incrementally** (O(1) operation):
-   - Run `.specify/scripts/bash/update-agent-context.sh codex`
+   - Run `.specify/scripts/bash/update-agent-context.sh copilot`
      **IMPORTANT**: Execute it exactly as specified above. Do not add or remove any arguments.
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
