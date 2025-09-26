@@ -43,12 +43,13 @@ export interface PaginationData<T = unknown> {
 
 /**
  * Configuration options for pagination behavior
+ * Values loaded from site constants in src/lib/site.ts
  */
 export interface PaginationConfig {
   /** Number of items to display per page */
   itemsPerPage: number;
   
-  /** Maximum number of page links to show in UI */
+  /** Maximum number of page links to show in UI (configurable in site.ts) */
   maxVisiblePageLinks: number;
   
   /** Whether to show First/Last navigation buttons */

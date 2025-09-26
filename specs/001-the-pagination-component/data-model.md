@@ -28,11 +28,11 @@ Represents the computed pagination state for a given dataset.
 - Jump to Page: `currentPage` sets to target page (if valid)
 
 ### PaginationConfig
-Configuration settings for pagination behavior.
+Configuration settings for pagination behavior, sourced from site constants.
 
 **Fields**:
-- `itemsPerPage: number` - Items per page (default: 15)
-- `maxVisiblePageLinks: number` - Maximum page numbers to show (default: 3)
+- `itemsPerPage: number` - Number of items per page (default: 15, configured in site.ts)
+- `maxVisiblePageLinks: number` - Maximum page numbers to show (configurable in site.ts, default: 3)
 - `showFirstLastButtons: boolean` - Whether to show "First"/"Last" buttons
 - `showPreviousNextButtons: boolean` - Whether to show "Previous"/"Next" buttons
 - `ellipsisThreshold: number` - When to show ellipsis (...) in page links
@@ -41,6 +41,7 @@ Configuration settings for pagination behavior.
 - `itemsPerPage` must be between 1 and 100
 - `maxVisiblePageLinks` must be between 1 and 10
 - All boolean fields default to appropriate values
+- Configuration values loaded from `src/lib/site.ts` constants
 
 ### PaginationLinks
 Represents the computed page links for UI rendering.

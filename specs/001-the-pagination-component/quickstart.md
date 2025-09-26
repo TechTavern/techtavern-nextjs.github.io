@@ -260,7 +260,7 @@ npm run test:a11y  # Includes pagination pages
 - [ ] **FR-009**: Disable Previous button on page 1
 - [ ] **FR-010**: Disable Next button on last page
 - [ ] **FR-011**: Component works with any array of items
-- [ ] **FR-012**: Display 15 items per page
+- [ ] **FR-012**: Display 15 itemsPerPage
 - [ ] **FR-013**: Limit to 3 visible page links
 - [ ] **FR-014**: Show 404 for pages exceeding total
 - [ ] **FR-015**: Same page number shows updated content when articles change

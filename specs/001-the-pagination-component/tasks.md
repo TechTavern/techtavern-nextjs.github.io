@@ -24,8 +24,8 @@
    → ALL test tasks before corresponding implementation tasks
    → Mark [P] for independent files (different utilities, separate components)
    → Sequential for same file modifications (posts.ts extensions)
-5. Number tasks sequentially (T001-T027)
-6. Enforce constitutional compliance: Static-First, TDD, ESO-First, Performance, Security
+5. Number tasks sequentially (T001-T030)
+6. Enforce constitutional compliance: Static-First, TDD, SEO-First, Performance, Security
 ```
 
 ## Format: `[ID] [P?] Description`
@@ -42,83 +42,84 @@ Single Next.js project structure:
 - Integration tests: `tests/integration/`
 
 ## Phase 3.1: Setup & Infrastructure
-- [ ] **T001** [P] Create pagination utility types file `src/lib/pagination.types.ts` with ESLint-compliant TypeScript interfaces
-- [ ] **T002** [P] Setup pagination test fixtures in `src/tests/test-utils.tsx` (extend existing createPosts function)
-- [ ] **T003** [P] Configure Jest environment for pagination testing (if needed beyond existing setup)
+- [ ] **T001** [P] Add pagination configuration constants to `src/lib/site.ts` (itemsPerPage: 15, maxVisiblePageLinks: configurable)
+- [ ] **T002** [P] Create pagination utility types file `src/lib/pagination.types.ts` with ESLint-compliant TypeScript interfaces
+- [ ] **T003** [P] Setup pagination test fixtures in `src/tests/test-utils.tsx` (extend existing createPosts function)
+- [ ] **T004** [P] Configure Jest environment for pagination testing (if needed beyond existing setup)
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
 ### Utility Function Tests [P]
-- [ ] **T004** [P] Create `src/lib/pagination.test.ts` with failing tests for `getPaginationData()` function
-- [ ] **T005** [P] Create `src/lib/pagination.test.ts` with failing tests for `validatePageParameter()` function  
-- [ ] **T006** [P] Create `src/lib/pagination.test.ts` with failing tests for `generatePaginationLinks()` function
-- [ ] **T007** [P] Extend `src/lib/posts.test.ts` with failing tests for new pagination functions in posts.ts
+- [ ] **T005** [P] Create `src/lib/pagination.test.ts` with failing tests for `getPaginationData()` function
+- [ ] **T006** [P] Create `src/lib/pagination.test.ts` with failing tests for `validatePageParameter()` function  
+- [ ] **T007** [P] Create `src/lib/pagination.test.ts` with failing tests for `generatePaginationLinks()` function
+- [ ] **T008** Extend `src/lib/posts.test.ts` with failing tests for new pagination functions in posts.ts
 
 ### Component Tests [P]  
-- [ ] **T008** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for component rendering
-- [ ] **T009** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for navigation interactions
-- [ ] **T010** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for accessibility features
-- [ ] **T011** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for responsive behavior
+- [ ] **T009** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for component rendering
+- [ ] **T010** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for navigation interactions
+- [ ] **T011** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for accessibility features
+- [ ] **T012** [P] Create `src/components/ui/Pagination.test.tsx` with failing tests for responsive behavior
 
 ### Integration Tests [P]
-- [ ] **T012** [P] Create `tests/integration/pagination.spec.ts` with failing Playwright tests for pagination navigation
-- [ ] **T013** [P] Extend `tests/accessibility.spec.js` with failing tests for pagination accessibility compliance
+- [ ] **T013** [P] Create `tests/integration/pagination.spec.ts` with failing Playwright tests for pagination navigation
+- [ ] **T014** [P] Extend `tests/accessibility.spec.js` with failing tests for pagination accessibility compliance
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 ### Pagination Utilities
-- [ ] **T014** [P] Implement `src/lib/pagination.ts` with `getPaginationData<T>()` function to make T004 tests pass
-- [ ] **T015** [P] Implement `src/lib/pagination.ts` with `validatePageParameter()` function to make T005 tests pass
-- [ ] **T016** [P] Implement `src/lib/pagination.ts` with `generatePaginationLinks()` function to make T006 tests pass
-- [ ] **T017** Extend `src/lib/posts.ts` with pagination functions `getPaginatedPosts()` and `generatePaginationParams()` to make T007 tests pass
+- [ ] **T015** [P] Implement `src/lib/pagination.ts` with `getPaginationData<T>()` function to make T005 tests pass
+- [ ] **T016** [P] Implement `src/lib/pagination.ts` with `validatePageParameter()` function to make T006 tests pass
+- [ ] **T017** [P] Implement `src/lib/pagination.ts` with `generatePaginationLinks()` function to make T007 tests pass
+- [ ] **T018** Extend `src/lib/posts.ts` with pagination functions `getPaginatedPosts()` and `generatePaginationParams()` to make T008 tests pass
 
 ### React Component
-- [ ] **T018** Create `src/components/ui/Pagination.tsx` with TypeScript props interface to make T008 tests pass
-- [ ] **T019** Implement pagination navigation logic in `src/components/ui/Pagination.tsx` to make T009 tests pass
-- [ ] **T020** Add accessibility features (ARIA labels, keyboard navigation) to `src/components/ui/Pagination.tsx` to make T010 tests pass
-- [ ] **T021** Implement responsive design with Tailwind CSS classes in `src/components/ui/Pagination.tsx` to make T011 tests pass
+- [ ] **T019** Create `src/components/ui/Pagination.tsx` with TypeScript props interface to make T009 tests pass
+- [ ] **T020** Implement pagination navigation logic in `src/components/ui/Pagination.tsx` to make T010 tests pass
+- [ ] **T021** Add accessibility features (ARIA labels, keyboard navigation) to `src/components/ui/Pagination.tsx` to make T011 tests pass
+- [ ] **T022** Implement responsive design using existing site breakpoint strategy (grid gap-8 md:grid-cols-2 lg:grid-cols-3 pattern) with mobile showing only Prev/Next buttons in `src/components/ui/Pagination.tsx` to make T012 tests pass
 
 ## Phase 3.4: Next.js Pages Integration
 
 ### Articles Page Updates
-- [ ] **T022** Update `src/app/articles/page.tsx` to use pagination for first page (≤15 articles display logic)
-- [ ] **T023** Create `src/app/articles/page/[pageNumber]/page.tsx` for paginated article routes with static generation
-- [ ] **T024** Implement `generateStaticParams()` in paginated articles page for static export compatibility
-- [ ] **T025** Add proper metadata generation for paginated pages (SEO titles, canonical URLs)
+- [ ] **T023** Update `src/app/articles/page.tsx` to use pagination for first page (≤15 articles display logic)
+- [ ] **T024** Create `src/app/articles/page/[pageNumber]/page.tsx` for paginated article routes with static generation
+- [ ] **T025** Implement `generateStaticParams()` in paginated articles page for static export compatibility
+- [ ] **T026** Add proper metadata generation for paginated pages (SEO titles, canonical URLs)
 
 ### Error Handling
-- [ ] **T026** Enhance `src/app/not-found.tsx` to handle pagination error cases (invalid/out-of-range pages)
+- [ ] **T027** Enhance `src/app/not-found.tsx` to handle pagination error cases (invalid/out-of-range pages)
 
 ## Phase 3.5: Polish & Quality Gates
 
 ### SEO & Performance
-- [ ] **T027** [P] Update `src/app/sitemap.ts` to include all paginated article pages
-- [ ] **T028** [P] Verify Lighthouse performance score ≥90 with pagination component
-- [ ] **T029** [P] Run accessibility audit with pagination component using existing axe-core setup
+- [ ] **T028** [P] Update `src/app/sitemap.ts` to include all paginated article pages
+- [ ] **T029** [P] Verify Lighthouse performance score ≥90 with pagination component
+- [ ] **T030** [P] Run accessibility audit with pagination component using existing axe-core setup
 
 ## Dependencies
 ```
-Setup Phase: T001, T002, T003 (parallel)
+Setup Phase: T001, T002, T003, T004 (all parallel)
     ↓
-Tests Phase: T004-T013 (all parallel, must complete before implementation)
+Tests Phase: T005-T014 (all parallel, must complete before implementation)
     ↓
-Core Utils: T014, T015, T016 (parallel) → T017 (extends posts.ts)
+Core Utils: T015, T016, T017 (parallel) → T018 (extends posts.ts)
     ↓
-Component: T018 → T019 → T020, T021 (T020-T021 can be parallel)
+Component: T019 → T020 → T021, T022 (T021-T022 can be parallel)
     ↓
-Pages: T022 → T023 → T024, T025 (T024-T025 can be parallel)
+Pages: T023 → T024 → T025, T026 (T025-T026 can be parallel)
     ↓
-Error Handling: T026
+Error Handling: T027
     ↓
-Polish: T027, T028, T029 (all parallel)
+Polish: T028, T029, T030 (all parallel)
 ```
 
 ## Parallel Execution Examples
 
-### Tests Phase (After T001-T003)
+### Tests Phase (After T001-T004)
 ```bash
-# Launch T004-T011 together (all different test files):
+# Launch T005-T012 together (all different test files):
 Task: "Create pagination utility tests in src/lib/pagination.test.ts with getPaginationData failing tests"
 Task: "Create pagination component tests in src/components/ui/Pagination.test.tsx with rendering failing tests"  
 Task: "Create integration tests in tests/integration/pagination.spec.ts with navigation failing tests"
@@ -127,15 +128,15 @@ Task: "Extend accessibility tests in tests/accessibility.spec.js with pagination
 
 ### Core Implementation Phase (After all tests fail)
 ```bash
-# Launch T014-T016 together (same pagination.ts file, but different functions):
+# Launch T015-T017 together (same pagination.ts file, but different functions):
 Task: "Implement getPaginationData function in src/lib/pagination.ts"
 Task: "Implement validatePageParameter function in src/lib/pagination.ts" 
 Task: "Implement generatePaginationLinks function in src/lib/pagination.ts"
 ```
 
-### Polish Phase (After T026)
+### Polish Phase (After T027)
 ```bash
-# Launch T027-T029 together (different files/systems):
+# Launch T028-T030 together (different files/systems):
 Task: "Update sitemap generation in src/app/sitemap.ts to include paginated pages"
 Task: "Run Lighthouse performance audit with pagination component"
 Task: "Run axe-core accessibility audit with pagination component"
@@ -148,12 +149,13 @@ Task: "Run axe-core accessibility audit with pagination component"
 - [ ] FR-002-003: Previous/Next buttons and numbered page links rendered
 - [ ] FR-004-005: Page number in URL, defaults to page 1
 - [ ] FR-006-007: Display correct subset, update URL without reload
-- [ ] FR-008,014: Show 404 for invalid/out-of-range pages
+- [ ] FR-008: Show 404 for invalid page scenarios (non-numeric, negative, zero, out-of-range)
 - [ ] FR-009-010: Disable buttons at boundaries
 - [ ] FR-011: Component works with any array type
-- [ ] FR-012-013: 15 items per page, 3 visible page links
-- [ ] FR-015: Page consistency when content changes
-- [ ] FR-016-018: Mobile responsive, accessible
+- [ ] FR-012-013: 15 itemsPerPage, configurable visible page links
+- [ ] FR-015: Page consistency when content changes (reverse-chronological order)
+- [ ] FR-015B: Redirect to last valid page when bookmarked pages no longer exist
+- [ ] FR-016-018: Mobile responsive (Prev/Next only), accessible
 
 ### Constitutional Compliance
 - [ ] **Static-First**: All pages generated at build time, no runtime dependencies
@@ -171,7 +173,7 @@ Task: "Run axe-core accessibility audit with pagination component"
 
 ## Notes
 - **[P] tasks**: Different files, no dependencies between them
-- **TDD Mandatory**: Verify ALL tests fail before starting T014 (implementation phase)
+- **TDD Mandatory**: Verify ALL tests fail before starting T015 (implementation phase)
 - **ESLint First**: Every task must produce ESLint-compliant code
 - **Accessibility Priority**: WCAG 2.1 AA compliance required
 - **Performance Gates**: Maintain existing Lighthouse scores
@@ -186,7 +188,8 @@ Task: "Run axe-core accessibility audit with pagination component"
 - `src/app/articles/page/[pageNumber]/page.tsx` (paginated routes)
 - `tests/integration/pagination.spec.ts` (integration tests)
 
-**Modified Files**: 5 existing files extended
+**Modified Files**: 7 existing files extended
+- `src/lib/site.ts` (add pagination configuration constants)
 - `src/lib/posts.ts` (add pagination functions)
 - `src/lib/posts.test.ts` (extend with pagination tests)
 - `src/app/articles/page.tsx` (add pagination logic)

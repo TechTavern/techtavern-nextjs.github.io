@@ -15,7 +15,7 @@
    → Data: lists of items (articles, search results)
    → Constraints: URL-based state, performance for large lists
 3. For each unclear aspect:
-   → [NEEDS CLARIFICATION: Default items per page value not specified]
+   → Default itemsPerPage value: 15 (specified in clarifications)
    → [NEEDS CLARIFICATION: Maximum number of page links to display not specified]
 4. Fill User Scenarios & Testing section
    → Primary flow: user navigates through paginated content
@@ -72,27 +72,27 @@ As a blog reader, I want to navigate through multiple pages of articles so that 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
-- **FR-001**: System MUST display pagination controls only when the total number of items exceeds the items per page threshold
+- **FR-001**: System MUST display pagination controls only when the total number of items exceeds the itemsPerPage threshold
 - **FR-002**: System MUST render "Previous" and "Next" navigation buttons as part of the pagination controls
 - **FR-003**: System MUST display numbered page links allowing direct navigation to specific pages
 - **FR-004**: System MUST maintain the current page number in the URL as a query parameter named "page"
 - **FR-005**: System MUST default to page 1 when no page parameter is present in the URL
 - **FR-006**: System MUST display only the subset of items corresponding to the currently active page
 - **FR-007**: System MUST update the URL when users navigate to different pages without requiring a full page reload
-- **FR-008**: System MUST display a "Page not found" error page for invalid page parameters (non-numeric, negative, or zero values)
-- **FR-014**: System MUST display a "Page not found" error page when navigating to a page number that exceeds total available pages
-- **FR-015**: System MUST maintain page number consistency when content changes, showing the same page number with updated content reflecting current item collection
+- **FR-008**: System MUST display a "Page not found" error page for invalid page scenarios including non-numeric parameters, negative or zero values, and page numbers that exceed total available pages
+- **FR-015**: System MUST maintain page number consistency when content changes in reverse-chronological order: users remain on the same page number after new articles are added (appearing at top of page 1), deletions (pulling later articles up), or date updates (reordering articles), showing updated content for that page position without resetting to page 1
+- **FR-015B**: System MUST redirect to the last valid page when bookmarked or requested pages no longer exist due to content changes, or display "No articles to display" message if no articles remain
 - **FR-016**: System MUST be fully responsive and functional on mobile devices with touch-friendly navigation controls
-- **FR-017**: System MUST adapt page link display for smaller screens (may show fewer numbered links on mobile while maintaining Previous/Next buttons)
+- **FR-017**: System MUST show only Previous/Next buttons on mobile devices while maintaining the same number of articles per page, with responsive design handled by the site theme
 - **FR-018**: System MUST ensure all pagination controls are accessible via keyboard navigation and screen readers
 - **FR-009**: System MUST disable the "Previous" button when on the first page
 - **FR-010**: System MUST disable the "Next" button when on the last page
 - **FR-011**: System MUST work with any array of items, making it reusable across different content types
-- **FR-012**: System MUST display 15 items per page
-- **FR-013**: System MUST limit the number of visible page number links to 3 to prevent UI overflow
+- **FR-012**: System MUST display 15 itemsPerPage
+- **FR-013**: System MUST use configurable number of visible page number links (default 3) to prevent UI overflow
 
 ### Key Entities *(include if feature involves data)*
-- **PaginationState**: Represents the current pagination context including current page number, total items, items per page, and total pages
+- **PaginationState**: Represents the current pagination context including current page number, total items, itemsPerPage, and total pages
 - **ItemCollection**: Represents any array of items to be paginated, agnostic of item type or content structure
 - **PageSubset**: Represents the calculated slice of items to display for the current page
 
