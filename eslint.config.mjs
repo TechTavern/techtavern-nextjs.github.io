@@ -20,6 +20,7 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "techtavern.github.io/**",
+      "specs/**",
     ],
   },
   // Allow CommonJS in tooling scripts and Jest config
