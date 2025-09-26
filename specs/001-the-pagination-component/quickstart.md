@@ -24,6 +24,12 @@ npm run typecheck
 npm run lint
 ```
 
+**⚠️ ESLint Compliance Requirements**:
+- NO use of `any` type - use `unknown` or proper generics instead
+- Follow Next.js + TypeScript ESLint rules strictly
+- All code must pass `npm run lint` before implementation
+- TypeScript strict mode enforced throughout
+
 ### Step 2: Follow TDD Approach
 **IMPORTANT**: Write tests BEFORE implementation (constitutional requirement).
 
@@ -87,15 +93,15 @@ export function generatePaginationLinks(
 
 ```tsx
 // Test-driven implementation approach:
-interface PaginationProps {
-  data: PaginationData<any>;
+interface PaginationProps<T = unknown> {
+  data: PaginationData<T>;
   onPageChange: (page: number) => void;
   config?: Partial<PaginationConfig>;
   className?: string;
   'aria-label'?: string;
 }
 
-export function Pagination({ data, onPageChange, config, ...props }: PaginationProps) {
+export function Pagination<T = unknown>({ data, onPageChange, config, ...props }: PaginationProps<T>) {
   // Implementation guided by failing tests
 }
 ```
@@ -278,6 +284,8 @@ npm run test:a11y  # Includes pagination pages
 - [ ] **Performance**: Lighthouse score ≥90 maintained
 - [ ] **Accessibility**: axe-core tests pass
 - [ ] **Type Safety**: TypeScript compilation with no errors
+- [ ] **ESLint Compliance**: All code passes `npm run lint` with no violations
+- [ ] **Code Quality**: No `any` types used, proper generics and `unknown` instead
 - [ ] **Test Coverage**: All critical paths covered
 - [ ] **Error Handling**: Invalid URLs show proper 404
 

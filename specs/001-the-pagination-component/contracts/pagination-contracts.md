@@ -115,9 +115,9 @@ interface GeneratePaginationLinksContract {
 React component interface for pagination UI.
 
 ```typescript
-interface PaginationComponentContract {
+interface PaginationComponentContract<T = unknown> {
   // Required Props
-  data: PaginationData<any>;
+  data: PaginationData<T>;
   onPageChange: (page: number) => void;
   
   // Optional Props

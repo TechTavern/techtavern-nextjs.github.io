@@ -12,7 +12,7 @@
 /**
  * Represents the complete pagination state for a dataset
  */
-export interface PaginationData<T = any> {
+export interface PaginationData<T = unknown> {
   /** Current active page number (1-based) */
   currentPage: number;
   
@@ -151,9 +151,9 @@ export interface GenerateStaticPaginationParamsFunction {
 /**
  * Props for the Pagination React component
  */
-export interface PaginationProps {
+export interface PaginationProps<T = unknown> {
   /** Pagination state data */
-  data: PaginationData<any>;
+  data: PaginationData<T>;
   
   /** Callback when user navigates to a different page */
   onPageChange: (page: number) => void;
@@ -237,7 +237,7 @@ export interface InvalidPageError extends Error {
  * Type guard to check if a value is a valid pagination data object
  */
 export interface IsPaginationDataFunction {
-  <T>(value: any): value is PaginationData<T>;
+  <T>(value: unknown): value is PaginationData<T>;
 }
 
 /**
@@ -327,7 +327,7 @@ export interface PaginationConstants {
  */
 export interface PaginationTestUtilities {
   /** Create mock pagination data for testing */
-  createMockPaginationData: <T>(
+  createMockPaginationData: <T = PostMeta>(
     overrides?: Partial<PaginationData<T>>
   ) => PaginationData<T>;
   
@@ -384,12 +384,12 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
 /**
  * Type for pagination component ref
  */
-export interface PaginationRef {
+export interface PaginationRef<T = unknown> {
   /** Focus the pagination component */
   focus: () => void;
   
   /** Get current pagination state */
-  getCurrentState: () => PaginationData<any>;
+  getCurrentState: () => PaginationData<T>;
   
   /** Programmatically navigate to a page */
   goToPage: (page: number) => void;

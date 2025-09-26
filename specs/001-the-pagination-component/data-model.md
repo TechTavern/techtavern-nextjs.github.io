@@ -93,7 +93,7 @@ Represents and validates URL page parameters.
 
 ### PaginationDataSchema
 ```typescript
-const PaginationDataSchema = z.object({
+const PaginationDataSchema = <T>() => z.object({
   currentPage: z.number().int().min(1),
   totalPages: z.number().int().min(0),
   totalItems: z.number().int().min(0),
@@ -102,8 +102,11 @@ const PaginationDataSchema = z.object({
   endIndex: z.number().int().min(0),
   hasNextPage: z.boolean(),
   hasPreviousPage: z.boolean(),
-  pageItems: z.array(z.any()), // Generic array for reusability
+  pageItems: z.array(z.unknown()), // Generic array - consumer provides specific schema
 });
+
+// For PostMeta specifically:
+const PostPaginationDataSchema = PaginationDataSchema<PostMeta>();
 ```
 
 ### PaginationConfigSchema

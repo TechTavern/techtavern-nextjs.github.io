@@ -43,9 +43,9 @@ src/app/articles/page/[pageNumber]/page.tsx  # Pages 2, 3, 4...
 - Follows existing codebase patterns (posts utilities in `src/lib/`)
 
 **Core Functions Needed**:
-- `getPaginationData(items: any[], currentPage: number, itemsPerPage: number)`
-- `generateStaticPaginationParams(totalItems: number, itemsPerPage: number)`
-- `validatePageParameter(page: string | null)`
+- `getPaginationData<T>(items: T[], currentPage: number, itemsPerPage: number): PaginationData<T>`
+- `generateStaticPaginationParams(totalItems: number, itemsPerPage: number): { pageNumber: string }[]`
+- `validatePageParameter(page: string | null, totalPages: number): PageParameter`
 
 ### 4. Error Handling Strategy
 **Decision**: Use Next.js `not-found.tsx` for invalid pagination  
