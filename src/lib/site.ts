@@ -15,3 +15,12 @@ export const siteOrg = {
   // Use a square logo for previews and JSON-LD
   logoPath: '/android-chrome-512x512.png',
 };
+
+export const paginationSettings = {
+  defaultItemsPerPage: 3,
+  maxVisiblePageLinks: 3,
+  showFirstLastButtons: false,
+  showPreviousNextButtons: true,
+  ellipsisThreshold: 2,
+  minTouchTargetSize: 44,
+} as const;

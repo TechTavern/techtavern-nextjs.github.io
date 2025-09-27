@@ -2,6 +2,11 @@ import { render } from '@testing-library/react';
 import type { RenderOptions, RenderResult } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import type { PostMeta } from '@/lib/posts';
+import type {
+  PageParameter,
+  PaginationConfig,
+  PaginationData,
+} from '@/lib/pagination.types';
 
 const BASE_POST: PostMeta = {
   title: 'Sample Post',
@@ -42,20 +47,77 @@ export function createPostMeta(overrides: Partial<PostMeta> = {}): PostMeta {
   };
 }
 
-export function createPosts(list: Array<Partial<PostMeta>> = []): PostMeta[] {
-  return list.map((item, index) => {
+export function createPosts(
+  list: Array<Partial<PostMeta>> = [],
+  totalCount?: number,
+): PostMeta[] {
+  const targetCount = typeof totalCount === 'number' ? totalCount : list.length;
+  if (targetCount === 0) {
+    return [];
+  }
+
+  return Array.from({ length: targetCount }, (_, index) => {
+    const item = list[index] ?? {};
     const date = item.date ?? `2025-01-${String(index + 1).padStart(2, '0')}`;
     const [year, month, day] = date.split('-');
+    const slug = item.slug ?? `post-${index + 1}`;
     return createPostMeta({
       date,
       lastModified: item.lastModified ?? date,
       year,
       month,
       day,
-      slug: item.slug ?? `post-${index + 1}`,
-      url:
-        item.url ?? `/articles/${year}/${month}/${day}/${item.slug ?? `post-${index + 1}`}/`,
+      slug,
+      url: item.url ?? `/articles/${year}/${month}/${day}/${slug}/`,
       ...item,
     });
   });
+}
+
+export function createPaginationConfig(
+  overrides: Partial<PaginationConfig> = {},
+): PaginationConfig {
+  return {
+    itemsPerPage: overrides.itemsPerPage ?? 15,
+    maxVisiblePageLinks: overrides.maxVisiblePageLinks ?? 3,
+    showFirstLastButtons: overrides.showFirstLastButtons ?? false,
+    showPreviousNextButtons: overrides.showPreviousNextButtons ?? true,
+    ellipsisThreshold: overrides.ellipsisThreshold ?? 2,
+  };
+}
+
+export function createPaginationData<T>(
+  items: T[],
+  overrides: Partial<PaginationData<T>> = {},
+): PaginationData<T> {
+  const totalItems = overrides.totalItems ?? items.length;
+  const itemsPerPage = overrides.itemsPerPage ?? 15;
+  const totalPages = overrides.totalPages ?? Math.ceil(totalItems / itemsPerPage);
+  const currentPage = overrides.currentPage ?? 1;
+  const startIndex = overrides.startIndex ?? (currentPage - 1) * itemsPerPage;
+  const endIndex = overrides.endIndex ?? Math.min(startIndex + itemsPerPage, totalItems);
+  const pageItems = overrides.pageItems ?? items.slice(startIndex, endIndex);
+
+  return {
+    currentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage,
+    startIndex,
+    endIndex,
+    hasNextPage: overrides.hasNextPage ?? currentPage < totalPages,
+    hasPreviousPage: overrides.hasPreviousPage ?? currentPage > 1,
+    pageItems,
+  };
+}
+
+export function createPageParameter(
+  overrides: Partial<PageParameter> = {},
+): PageParameter {
+  return {
+    raw: overrides.raw ?? '1',
+    parsed: overrides.parsed ?? 1,
+    isValid: overrides.isValid ?? true,
+    errorType: overrides.errorType ?? null,
+  };
 }

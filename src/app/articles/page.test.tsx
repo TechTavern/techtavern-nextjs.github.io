@@ -1,13 +1,27 @@
 import { render, screen } from '@testing-library/react';
 import ArticlesIndexPage, { metadata } from './page';
-import { createPosts } from '@/tests/test-utils';
-import { getAllPosts } from '@/lib/posts';
+import { createPosts, createPaginationData } from '@/tests/test-utils';
+import { getPaginatedPosts } from '@/lib/posts';
 
-jest.mock('@/lib/posts', () => ({
-  getAllPosts: jest.fn(),
-}));
+jest.mock('next/navigation', () => {
+  const actual = jest.requireActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: () => ({
+      push: jest.fn(),
+    }),
+  };
+});
 
-const mockGetAllPosts = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
+jest.mock('@/lib/posts', () => {
+  const actual = jest.requireActual('@/lib/posts');
+  return {
+    ...actual,
+    getPaginatedPosts: jest.fn(),
+  };
+});
+
+const mockGetPaginatedPosts = getPaginatedPosts as jest.MockedFunction<typeof getPaginatedPosts>;
 
 describe('Articles index page', () => {
   beforeEach(() => {
@@ -15,7 +29,18 @@ describe('Articles index page', () => {
   });
 
   it('renders an empty state when no posts are available', async () => {
-    mockGetAllPosts.mockResolvedValueOnce([]);
+    mockGetPaginatedPosts.mockResolvedValueOnce(
+      createPaginationData([], {
+        totalItems: 0,
+        totalPages: 1,
+        pageItems: [],
+        itemsPerPage: 3,
+        startIndex: 0,
+        endIndex: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      }),
+    );
 
     const page = await ArticlesIndexPage();
     render(page);
@@ -46,7 +71,17 @@ describe('Articles index page', () => {
         slug: 'observability-for-ai',
       },
     ]);
-    mockGetAllPosts.mockResolvedValueOnce(posts);
+    mockGetPaginatedPosts.mockResolvedValueOnce(
+      createPaginationData(posts, {
+        totalItems: posts.length,
+        totalPages: 2,
+        itemsPerPage: 3,
+        pageItems: posts,
+        endIndex: posts.length,
+        hasNextPage: true,
+        hasPreviousPage: false,
+      }),
+    );
 
     const page = await ArticlesIndexPage();
     render(page);

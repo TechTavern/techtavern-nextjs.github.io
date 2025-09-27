@@ -1,5 +1,9 @@
 /* @jest-environment node */
-import { getAllPosts } from './posts';
+import {
+  generatePaginationParams,
+  getAllPosts,
+  getPaginatedPosts,
+} from './posts';
 
 describe('getAllPosts (integration with content)', () => {
   it('reads MDX frontmatter, computes URL and reading time', async () => {
@@ -30,5 +34,28 @@ describe('getAllPosts (integration with content)', () => {
       expect(typeof p.readingTimeMinutes).toBe('number');
       expect(p.readingTimeMinutes).toBeGreaterThanOrEqual(1);
     }
+  });
+});
+
+describe('pagination helpers (failing tests before implementation)', () => {
+  it('returns paginated posts for requested page', async () => {
+    const data = await getPaginatedPosts(1, 5);
+
+    expect(data.currentPage).toBe(1);
+    expect(data.itemsPerPage).toBe(5);
+    expect(data.pageItems.length).toBeLessThanOrEqual(5);
+    expect(data.totalPages).toBeGreaterThan(0);
+  });
+
+  it('throws when requesting a page out of range', async () => {
+    await expect(getPaginatedPosts(999, 5)).rejects.toThrow('Requested page is out of range');
+  });
+
+  it('generates static params for all pages', async () => {
+    const params = await generatePaginationParams(10);
+
+    expect(Array.isArray(params)).toBe(true);
+    expect(params.length).toBeGreaterThan(0);
+    expect(params[0]).toHaveProperty('pageNumber');
   });
 });

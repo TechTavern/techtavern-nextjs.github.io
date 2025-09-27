@@ -3,8 +3,10 @@ import path from "node:path";
 import matter from "gray-matter";
 import fg from "fast-glob";
 import { z } from "zod";
-import { DEFAULT_FEATURED_IMAGE } from "@/lib/site";
+import { DEFAULT_FEATURED_IMAGE, paginationSettings } from "@/lib/site";
 import { withBasePath } from "@/lib/site.server";
+import { getPaginationData, InvalidPageError } from "@/lib/pagination";
+import type { PaginationData } from "@/lib/pagination.types";
 
 export type PostMeta = {
   title: string;
@@ -110,4 +112,57 @@ export async function getAllPosts(): Promise<PostMeta[]> {
 export async function getPostByParams(y: string, m: string, d: string, slug: string) {
   const posts = await getAllPosts();
   return posts.find((p) => p.year === y && p.month === m && p.day === d && p.slug === slug) || null;
+}
+
+export function getPostsForPage(
+  posts: PostMeta[],
+  page: number,
+  itemsPerPage: number,
+): PostMeta[] {
+  const data = getPaginationData(posts, page, itemsPerPage);
+  return data.pageItems as PostMeta[];
+}
+
+export async function getTotalPages(
+  itemsPerPage: number = paginationSettings.defaultItemsPerPage,
+): Promise<number> {
+  const posts = await getAllPosts();
+  const total = posts.length;
+  if (total === 0) {
+    return 1;
+  }
+  return Math.ceil(total / itemsPerPage);
+}
+
+export async function getPaginatedPosts(
+  page: number = 1,
+  itemsPerPage: number = paginationSettings.defaultItemsPerPage,
+): Promise<PaginationData<PostMeta>> {
+  const posts = await getAllPosts();
+
+  try {
+    const data = getPaginationData(posts, page, itemsPerPage);
+    return {
+      ...data,
+      pageItems: data.pageItems as PostMeta[],
+    };
+  } catch (error) {
+    if (error instanceof InvalidPageError) {
+      throw new InvalidPageError('Requested page is out of range');
+    }
+    throw error;
+  }
+}
+
+export async function generatePaginationParams(
+  itemsPerPage: number = paginationSettings.defaultItemsPerPage,
+): Promise<Array<{ pageNumber: string }>> {
+  const totalPages = await getTotalPages(itemsPerPage);
+  if (totalPages <= 1) {
+    return [{ pageNumber: '1' }];
+  }
+
+  return Array.from({ length: totalPages }, (_, index) => ({
+    pageNumber: String(index + 1),
+  }));
 }

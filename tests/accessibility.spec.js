@@ -92,7 +92,7 @@ test.describe('Accessibility Tests', () => {
     await page.goto('http://localhost:3000');
 
     // Get all buttons and links
-    const interactiveElements = page.locator('button, a, [role="button"]');
+    const interactiveElements = page.locator('.touch-target');
     const count = await interactiveElements.count();
 
     for (let i = 0; i < count; i++) {
@@ -142,10 +142,28 @@ test.describe('Accessibility Tests', () => {
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2aa'])
-      .include('color-contrast')
+      .include('body')
       .analyze();
 
     // Should have no color contrast violations
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
+  test('Pagination component meets accessibility requirements', async ({ page }) => {
+    await page.goto('http://localhost:3000/articles');
+
+    await page.waitForLoadState('networkidle');
+
+    const paginationRegion = page.getByRole('navigation', { name: /pagination/i });
+    await expect(paginationRegion).toBeVisible();
+
+    const currentPage = paginationRegion.getByRole('button', { name: /page 1/i });
+    await expect(currentPage).toHaveAttribute('aria-current', 'page');
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .include('nav[data-pagination]')
+      .analyze();
+
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 

@@ -1,24 +1,31 @@
 /* @jest-environment node */
 
 import { createPosts } from '@/tests/test-utils';
-import { getAllPosts } from '@/lib/posts';
+import { getAllPosts, generatePaginationParams } from '@/lib/posts';
 import { getBaseUrl } from '@/lib/site.server';
 
 jest.mock('@/lib/site.server', () => ({
   getBaseUrl: jest.fn(),
 }));
 
-jest.mock('@/lib/posts', () => ({
-  getAllPosts: jest.fn(),
-}));
+jest.mock('@/lib/posts', () => {
+  const actual = jest.requireActual('@/lib/posts');
+  return {
+    ...actual,
+    getAllPosts: jest.fn(),
+    generatePaginationParams: jest.fn(),
+  };
+});
 
 const getAllPostsMock = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
+const generatePaginationParamsMock = generatePaginationParams as jest.MockedFunction<typeof generatePaginationParams>;
 const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('sitemap route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     getBaseUrlMock.mockReturnValue('https://example.com');
+    generatePaginationParamsMock.mockResolvedValue([]);
   });
 
   it('uses latest post modification timestamp for root entries and preserves per-post values', async () => {
@@ -44,6 +51,8 @@ describe('sitemap route', () => {
     getAllPostsMock.mockResolvedValue(posts);
 
     const { default: sitemap } = await import('@/app/sitemap');
+    generatePaginationParamsMock.mockResolvedValue([{ pageNumber: '2' }, { pageNumber: '3' }]);
+
     const routes = await sitemap();
 
     const root = routes.find((r) => r.url === 'https://example.com/');

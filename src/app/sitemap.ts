@@ -1,38 +1,45 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next';
 
-// Ensure static generation for static export
 export const dynamic = 'force-static';
-import { getAllPosts } from '@/lib/posts'
-import { getBaseUrl } from '@/lib/site.server'
 
-function formatYmd(d: Date): string {
-  const y = d.getUTCFullYear()
-  const m = String(d.getUTCMonth() + 1).padStart(2, '0')
-  const day = String(d.getUTCDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+import { generatePaginationParams, getAllPosts } from '@/lib/posts';
+import { getBaseUrl } from '@/lib/site.server';
+
+function formatYmd(date: Date): string {
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(date.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = getBaseUrl()
-  const all = await getAllPosts()
+  const base = getBaseUrl();
+  const allPosts = await getAllPosts();
 
-  // Determine site-level lastModified as the newest post's lastModified
-  const newestPostLastMod = all.reduce<string | null>((acc, p) => {
-    return acc === null || p.lastModified > acc ? p.lastModified : acc
-  }, null)
-  const rootLastMod = newestPostLastMod ?? formatYmd(new Date())
+  const newestPostLastMod = allPosts.reduce<string | null>((acc, post) => {
+    return acc === null || post.lastModified > acc ? post.lastModified : acc;
+  }, null);
 
-  const routes: MetadataRoute.Sitemap = [
+  const rootLastMod = newestPostLastMod ?? formatYmd(new Date());
+
+  const baseRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: rootLastMod, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/articles/`, lastModified: rootLastMod, changeFrequency: 'weekly', priority: 0.9 },
-  ]
+  ];
 
-  const posts = all.map((p) => ({
-    url: `${base}${p.url}`,
-    lastModified: p.lastModified,
+  const paginatedRoutes = (await generatePaginationParams()).map(({ pageNumber }) => ({
+    url: `${base}/articles/page/${pageNumber}/`,
+    lastModified: rootLastMod,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  const postRoutes = allPosts.map((post) => ({
+    url: `${base}${post.url}`,
+    lastModified: post.lastModified,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
-  }))
+  }));
 
-  return [...routes, ...posts]
+  return [...baseRoutes, ...paginatedRoutes, ...postRoutes];
 }

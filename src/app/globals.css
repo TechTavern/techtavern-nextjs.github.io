@@ -153,6 +153,16 @@
   border-color: var(--focus-within-border);
 }
 
+.bg-nero .text-accent {
+  color: var(--color-beau-blue);
+}
+
+.bg-nero .text-accent:hover,
+.bg-nero .text-accent:focus,
+.bg-nero .text-accent:focus-visible {
+  color: var(--color-light);
+}
+
 /* Touch Target - minimum 44px for accessibility */
 .touch-target {
   min-height: 44px;
@@ -214,5 +224,4 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
-
 
