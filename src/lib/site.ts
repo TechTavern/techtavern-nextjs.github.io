@@ -17,7 +17,7 @@ export const siteOrg = {
 };
 
 export const paginationSettings = {
-  defaultItemsPerPage: 3,
+  defaultItemsPerPage: 15,
   maxVisiblePageLinks: 3,
   showFirstLastButtons: false,
   showPreviousNextButtons: true,
