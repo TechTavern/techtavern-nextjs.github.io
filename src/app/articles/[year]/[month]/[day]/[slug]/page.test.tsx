@@ -171,4 +171,48 @@ describe('Article page metadata', () => {
     expect(tags).toEqual(expect.arrayContaining(['Testing', 'Coverage']));
     expect(meta.alternates?.canonical).toBe('http://localhost:3000/articles/2025/01/01/fixture-with-excerpt/');
   });
+
+  it('prefers canonical URLs and absolute OG images when provided', async () => {
+    mockGetPostByParams.mockResolvedValueOnce({
+      ...post,
+      canonicalUrl: 'https://example.com/custom-canonical',
+      ogImage: 'https://cdn.example.com/og.png',
+    });
+
+    const meta = await generateMetadata({
+      params: Promise.resolve({ year: '2025', month: '01', day: '01', slug: 'fixture-with-excerpt' }),
+    });
+
+    expect(meta.alternates?.canonical).toBe('https://example.com/custom-canonical');
+
+    const images = meta.openGraph?.images;
+    let ogImageUrl: string | undefined;
+    if (Array.isArray(images)) {
+      const first = images[0];
+      if (typeof first === 'string' || first instanceof URL) {
+        ogImageUrl = first.toString();
+      } else if (first) {
+        ogImageUrl = first.url instanceof URL ? first.url.toString() : first.url;
+      }
+    } else if (images) {
+      if (typeof images === 'string' || images instanceof URL) {
+        ogImageUrl = images.toString();
+      } else if ('url' in images) {
+        ogImageUrl = images.url instanceof URL ? images.url.toString() : images.url;
+      }
+    }
+
+    expect(ogImageUrl).toBe('https://cdn.example.com/og.png');
+    expect(meta.twitter?.images).toEqual(['https://cdn.example.com/og.png']);
+  });
+
+  it('returns empty metadata when the article cannot be found', async () => {
+    mockGetPostByParams.mockResolvedValueOnce(null);
+
+    const meta = await generateMetadata({
+      params: Promise.resolve({ year: '2024', month: '12', day: '31', slug: 'missing' }),
+    });
+
+    expect(meta).toEqual({});
+  });
 });

@@ -1,10 +1,16 @@
 import {
+  badgeVariants,
+  buttonVariants,
+  cardVariants,
   getBadgeClasses,
   getButtonClasses,
   getCardClasses,
   getInputClasses,
   getLabelClasses,
   getTypographyClasses,
+  inputVariants,
+  labelVariants,
+  typographyVariants,
   responsive,
   focusVariants,
   animationVariants,
@@ -37,6 +43,25 @@ describe('variants helpers', () => {
     ];
 
     expected.forEach((token) => expect(tokens).toContain(token));
+  });
+
+  it('builds default button classes when optional flags are omitted', () => {
+    const classes = getButtonClasses({});
+    const tokens = classes.split(/\s+/);
+    expect(tokens).toContain('text-light');
+    expect(tokens).toContain('bg-primary');
+    expect(tokens).toContain('w-auto');
+    expect(tokens).not.toContain('cursor-wait');
+  });
+
+  it.each([
+    ['outline', 'hover:bg-secondary/20'],
+    ['ghost', 'shadow-none'],
+    ['danger', 'bg-danger'],
+    ['success', 'bg-success'],
+  ] as const)('builds %s button variants with distinct styling', (variant, expectedToken) => {
+    const tokens = getButtonClasses({ variant }).split(/\s+/);
+    expect(tokens).toContain(expectedToken);
   });
 
   it('builds card classes with interactive styling', () => {
@@ -159,6 +184,36 @@ describe('variants helpers', () => {
 
   it('builds responsive classchains for breakpoints', () => {
     expect(responsive('block', 'flex', 'grid', 'contents')).toBe('block md:flex lg:grid xl:contents');
+  });
+
+  it.each(Object.entries(buttonVariants.variants))('supports button variant %s', (variant, styles) => {
+    const classes = getButtonClasses({ variant: variant as Parameters<typeof getButtonClasses>[0]['variant'] });
+    expect(classes).toContain((styles as string[])[0]);
+  });
+
+  it.each(Object.entries(cardVariants.variants))('supports card variant %s', (variant, styles) => {
+    const classes = getCardClasses({ variant: variant as Parameters<typeof getCardClasses>[0]['variant'] });
+    expect(classes).toContain((styles as string[])[0]);
+  });
+
+  it.each(Object.entries(inputVariants.variants))('supports input variant %s', (variant, styles) => {
+    const classes = getInputClasses({ variant: variant as Parameters<typeof getInputClasses>[0]['variant'] });
+    expect(classes).toContain((styles as string[])[0]);
+  });
+
+  it.each(Object.entries(labelVariants.variants))('supports label variant %s', (variant, styles) => {
+    const classes = getLabelClasses({ variant: variant as Parameters<typeof getLabelClasses>[0]['variant'] });
+    expect(classes).toContain((styles as string[])[0]);
+  });
+
+  it.each(Object.entries(badgeVariants.variants))('supports badge variant %s', (variant, styles) => {
+    const classes = getBadgeClasses({ variant: variant as Parameters<typeof getBadgeClasses>[0]['variant'] });
+    expect(classes).toContain((styles as string[])[0]);
+  });
+
+  it.each(Object.entries(typographyVariants.colors))('supports typography color %s', (color, styles) => {
+    const classes = getTypographyClasses({ color: color as Parameters<typeof getTypographyClasses>[0]['color'] });
+    expect(classes).toContain((styles as string[])[0]);
   });
 
   it('exposes focus, animation, and state helpers for reuse', () => {

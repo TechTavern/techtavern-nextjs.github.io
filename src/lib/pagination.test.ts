@@ -4,6 +4,9 @@ import {
   generatePaginationLinks,
   getPaginationData,
   validatePageParameter,
+  createPaginationState,
+  InvalidConfigError,
+  InvalidPageError,
 } from './pagination';
 import { createPosts } from '@/tests/test-utils';
 
@@ -33,6 +36,13 @@ describe('getPaginationData', () => {
 
     expect(() => getPaginationData(posts, 3, ITEMS_PER_PAGE)).toThrow('Page out of range');
   });
+
+  it('validates inputs before computing pagination', () => {
+    expect(() => getPaginationData(null as unknown as number[], 1, ITEMS_PER_PAGE)).toThrow(
+      TypeError,
+    );
+    expect(() => getPaginationData([], 1, 0)).toThrow(InvalidConfigError);
+  });
 });
 
 describe('validatePageParameter', () => {
@@ -57,6 +67,14 @@ describe('validatePageParameter', () => {
 
     expect(result.isValid).toBe(false);
     expect(result.errorType).toBe('OUT_OF_RANGE');
+  });
+
+  it('normalizes array parameters and handles empty arrays', () => {
+    const fromArray = validatePageParameter(['3', '4'], 5);
+    expect(fromArray.parsed).toBe(3);
+    expect(fromArray.isValid).toBe(true);
+    const fromEmpty = validatePageParameter([], 5);
+    expect(fromEmpty.parsed).toBe(1);
   });
 });
 
@@ -99,5 +117,19 @@ describe('generatePaginationLinks', () => {
     expect(result.visiblePages).toEqual([8, 9, 10]);
     expect(result.showStartEllipsis).toBe(true);
     expect(result.showEndEllipsis).toBe(false);
+  });
+});
+
+describe('createPaginationState', () => {
+  it('acts as a convenience wrapper around getPaginationData', () => {
+    const posts = createPosts([], 6);
+    const state = createPaginationState(posts, 2, { itemsPerPage: 3 });
+    expect(state.currentPage).toBe(2);
+    expect(state.pageItems).toHaveLength(3);
+  });
+
+  it('propagates pagination errors for invalid requests', () => {
+    const posts = createPosts([], 2);
+    expect(() => createPaginationState(posts, 99, { itemsPerPage: 1 })).toThrow(InvalidPageError);
   });
 });

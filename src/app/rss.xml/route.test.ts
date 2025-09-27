@@ -35,7 +35,13 @@ describe('rss route GET', () => {
         slug: 'hello-world',
         date: '2025-02-20',
         lastModified: '2025-02-21',
-        excerpt: 'Learn <fast> & grow',
+        excerpt: 'Learn <fast> & grow while saying "cheers" and it\'s fun!',
+      },
+      {
+        title: 'Update without excerpt',
+        slug: 'update',
+        date: '2025-03-01',
+        lastModified: '2025-03-02',
       },
     ]);
     getAllPostsMock.mockResolvedValue(posts);
@@ -52,7 +58,7 @@ describe('rss route GET', () => {
     expect(body).toContain('<title>Tech &amp; Tavern</title>');
     expect(body).toContain('<description>Insights &lt;for&gt; builders &amp; leaders</description>');
     expect(body).toContain('<title>Hello &amp; Welcome</title>');
-    expect(body).toContain('<description>Learn &lt;fast&gt; &amp; grow</description>');
+    expect(body).toContain('Learn &lt;fast&gt; &amp; grow while saying &quot;cheers&quot; and it&apos;s fun!');
     expect(body).toContain('<link>https://example.com/articles/2025/02/20/hello-world/</link>');
     expect(body).toContain('<pubDate>Thu, 20 Feb 2025');
   });
@@ -62,5 +68,16 @@ describe('rss route GET', () => {
 
     const { GET } = await import('@/app/rss.xml/route');
     await expect(GET()).rejects.toThrow('rss load failed');
+  });
+
+  it('returns a valid but empty channel when there are no posts', async () => {
+    getAllPostsMock.mockResolvedValue([]);
+
+    const { GET } = await import('@/app/rss.xml/route');
+    const response = await GET();
+    const body = await response.text();
+
+    expect(body).toContain('<channel>');
+    expect(body).not.toContain('<item>');
   });
 });

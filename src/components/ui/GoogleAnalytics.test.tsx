@@ -49,4 +49,28 @@ describe('GoogleAnalytics', () => {
       );
     });
   });
+
+  it('retries sending when gtag is not immediately available', async () => {
+    jest.useFakeTimers();
+    mockUseSearchParams.mockReturnValueOnce(null);
+    delete (window as typeof window & { gtag?: jest.Mock }).gtag;
+
+    render(<GoogleAnalytics measurementId="G-456" />);
+
+    const gtag = jest.fn();
+    // Make gtag available after the first retry tick
+    jest.advanceTimersByTime(250);
+    (window as typeof window & { gtag?: typeof gtag }).gtag = gtag;
+    jest.advanceTimersByTime(250);
+
+    await waitFor(() => {
+      expect(gtag).toHaveBeenCalledWith(
+        'config',
+        'G-456',
+        expect.objectContaining({ page_path: '/articles' }),
+      );
+    });
+
+    jest.useRealTimers();
+  });
 });

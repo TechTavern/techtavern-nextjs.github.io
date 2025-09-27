@@ -5,7 +5,17 @@ import PaginatedArticlesPage, {
 } from './page';
 import { createPaginationData, createPosts } from '@/tests/test-utils';
 import { generatePaginationParams, getPaginatedPosts } from '@/lib/posts';
+import { InvalidPageError } from '@/lib/pagination';
 import { getBaseUrl } from '@/lib/site.server';
+
+jest.mock('next/navigation', () => ({
+  notFound: () => {
+    const error = new Error('NEXT_NOT_FOUND');
+    // @ts-expect-error align with Next error structure
+    error.digest = 'NEXT_NOT_FOUND';
+    throw error;
+  },
+}));
 
 jest.mock('@/lib/site.server', () => {
   const actual = jest.requireActual('@/lib/site.server');
@@ -88,6 +98,19 @@ describe('Paginated articles page', () => {
     expect(metadata.openGraph?.url).toBe('https://example.com/articles/page/2/');
   });
 
+  it('returns empty metadata when the requested page is missing', async () => {
+    getPaginatedPostsMock.mockRejectedValueOnce(new InvalidPageError('Requested page is out of range'));
+
+    const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '999' }) });
+
+    expect(metadata).toEqual({});
+  });
+
+  it('returns empty metadata when the page parameter is invalid', async () => {
+    const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: 'abc' }) });
+    expect(metadata).toEqual({});
+  });
+
   it('renders the paginated articles section when data is available', async () => {
     const posts = createPosts([
       { title: 'Paginated article', slug: 'paginated-article' },
@@ -114,5 +137,17 @@ describe('Paginated articles page', () => {
 
     expect(screen.getByTestId('current-page')).toHaveTextContent('2');
     expect(screen.getByTestId('posts-count')).toHaveTextContent('3');
+  });
+
+  it('throws notFound for non-numeric page parameters', async () => {
+    await expect(
+      PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: 'abc' }) }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
+  it('throws notFound for page numbers less than one', async () => {
+    await expect(
+      PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: '0' }) }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
   });
 });

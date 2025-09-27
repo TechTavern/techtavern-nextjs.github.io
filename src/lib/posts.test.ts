@@ -3,7 +3,9 @@ import {
   generatePaginationParams,
   getAllPosts,
   getPaginatedPosts,
+  getPostsForPage,
 } from './posts';
+import { createPosts } from '@/tests/test-utils';
 
 describe('getAllPosts (integration with content)', () => {
   it('reads MDX frontmatter, computes URL and reading time', async () => {
@@ -57,5 +59,29 @@ describe('pagination helpers (failing tests before implementation)', () => {
     expect(Array.isArray(params)).toBe(true);
     expect(params.length).toBeGreaterThan(0);
     expect(params[0]).toHaveProperty('pageNumber');
+  });
+});
+
+describe('posts pagination utility helpers', () => {
+  const posts = createPosts([
+    { slug: 'one' },
+    { slug: 'two' },
+    { slug: 'three' },
+    { slug: 'four' },
+  ]);
+
+  it('slices posts for the desired page', () => {
+    const page = getPostsForPage(posts, 2, 2);
+    expect(page).toHaveLength(2);
+    expect(page[0].slug).toBe('three');
+  });
+
+  it('throws when requesting posts for an out-of-range page', () => {
+    expect(() => getPostsForPage(posts, 99, 2)).toThrow('Page out of range');
+  });
+
+  it('includes page one when the dataset fits on a single page', async () => {
+    const params = await generatePaginationParams(10_000);
+    expect(params[0]).toEqual({ pageNumber: '1' });
   });
 });
