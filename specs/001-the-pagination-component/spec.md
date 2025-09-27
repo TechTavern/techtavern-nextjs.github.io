@@ -116,6 +116,15 @@ As a blog reader, I want to navigate through multiple pages of articles so that 
 
 ---
 
+## Recent Discoveries & Considerations
+
+- Mobile readers responded best to a simplified control surface: showing only forward/back navigation on small screens avoids clutter, but they still need a cue that more content exists. An ellipsis indicator between the icons satisfies that expectation without reintroducing numbered buttons.
+- Accessibility reviews surfaced that decorative choices (for example link colors and icon-only buttons) can silently undermine compliance. High-contrast accent treatments and larger touch targets are now treated as baseline requirements whenever pagination appears on dark sections.
+- Audit cadence matters. Running both Lighthouse and axe as part of the acceptance process caught regressions early, so future enhancements should keep automated UX audits in scope whenever pagination behavior changes.
+- Pagination state must feel canonical: page 1 should resolve to `/articles/`, while deeper pages remain shareable. Keeping this mental model intact proved more important than exposing every detail of the underlying logic.
+
+---
+
 ## Execution Status
 *Updated by main() during processing*
 
