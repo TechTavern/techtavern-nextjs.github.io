@@ -122,7 +122,10 @@ function toTitleCaseWord(word) {
   if (word.length === 0) {
     return false;
   }
-  return /^[A-Z][a-z0-9]*$/.test(word);
+  const segments = word.split('-');
+  const isTitleCaseSegment = (segment) => /^[A-Z][a-z0-9]*$/.test(segment);
+
+  return segments.every((segment) => segment.length > 0 && isTitleCaseSegment(segment));
 }
 
 function validateTags(tags) {

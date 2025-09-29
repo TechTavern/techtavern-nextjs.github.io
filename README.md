@@ -77,10 +77,24 @@ Reading time is computed automatically (~200 wpm) and shown on index and article
 
 ### AI Article Enrichment
 
-- Configure `.env.local` with `OPENAI_API_KEY` (required) and optionally `OPENAI_MODEL` (defaults to `gpt-5-mini`).
-- Run `npm run article-enrichment` to enrich every `.mdx` file in `content/articles/` that lacks `excerpt` or `tags`.
-- Optional path scoping: `npm run article-enrichment -- content/articles/2025-10-31-sample.mdx`.
-- Use `--dry-run` (or `DRY_RUN=1`) to preview the files that would be updated without making API calls or writes.
+The `scripts/enrich-article.js` CLI fills in missing `excerpt` and `tags` frontmatter for `.mdx` articles by calling OpenAI's Responses API. Existing excerpts and tags are left untouched so the script can be re-run safely.
+
+**Setup**
+- Provide an `OPENAI_API_KEY` via your shell or `.env.local`. Lines in `.env.local` follow `KEY=value` syntax; quoted values are unwrapped. Missing keys cause the script to exit before any files are touched.
+- Optionally set `OPENAI_MODEL` (defaults to `gpt-5-mini`).
+
+**Usage**
+- `npm run article-enrichment` – processes every `.mdx` file in `content/articles/` (non-recursive).
+- `npm run article-enrichment -- content/articles/2025-09-29-spec-kit-in-practice.mdx` – limit to a single file or directory.
+- `node scripts/enrich-article.js <path>` – run the script directly if you prefer not to use npm scripts.
+- Append `--dry-run` or set `DRY_RUN=1` to preview the work without API calls or file writes.
+
+**Behavior & validation**
+- Files that already have both `excerpt` and `tags` are skipped with a log line.
+- When enrichment is needed, the script prompts OpenAI once per file and merges the generated excerpt/tags back into the existing frontmatter.
+- Excerpts must be a single paragraph between 100–160 characters and should highlight the article's hook; invalid responses cause the run to fail for that file.
+- Tags must be an array of 2–5 Title Case words (each word capitalized); hyphenated compounds are allowed when each segment is Title Case. Whitespace or casing issues trigger validation errors.
+- A summary is printed at the end (`updated`, `skipped`, `errors`). Any errors set a non-zero exit code so CI/editor integrations can detect failures.
 
 ## Environment Configuration
 
