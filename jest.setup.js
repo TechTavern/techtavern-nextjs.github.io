@@ -1,5 +1,9 @@
-// Testing Library matchers
-import '@testing-library/jest-dom';
+// Only load jest-dom matchers in jsdom environment (not in node environment tests)
+// This prevents "Node is not defined" errors in tests with @jest-environment node
+if (typeof window !== 'undefined') {
+  // Dynamically import jest-dom only in browser environment
+  import('@testing-library/jest-dom');
+}
 
 // Provide matchMedia mock for responsive component tests
 if (typeof window !== 'undefined' && !window.matchMedia) {
