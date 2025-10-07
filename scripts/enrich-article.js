@@ -128,14 +128,34 @@ function toTitleCaseWord(word) {
   return segments.every((segment) => segment.length > 0 && isTitleCaseSegment(segment));
 }
 
+function normalizeToTitleCase(text) {
+  return text
+    .split(' ')
+    .map((word) => {
+      if (!word) return '';
+      // Handle hyphenated words
+      return word
+        .split('-')
+        .map((segment) => {
+          if (!segment) return '';
+          return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
+        })
+        .join('-');
+    })
+    .join(' ');
+}
+
 function validateTags(tags) {
   if (!Array.isArray(tags)) {
     throw new Error('Tags must be an array.');
   }
 
-  const cleaned = tags.map((tag) => (typeof tag === 'string' ? tag.trim() : ''));
+  const cleaned = tags
+    .map((tag) => (typeof tag === 'string' ? tag.trim() : ''))
+    .filter((tag) => tag.length > 0)
+    .map((tag) => normalizeToTitleCase(tag));
 
-  if (cleaned.some((tag) => !tag)) {
+  if (cleaned.length === 0) {
     throw new Error('Tags must be non-empty strings.');
   }
 
