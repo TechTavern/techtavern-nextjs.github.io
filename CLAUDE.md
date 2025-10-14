@@ -149,12 +149,27 @@ Remember: These guidelines should enhance development velocity while maintaining
 
 ## Testing Framework
 
+### Unit and Integration Tests (Jest)
+
 - **Jest**: Configured with Next.js integration
 - **React Testing Library**: For component testing
 - **jsdom**: Test environment for DOM testing
 - **Setup**: `jest.setup.js` with testing-library/jest-dom
 - **Coverage**: Collects from `src/**/*.{ts,tsx}` excluding type definitions
 - **Path mapping**: Supports `@/*` imports in tests
+
+### End-to-End and Accessibility Tests (Playwright)
+
+- **Playwright**: E2E testing with WCAG accessibility validation using axe-core
+- **Test Requirements**: Minimum 16 articles for pagination tests (15 items/page = 2 pages)
+- **Configuration**: `playwright.config.js` with automatic dev server startup
+- **CI Integration**: Runs in GitHub Actions `quality-gates` job
+- **Commands**:
+  - `npm run test:a11y` - Run accessibility tests
+  - `npm run test:playwright` - Run all Playwright tests
+  - `npm run verify-test-data` - Verify sufficient articles exist for testing
+- **Test Data**: See `tests/README.md` for detailed requirements and best practices
+- **Reports**: HTML reports uploaded as artifacts in CI, viewable with `npx playwright show-report`
 
 ## Environment Configuration
 

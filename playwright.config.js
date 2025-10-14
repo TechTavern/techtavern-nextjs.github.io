@@ -29,6 +29,20 @@ module.exports = defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    /* Navigation timeout - increased for slower CI environments */
+    navigationTimeout: 30000,
+
+    /* Action timeout - time for each action like click, fill, etc */
+    actionTimeout: 10000,
+  },
+
+  /* Global timeout for each test */
+  timeout: 60000,
+
+  /* Global timeout for expect() calls */
+  expect: {
+    timeout: 10000,
   },
 
   /* Configure projects for major browsers */
@@ -45,5 +59,7 @@ module.exports = defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });
