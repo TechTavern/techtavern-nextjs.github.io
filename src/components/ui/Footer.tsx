@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-seal-brown to-maroon text-light py-12">
+    <footer className="bg-gradient-to-br from-seal-brown to-maroon text-light py-12" role="contentinfo" aria-label="Site footer">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Left: Branding/content */}
           <div>
-            <h3 className="text-xl font-heading font-bold mb-2">Created by Tech Tavern</h3>
+            <p className="text-xl font-heading font-bold mb-2">Created by Tech Tavern</p>
             <p className="text-[color:var(--color-light-80)]">Veteran-owned | Innovation on Tap</p>
           </div>
 

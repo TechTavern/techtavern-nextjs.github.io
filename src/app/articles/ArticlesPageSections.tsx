@@ -79,7 +79,7 @@ export function ArticlesPageSections({ posts, pagination }: ArticlesPageSections
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={post.featuredImage}
-                        alt={post.title}
+                        alt={`Featured image for article: ${post.title}`}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />

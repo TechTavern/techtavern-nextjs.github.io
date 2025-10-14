@@ -130,7 +130,6 @@ export default function Services() {
                       <Image
                         src={logo.src}
                         alt={logo.alt}
-                        title={logo.title}
                         width={200}
                         height={150}
                         className="h-10 sm:h-12 md:h-14 w-auto object-contain max-w-full hover:scale-105 transition-transform duration-200"
@@ -147,24 +146,25 @@ export default function Services() {
       {/* Service Areas */}
       <div className="space-y-16 pt-12">
         {serviceAreas.map((service, index) => (
-          <div 
+          <section
             key={index}
             data-testid={`service-area-${index}`}
+            aria-labelledby={`service-heading-${index}`}
             className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
               service.layout === 'image-first' ? 'lg:grid-flow-col-dense' : ''
             }`}
           >
             {/* Content */}
             <div className={`space-y-6 ${service.layout === 'image-first' ? 'lg:col-start-2' : ''}`}>
-              <h3 className="text-3xl md:text-4xl font-heading font-bold text-light">
+              <h3 id={`service-heading-${index}`} className="text-3xl md:text-4xl font-heading font-bold text-light">
                 {service.title}
               </h3>
-              
+
               <p className="text-lg text-light/90 leading-relaxed">
                 {service.content}
               </p>
-              
-              <ul className="feature-list space-y-2 text-light">
+
+              <ul className="feature-list space-y-2 text-light" role="list">
                 {service.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="text-base">
                     {feature}
@@ -183,7 +183,7 @@ export default function Services() {
                 className="w-full h-auto object-contain"
               />
             </div>
-          </div>
+          </section>
         ))}
       </div>
     </div>

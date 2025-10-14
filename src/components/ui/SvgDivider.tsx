@@ -15,13 +15,15 @@ export default function SvgDivider({
 
   return (
     <div className={`relative ${isTop ? styles.shapeDividerTop : styles.shapeDivider} ${className}`}>
-      <svg 
+      <svg
         data-name={`tri-asym-${position}`}
-        xmlns="http://www.w3.org/2000/svg" 
+        xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1200 120"
         preserveAspectRatio="none"
         className={`w-full ${isTop ? '' : 'mt-3'} shape-fill`}
         style={{ height: 'var(--size-shape-divider)' }}
+        aria-hidden="true"
+        role="presentation"
       >
         <path
           fill={fill}

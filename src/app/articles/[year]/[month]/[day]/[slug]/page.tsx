@@ -89,18 +89,24 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <>
       {/* Breadcrumb Navigation */}
-      <nav className="bg-secondary/5 py-4 border-b border-secondary/20">
+      <nav className="bg-secondary/5 py-4 border-b border-secondary/20" aria-label="Breadcrumb">
         <div className="container mx-auto px-4">
-          <div className="flex items-center space-x-2 text-sm">
-            <Link 
-              href="/articles"
-              className="text-accent hover:text-accent-dark transition-colors duration-300"
-            >
-              Articles
-            </Link>
-            <span className="text-dark/40">/</span>
-            <span className="text-dark/70">{post.title}</span>
-          </div>
+          <ol className="flex items-center space-x-2 text-sm" role="list">
+            <li>
+              <Link
+                href="/articles"
+                className="text-accent hover:text-accent-dark transition-colors duration-300 focus-ring"
+              >
+                Articles
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <span className="text-dark/40">/</span>
+            </li>
+            <li aria-current="page">
+              <span className="text-dark/70">{post.title}</span>
+            </li>
+          </ol>
         </div>
       </nav>
 
@@ -113,7 +119,7 @@ export default async function ArticlePage({ params }: Props) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.featuredImage}
-                  alt={post.title}
+                  alt={`Featured image for article: ${post.title}`}
                   className="w-full h-auto object-cover"
                 />
               </div>
@@ -121,13 +127,15 @@ export default async function ArticlePage({ params }: Props) {
             <div className="mb-6">
               <Link
                 href="/articles"
-                className="inline-flex items-center text-accent hover:text-accent-dark transition-colors duration-300 mb-4"
+                className="inline-flex items-center text-accent hover:text-accent-dark transition-colors duration-300 focus-ring touch-target mb-4"
+                aria-label="Back to Articles listing"
               >
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"

@@ -25,31 +25,32 @@ export default function Contact() {
         
         <div className="space-y-4">
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-              <MapPin className="text-primary" size={20} />
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden="true">
+              <MapPin className="text-primary" size={20} aria-hidden="true" />
             </div>
             <div className="text-dark">
               <p className="font-medium">{contact.city}</p>
               <p>{contact.country}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-              <Globe className="text-primary" size={20} />
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden="true">
+              <Globe className="text-primary" size={20} aria-hidden="true" />
             </div>
             <div className="text-dark">
               Remote-friendly | <em>Globally available</em>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-              <Mail className="text-primary" size={20} />
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden="true">
+              <Mail className="text-primary" size={20} aria-hidden="true" />
             </div>
             <a
               href={`mailto:${contact.email}`}
               className="text-primary hover:text-primary-dark transition-colors font-medium underline decoration-2 underline-offset-2"
+              aria-label={`Email Tech Tavern at ${contact.email}`}
             >
               {contact.email}
             </a>
@@ -61,7 +62,7 @@ export default function Contact() {
       <div className="flex justify-center">
         <Image
           src="/assets/img/undraw_contact_us_15o2_white_circles.svg"
-          alt="line art of people sitting around social media icons"
+          alt="Illustration of people collaborating around social media and communication icons"
           width={500}
           height={400}
           className="w-full h-auto max-w-md object-contain"

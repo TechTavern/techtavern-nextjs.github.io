@@ -12,11 +12,18 @@ export default function MDXImage({ src, alt, width, height, className = "", ...r
   const isExternal = /^https?:\/\//i.test(srcStr);
   const canUseNextImage = !isExternal && !!width && !!height && !!srcStr;
 
+  // Warn in development if alt is missing for content images
+  if (process.env.NODE_ENV === 'development' && !alt) {
+    console.warn(`MDXImage: Missing alt text for image: ${srcStr}. Use empty string for decorative images.`);
+  }
+
+  const altText = alt ?? "";
+
   if (canUseNextImage) {
     return (
       <Image
         src={srcStr}
-        alt={alt || ""}
+        alt={altText}
         width={Number(width)}
         height={Number(height)}
         className={`rounded-lg shadow-lg my-6 max-w-full h-auto ${className || ""}`}
@@ -31,7 +38,7 @@ export default function MDXImage({ src, alt, width, height, className = "", ...r
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={srcStr}
-      alt={alt || ""}
+      alt={altText}
       className={`rounded-lg shadow-lg my-6 max-w-full h-auto ${className || ""}`}
       loading="lazy"
       {...rest}
