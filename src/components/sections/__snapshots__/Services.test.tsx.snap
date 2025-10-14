@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Services section captures structural snapshot for the first service card 1`] = `
-<div
+<section
+  aria-labelledby="service-heading-0"
   class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center "
   data-testid="service-area-0"
 >
@@ -10,6 +11,7 @@ exports[`Services section captures structural snapshot for the first service car
   >
     <h3
       class="text-3xl md:text-4xl font-heading font-bold text-light"
+      id="service-heading-0"
     >
       Tap into Insights
     </h3>
@@ -20,6 +22,7 @@ exports[`Services section captures structural snapshot for the first service car
     </p>
     <ul
       class="feature-list space-y-2 text-light"
+      role="list"
     >
       <li
         class="text-base"
@@ -49,5 +52,5 @@ exports[`Services section captures structural snapshot for the first service car
       width="500"
     />
   </div>
-</div>
+</section>
 `;
