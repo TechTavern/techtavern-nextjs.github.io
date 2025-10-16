@@ -54,9 +54,7 @@ export const FrontmatterSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "lastModified must be yyyy-mm-dd")
     .optional(),
-  slug: z
-    .string({ required_error: "Required", invalid_type_error: "Required" })
-    .min(1, "slug is required"),
+  slug: z.string().min(1, "slug is required"),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
   featuredImage: z.string().optional(),
