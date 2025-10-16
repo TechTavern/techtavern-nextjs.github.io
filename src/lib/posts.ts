@@ -54,7 +54,9 @@ export const FrontmatterSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "lastModified must be yyyy-mm-dd")
     .optional(),
-  slug: z.string().min(1, "slug is required"),
+  slug: z
+    .string({ required_error: "Required", invalid_type_error: "Required" })
+    .min(1, "slug is required"),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
   featuredImage: z.string().optional(),
@@ -73,7 +75,20 @@ export async function getAllPosts(): Promise<PostMeta[]> {
       const { data, content } = matter(raw);
       const parsed = FrontmatterSchema.safeParse(data);
       if (!parsed.success) {
-        const issues = parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+        const issues = parsed.error.issues
+          .map((issue) => {
+            const pathLabel = issue.path.join('.');
+            let message = issue.message;
+            if (
+              issue.code === 'invalid_type' &&
+              issue.expected === 'string' &&
+              issue.message.includes('received undefined')
+            ) {
+              message = 'Required';
+            }
+            return `${pathLabel}: ${message}`;
+          })
+          .join('; ');
         throw new Error(`Invalid frontmatter in ${filePath}: ${issues}`);
       }
       const fm = parsed.data;
