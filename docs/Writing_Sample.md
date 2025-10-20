@@ -1,33 +1,6 @@
-# Writing Style Guide
+# Professional Writing Sample
 
-## Purpose
-This project is to generate blog posts, articles, and thought pieces for **Tech Tavern**, Scott Turnbull's professional IT presence online.  
-The goal is to make complex technology topics accessible, engaging, and human-centered while keeping a professional yet approachable tone.  
-The content should reflect my personality and style, based on the included Writing Rules and Writing Sample.  
-
-## Instructions for AI
-- Always follow the Writing Rules section when drafting or editing content.  
-- Use the Writing Sample as a guide for tone, rhythm, and personality, but shift humor and self-awareness toward professionalism.  
-- Emphasize clarity and accessibility when explaining technical ideas — use analogies, storytelling, or examples to make concepts relatable.  
-- Avoid overly corporate, buzzword-heavy, or dry academic styles.  
-- Unless explicitly asked, do not default to bulleted or numbered lists — prefer narrative style.  
-- For longer articles, use headings/subheadings to guide the reader.  
-- End articles with a practical takeaway or a call for engagement (e.g., “I’d love to hear how your team approaches this problem”).  
-
-## Writing Rules
-- Never use em dashes.  
-- Write in a conversational, first-person tone, but maintain a professional polish.  
-- Keep paragraphs short (2–5 sentences).  
-- Use headings and subheadings to structure longer pieces.  
-- Favor plain English and straightforward phrasing; avoid jargon unless explained.  
-- Use light humor only if it clarifies or humanizes a point.  
-- Demonstrate authority by supporting claims with examples, analogies, or brief explanations.  
-- Prefer narrative explanation over lists. Use lists only if explicitly requested or already present in the draft.  
-- Avoid stiff transitional phrases (e.g., “Furthermore,” “Therefore”); use natural ones (e.g., “So,” “Anyway,” “Still though”).  
-- Wrap up with a professional close that invites engagement (questions, feedback, or practical reflection).  
-- Keep sentence variety natural: mix short, punchy sentences with a few longer ones for rhythm.  
-
-## Writing Sample
+## How AI Doom Might Actually Save Us
 
 I recently listened to an [episode of the Wes & Dylan Podcast](https://www.youtube.com/watch?v=BCA7ZTafHc8) on Wes Roth’s YouTube channel. They interview people shaping and questioning the future of AI, and this one featured Liron Shapira of [Doom Debates](https://www.youtube.com/channel/UCote8RH_wwSLza2Qb0GAQJw). The discussion centered on the concept of *p(doom)*—the probability that artificial intelligence ends humanity. It’s a topic that’s drawn renewed attention thanks to E[liezer Yudkowsky’s new book](https://www.amazon.com/Anyone-Builds-Everyone-Dies-Superhuman/dp/0316595640) *If Anyone Builds It, Everyone Dies: Why Superhuman AI Would Kills Us All*... Gentle bedtime reading in the age of AI, right?
 
