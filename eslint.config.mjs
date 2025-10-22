@@ -1,16 +1,9 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const nextConfig = require("eslint-config-next");
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     ignores: [
       "node_modules/**",
@@ -23,6 +16,7 @@ const eslintConfig = [
       "specs/**",
     ],
   },
+  ...nextConfig,
   // Allow CommonJS in tooling scripts and Jest config
   {
     files: ["**/*.js", "**/*.cjs"],
