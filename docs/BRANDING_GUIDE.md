@@ -80,7 +80,7 @@ Tech Tavern uses an earth-toned palette anchored by warm browns and cool blue-gr
 |------------|----------|----------|-----|-------|
 | **Secondary (Ghost)** | `--color-secondary` | `#c1c6ce` | rgb(193, 198, 206) | Secondary buttons, borders, dividers |
 | **Secondary Dark** | `--color-secondary-dark` | `#9da2aa` | rgb(157, 162, 170) | Hover states, muted text |
-| **Secondary Light** | `--color-secondary-light` | `#e1e4ea` | rgb(225, 228, 234) | Light backgrounds, subtle highlights |
+| **Secondary Light** | `--color-secondary-light` | ` ` | rgb(225, 228, 234) | Light backgrounds, subtle highlights |
 
 **Usage Guidelines:**
 - Secondary colors provide visual hierarchy without competing with primary
