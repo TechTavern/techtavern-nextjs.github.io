@@ -153,7 +153,7 @@ The site generates absolute links (sitemap, RSS, OpenGraph) using `SITE_URL`. Va
   - Custom domain: `https://example.com`
 - NEXT_PUBLIC_BASE_PATH: Set by CI for staging vs production; rarely needed locally.
 - NEXT_PUBLIC_GA_ID: Optional Google Analytics measurement ID.
-- NEXT_PUBLIC_HUBSPOT_PORTAL_ID: Optional HubSpot tracking portal ID.
+- NEXT_PUBLIC_HUBSPOT_PORTAL_ID: Optional HubSpot tracking portal ID (numeric only; do not include the trailing `.js`). Set this in repo **Variables** or **Secrets** so CI can bake it into the static export.
 - CSP is centralized in `src/lib/csp.ts`; update the allowlists there if you introduce additional third-party scripts or APIs.
 
 Validation and defaults:

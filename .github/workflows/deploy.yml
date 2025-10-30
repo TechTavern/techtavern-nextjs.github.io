@@ -233,6 +233,20 @@ jobs:
             echo "Google Analytics not configured; proceeding without GA"
           fi
 
+          HUBSPOT_ID=""
+          if [ -n '${{ vars.NEXT_PUBLIC_HUBSPOT_PORTAL_ID }}' ]; then
+            HUBSPOT_ID='${{ vars.NEXT_PUBLIC_HUBSPOT_PORTAL_ID }}'
+          elif [ -n '${{ secrets.NEXT_PUBLIC_HUBSPOT_PORTAL_ID }}' ]; then
+            HUBSPOT_ID='${{ secrets.NEXT_PUBLIC_HUBSPOT_PORTAL_ID }}'
+          fi
+          export NEXT_PUBLIC_HUBSPOT_PORTAL_ID="$HUBSPOT_ID"
+          echo "NEXT_PUBLIC_HUBSPOT_PORTAL_ID=$NEXT_PUBLIC_HUBSPOT_PORTAL_ID" >> $GITHUB_ENV
+          if [ -n "$NEXT_PUBLIC_HUBSPOT_PORTAL_ID" ]; then
+            echo "HubSpot tracking enabled (NEXT_PUBLIC_HUBSPOT_PORTAL_ID set)"
+          else
+            echo "HubSpot tracking not configured; proceeding without HubSpot"
+          fi
+
       - name: Build static site
         run: npm run build
 

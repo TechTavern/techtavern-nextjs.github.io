@@ -8,6 +8,7 @@ describe('env schema', () => {
     delete process.env.SITE_URL;
     delete process.env.NEXT_PUBLIC_BASE_PATH;
     delete process.env.NEXT_PUBLIC_GA_ID;
+    delete process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
   });
 
   afterAll(() => {
@@ -39,5 +40,22 @@ describe('env schema', () => {
   it('rejects NEXT_PUBLIC_BASE_PATH with duplicate leading slashes', () => {
     process.env.NEXT_PUBLIC_BASE_PATH = '//bad';
     expect(() => parseEnv()).toThrow(/NEXT_PUBLIC_BASE_PATH must be empty or start with a single leading slash/);
+  });
+
+  it('accepts a numeric HubSpot portal id', () => {
+    process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID = ' 244237198 ';
+    const env = parseEnv();
+    expect(env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID).toBe('244237198');
+  });
+
+  it('trims a trailing .js from the HubSpot portal id', () => {
+    process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID = '244237198.js';
+    const env = parseEnv();
+    expect(env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID).toBe('244237198');
+  });
+
+  it('rejects a non-numeric HubSpot portal id', () => {
+    process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID = 'abc123';
+    expect(() => parseEnv()).toThrow(/must be the numeric HubSpot portal ID/);
   });
 });

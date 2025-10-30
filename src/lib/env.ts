@@ -48,9 +48,16 @@ const EnvSchema = z.object({
         return undefined;
       }
       const trimmed = value.trim();
-      return trimmed.length === 0 ? undefined : trimmed;
+      const normalized = trimmed.endsWith('.js') ? trimmed.slice(0, -3) : trimmed;
+      return normalized.length === 0 ? undefined : normalized;
     },
-    z.string().optional()
+    z
+      .string()
+      .regex(/^\d+$/, {
+        message:
+          'NEXT_PUBLIC_HUBSPOT_PORTAL_ID must be the numeric HubSpot portal ID (exclude ".js" and other characters)',
+      })
+      .optional()
   ),
 });
 
