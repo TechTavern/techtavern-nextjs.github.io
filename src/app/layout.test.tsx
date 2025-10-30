@@ -78,4 +78,20 @@ describe('RootLayout', () => {
     expect(metadata.alternates?.canonical).toBe('https://example.com');
     expect(metadata.openGraph?.images?.[0]?.url).toBe('https://example.com/images/tech-tavern-default-featured.webp');
   });
+
+  it('includes HubSpot domains in the CSP meta tag', async () => {
+    const { default: RootLayout } = await loadLayout();
+
+    const html = renderToStaticMarkup(
+      <RootLayout>
+        <div>content</div>
+      </RootLayout>,
+    );
+
+    expect(html).toContain('https://js-na2.hscollectedforms.net');
+    expect(html).toContain('https://js-na2.hs-banner.com');
+    expect(html).toContain('https://js-na2.hs-analytics.net');
+    expect(html).toContain('https://forms.hsforms.com');
+    expect(html).toContain('https://forms-na2.hscollectedforms.net');
+  });
 });

@@ -5,6 +5,7 @@ import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import { env } from "@/lib/env";
 import { buildOrganizationJsonLd } from "@/lib/seo";
+import { buildContentSecurityPolicy } from "@/lib/csp";
 
 export const metadata = {
   title: siteMeta.title,
@@ -59,7 +60,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* Inline critical CSS removed; relying on globals.css and Tailwind utilities */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://js-na2.hs-scripts.com https://js.hs-analytics.net${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com https://api-na1.hubspot.com https://api-na2.hubspot.com https://api.hsforms.com; img-src 'self' data: https:; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+          content={buildContentSecurityPolicy({
+            includeUnsafeEval: process.env.NODE_ENV === "development",
+          })}
         />
         <script
           type="application/ld+json"
