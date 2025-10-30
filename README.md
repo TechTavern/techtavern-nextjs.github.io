@@ -39,8 +39,9 @@ npm run build   # or: win-npm run build (WSL)
 
 ## Project Scripts
 
-- `dev`: Next.js dev server
-- `build`: Next.js static export build → `out/`
+- `dev`: Next.js dev server (uses Turbopack - currently incompatible with MDX plugins)
+- `dev:webpack`: Next.js dev server with webpack (use this for development)
+- `build`: Next.js static export build → `out/` (uses webpack)
 - `start`: Next.js start (rarely needed; static export is default)
 - `lint`: ESLint (Next + TS rules)
 - `typecheck`: TypeScript `--noEmit`
@@ -50,8 +51,55 @@ npm run build   # or: win-npm run build (WSL)
 
 ## Dev & Build
 
-- Dev: `npm run dev` (or `win-npm run dev` on WSL)
-- Build: `npm run build` (or `win-npm run build` on WSL)
+### Development Server
+
+**Recommended for active development:**
+```bash
+npm run dev:webpack   # or: win-npm run dev:webpack (WSL)
+```
+
+**For testing Turbopack compatibility:**
+```bash
+npm run dev           # or: win-npm run dev (WSL)
+```
+
+### Production Build
+
+```bash
+npm run build         # or: win-npm run build (WSL)
+```
+
+### Known Issue: Turbopack + MDX Plugins
+
+**Status:** As of Next.js 16.0.1, Turbopack has a serialization issue with MDX plugins (remark-gfm, rehype-slug, rehype-autolink-headings).
+
+**Symptoms:**
+```
+Error: loader mdx-js-loader.js does not have serializable options
+```
+
+**Current Solution:**
+- Development: Use `npm run dev:webpack` instead of `npm run dev`
+- Production: Build script already uses `--webpack` flag
+- Testing: Playwright tests use webpack via `dev:webpack` script
+
+**Future Check:**
+- Periodically test `npm run dev` to see if the issue is resolved in future Next.js releases
+- Check Next.js release notes for Turbopack MDX plugin support improvements
+- Related issues: [vercel/next.js#73757](https://github.com/vercel/next.js/issues/73757)
+
+**Why This Happens:**
+- Turbopack (written in Rust) requires serializable loader options
+- MDX remark/rehype plugins are JavaScript functions and cannot be serialized
+- Webpack handles these plugins without issues
+
+**Alternative (not recommended):**
+You could try using string-based plugin format, but this may not work for all plugins:
+```javascript
+// In next.config.ts
+remarkPlugins: ['remark-gfm'],
+rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }]]
+```
 
 ## Content & Authoring
 

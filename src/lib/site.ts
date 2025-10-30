@@ -13,7 +13,7 @@ export const siteOrg = {
   name: 'Tech Tavern, LLC',
   email: 'info@tech-tavern.com',
   // Use a square logo for previews and JSON-LD
-  logoPath: '/android-chrome-512x512.png',
+  logoPath: '/favicons/android-icon-192x192.png',
 };
 
 export const paginationSettings = {
