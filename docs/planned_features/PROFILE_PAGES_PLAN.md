@@ -55,7 +55,11 @@ certifications:
   - "AWS Solutions Architect"
   - "Certified Scrum Master"
 
-calendly_link: "https://calendly.com/scott-tech-tavern"
+booking:
+  provider: "google-booking"
+  link: "https://calendar.google.com/calendar/appointments/schedules/00000000000000000000000000000000?gv=true"
+  ctaLabel: "Book a Consultation"
+  embedComponent: "GoogleBookingButton"
 
 services:
   - title: "Ethical AI Governance Audit"
@@ -177,6 +181,19 @@ const CaseStudySchema = z.object({
 });
 
 /**
+ * Zod schema for booking configuration.
+ * Supports multiple scheduling providers (Google Booking, Calendly, etc.).
+ */
+const BookingSchema = z.object({
+  provider: z.enum(['google-booking', 'calendly']).default('google-booking'),
+  link: z.string().url(),
+  ctaLabel: z.string().optional(),
+  embedComponent: z.enum(['GoogleBookingButton']).optional(),
+});
+
+export type BookingConfig = z.infer<typeof BookingSchema>;
+
+/**
  * Zod schema for profile frontmatter.
  * Validates all required fields from MDX files.
  */
@@ -187,7 +204,7 @@ const ProfileFrontmatterSchema = z.object({
   image: z.string(),
   bio_short: z.string(),
   certifications: z.array(z.string()),
-  calendly_link: z.string().url(),
+  booking: BookingSchema.optional(),
   services: z.array(ServiceSchema),
   case_studies: z.array(CaseStudySchema),
 });
@@ -242,6 +259,10 @@ export async function getProfileBySlug(slug: string): Promise<ProfileMeta | null
 }
 ```
 
+**Notes**:
+- Profiles without `booking` data simply omit the CTA in the hero section.
+- When introducing a new scheduling provider, extend both the `BookingSchema.provider`/`embedComponent` unions and add a matching client component.
+
 ---
 
 ## Phase 3: App Router Pages
@@ -261,6 +282,7 @@ import { getAllProfiles, getProfileBySlug } from '@/lib/profiles';
 import { getMDXComponents } from '@/mdx-components';
 import { mdxOptions } from '@/lib/mdx-options';
 import type { Metadata } from 'next';
+import GoogleBookingButton from '@/components/consulting/GoogleBookingButton';
 
 /**
  * Generates static params for all profiles at build time.
@@ -311,6 +333,9 @@ export default async function ProfilePage({ params }: Props) {
     components: getMDXComponents({}),
   });
 
+  const booking = profile.booking;
+  const ctaLabel = booking?.ctaLabel ?? 'Book a Consultation';
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       {/* Hero Section */}
@@ -326,14 +351,23 @@ export default async function ProfilePage({ params }: Props) {
           {profile.name}
         </h1>
         <p className="text-xl text-dark/70 mb-6">{profile.title}</p>
-        <Link
-          href={profile.calendly_link}
-          className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Book a Consultation
-        </Link>
+        {booking ? (
+          booking.embedComponent === 'GoogleBookingButton' ? (
+            <GoogleBookingButton
+              bookingLink={booking.link}
+              label={ctaLabel}
+            />
+          ) : (
+            <Link
+              href={booking.link}
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ctaLabel}
+            </Link>
+          )
+        ) : null}
       </header>
 
       {/* Bio Section (MDX Content) */}
@@ -404,7 +438,75 @@ export default async function ProfilePage({ params }: Props) {
 }
 ```
 
-### 3.2 Create Consulting Section Layout
+### 3.2 Create Google Booking Button Component
+
+**File**: `src/components/consulting/GoogleBookingButton.tsx`
+
+This client component loads the Google Booking script once, renders the official scheduling button, and keeps a graceful fallback if the widget fails to initialize.
+
+```typescript
+'use client';
+
+import { useCallback, useEffect, useRef } from 'react';
+import Script from 'next/script';
+
+type GoogleBookingButtonProps = {
+  bookingLink: string;
+  label: string;
+};
+
+export default function GoogleBookingButton({
+  bookingLink,
+  label,
+}: GoogleBookingButtonProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const renderWidget = useCallback(() => {
+    // Google injects window.google.calendar.schedulingButton after the script loads.
+    const googleCalendar = (window as typeof window & {
+      google?: { calendar?: { schedulingButton?: any } };
+    }).google?.calendar?.schedulingButton;
+
+    if (!googleCalendar || !containerRef.current) return;
+
+    googleCalendar.load({
+      url: bookingLink,
+      color: '#2D6AE0', // TODO: align with brand palette if needed
+      label,
+      target: containerRef.current,
+    });
+  }, [bookingLink, label]);
+
+  useEffect(() => {
+    renderWidget();
+  }, [renderWidget]);
+
+  return (
+    <>
+      <Script
+        src="https://calendar.google.com/calendar/scheduling-button-script.js"
+        strategy="afterInteractive"
+        onReady={renderWidget}
+      />
+      <div ref={containerRef}>
+        <button
+          type="button"
+          onClick={() =>
+            window.open(bookingLink, '_blank', 'noopener,noreferrer')
+          }
+          className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
+        >
+          {label}
+        </button>
+      </div>
+    </>
+  );
+}
+```
+
+> ⚠️ Verify the Google Booking embed API (`window.google.calendar.schedulingButton`) against the latest documentation—adjust method names or options if Google updates their SDK.
+
+### 3.3 Create Consulting Section Layout
 
 **File**: `src/app/consulting/layout.tsx`
 
@@ -490,6 +592,19 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
+### 4.2 Update CSP for Google Booking Script
+
+**File**: `src/lib/csp.ts`
+
+- Add `https://calendar.google.com` to the `script-src`, `connect-src`, and `frame-src` directive arrays (Google serves both the embed script and the modal iframe from this host).
+- Optionally extract a `GOOGLE_BOOKING_HOST = "https://calendar.google.com"` constant so future providers are easy to toggle.
+- Keep the existing HubSpot and GA hosts intact.
+
+**File**: `src/app/layout.tsx`
+
+- No inline script is required because `GoogleBookingButton` uses `next/script`.
+- Confirm the `<meta httpEquiv="Content-Security-Policy">` continues to call `buildContentSecurityPolicy()` with the new domains included.
+
 ---
 
 ## Phase 5: Testing & Validation
@@ -511,14 +626,14 @@ npm run dev
 
 # Verify all sections render:
 # - Profile image and name
-# - Call-to-action button (Calendly link)
+# - Call-to-action button (Google Booking modal/button)
 # - Biography (MDX content)
 # - Certifications list
 # - Services grid (2 columns on desktop)
 # - Case studies with PDF links
 
 # Test external links:
-# - Click "Book a Consultation" → opens Calendly
+# - Click "Book a Consultation" → opens Google Booking modal
 # - Click case study cards → PDFs open in new tab
 
 # Test responsive layout:
@@ -564,7 +679,7 @@ npx serve out
 - [ ] `/scott` redirects to `/consulting/scott-turnbull`
 - [ ] Profile page renders all sections correctly
 - [ ] Profile image loads and displays properly
-- [ ] "Book a Consultation" button links to Calendly
+- [ ] "Book a Consultation" button opens Google Booking modal or link
 - [ ] Biography (MDX content) renders with proper formatting
 - [ ] Certifications list displays all items
 - [ ] Services grid shows 2 columns on desktop, 1 on mobile
@@ -626,7 +741,10 @@ To add another consultant (e.g., Jane Doe):
    certifications:
      - "Kubernetes Certified Administrator"
      - "AWS DevOps Professional"
-   calendly_link: "https://calendly.com/jane-tech-tavern"
+   booking:
+     provider: "google-booking"
+     link: "https://calendar.google.com/calendar/appointments/schedules/11111111111111111111111111111111?gv=true"
+     ctaLabel: "Schedule with Jane"
    services:
      - title: "Infrastructure Audit"
        description: "..."
@@ -922,7 +1040,7 @@ Add client testimonials to profiles:
 
 Display real-time availability:
 
-- Integrate Calendly API
+- Integrate scheduling provider API (Google Booking first)
 - Show next available time slots
 - Add booking flow
 
@@ -938,6 +1056,7 @@ Implementation is complete when:
 - ✅ All linting checks pass (`npm run lint`)
 - ✅ Static build succeeds (`npm run build`)
 - ✅ All images and PDFs load correctly
+- ✅ Booking CTA renders via Google Booking widget fallback
 - ✅ Responsive layout works on mobile/tablet/desktop (320px to 1920px+)
 - ✅ External links open in new tabs with security attributes
 - ✅ SEO metadata properly generated
