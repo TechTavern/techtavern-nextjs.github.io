@@ -2,15 +2,16 @@
 
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import Script from "next/script";
 
 type Gtag = (...args: unknown[]) => void;
 
-interface GoogleAnalyticsProps {
+interface GoogleAnalyticsRouterTrackerProps {
   measurementId: string;
 }
 
-export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
+export default function GoogleAnalyticsRouterTracker({
+  measurementId,
+}: GoogleAnalyticsRouterTrackerProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -43,21 +44,5 @@ export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps)
     }
   }, [pathname, searchParams, measurementId]);
 
-  return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          // Disable automatic page view to prevent double-counting in SPA
-          gtag('config', '${measurementId}', { send_page_view: false });
-        `}
-      </Script>
-    </>
-  );
+  return null;
 }

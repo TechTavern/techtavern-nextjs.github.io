@@ -153,6 +153,7 @@ The site generates absolute links (sitemap, RSS, OpenGraph) using `SITE_URL`. Va
   - Custom domain: `https://example.com`
 - NEXT_PUBLIC_BASE_PATH: Set by CI for staging vs production; rarely needed locally.
 - NEXT_PUBLIC_GA_ID: Optional Google Analytics measurement ID.
+- NEXT_PUBLIC_HUBSPOT_PORTAL_ID: Optional HubSpot tracking portal ID.
 
 Validation and defaults:
 - `SITE_URL` must be a valid URL if provided; missing locally defaults to `http://localhost:3000` for previewing sitemap/RSS.

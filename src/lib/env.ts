@@ -42,6 +42,16 @@ const EnvSchema = z.object({
     },
     z.string().optional()
   ),
+  NEXT_PUBLIC_HUBSPOT_PORTAL_ID: z.preprocess(
+    (value) => {
+      if (typeof value !== 'string') {
+        return undefined;
+      }
+      const trimmed = value.trim();
+      return trimmed.length === 0 ? undefined : trimmed;
+    },
+    z.string().optional()
+  ),
 });
 
 // Parse selectively from process.env to avoid pulling in unrelated keys
@@ -50,6 +60,7 @@ export function parseEnv() {
     SITE_URL: process.env.SITE_URL,
     NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH,
     NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
+    NEXT_PUBLIC_HUBSPOT_PORTAL_ID: process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID,
   } as Record<string, unknown>;
   const result = EnvSchema.safeParse(raw);
   if (!result.success) {

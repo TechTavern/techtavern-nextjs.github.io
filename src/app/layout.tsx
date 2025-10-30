@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
-import { Suspense } from "react";
-import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
+import AnalyticsRoot from "@/components/analytics/AnalyticsRoot";
 import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import { env } from "@/lib/env";
@@ -41,6 +40,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     logoPath: siteOrg.logoPath,
     email: siteOrg.email,
   });
+  const measurementId = env.NEXT_PUBLIC_GA_ID;
+  const hubspotPortalId = env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
+  const hasAnalytics = Boolean(measurementId || hubspotPortalId);
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
@@ -57,7 +59,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* Inline critical CSS removed; relying on globals.css and Tailwind utilities */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com; img-src 'self' data: https:; font-src 'self'; style-src 'self' 'unsafe-inline';`}
+          content={`default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://js-na2.hs-scripts.com https://js.hs-analytics.net${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}; connect-src 'self' https://www.google-analytics.com https://api-na1.hubspot.com https://api-na2.hubspot.com https://api.hsforms.com; img-src 'self' data: https:; font-src 'self'; style-src 'self' 'unsafe-inline';`}
         />
         <script
           type="application/ld+json"
@@ -66,10 +68,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
-        {env.NEXT_PUBLIC_GA_ID ? (
-          <Suspense fallback={null}>
-            <GoogleAnalytics measurementId={env.NEXT_PUBLIC_GA_ID} />
-          </Suspense>
+        {hasAnalytics ? (
+          <AnalyticsRoot
+            measurementId={measurementId}
+            hubspotPortalId={hubspotPortalId}
+          />
         ) : null}
         {children}
       </body>
