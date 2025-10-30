@@ -30,6 +30,8 @@ const HUBSPOT_CONNECT_HOSTS = [
   "https://forms-na2.hscollectedforms.net",
 ];
 
+const GOOGLE_BOOKING_HOST = "https://calendar.google.com";
+
 export function buildContentSecurityPolicy({
   includeUnsafeEval = false,
 }: BuildCspOptions = {}) {
@@ -37,6 +39,7 @@ export function buildContentSecurityPolicy({
     "'self'",
     "'unsafe-inline'",
     "https://www.googletagmanager.com",
+    GOOGLE_BOOKING_HOST,
     ...HUBSPOT_SCRIPT_HOSTS,
   ];
 
@@ -47,6 +50,7 @@ export function buildContentSecurityPolicy({
   const connectSrc = [
     "'self'",
     "https://www.google-analytics.com",
+    GOOGLE_BOOKING_HOST,
     ...HUBSPOT_CONNECT_HOSTS,
   ];
 
@@ -57,7 +61,7 @@ export function buildContentSecurityPolicy({
     "img-src": ["'self'", "data:", "https:"],
     "font-src": ["'self'"],
     "style-src": ["'self'", "'unsafe-inline'"],
-    "frame-src": ["'self'", "https://forms.hsforms.com"],
+    "frame-src": ["'self'", "https://forms.hsforms.com", GOOGLE_BOOKING_HOST],
   };
 
   return Object.entries(directives)
