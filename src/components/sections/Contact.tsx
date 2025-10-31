@@ -1,13 +1,16 @@
 import Image from 'next/image';
-import { MapPin, Mail, Globe } from 'lucide-react';
+import Link from 'next/link';
+import { MapPin, Mail, Globe, Calendar } from 'lucide-react';
 
 const contact = {
   heading: 'Contact us:',
   intro:
-    "Let’s Tap Into Your Mission. Whether you're nearby or across time zones, I’m ready to help. Let’s start a conversation—virtually or in person—about how AI, data, and strategy can serve your purpose.",
+    "Let's Tap Into Your Mission. Whether you're nearby or across time zones, I'm ready to help. Let's start a conversation—virtually or in person—about how AI, data, and strategy can serve your purpose.",
   city: 'Glen Allen, Virginia',
   country: 'United States',
   email: 'info@tech-tavern.com',
+  bookingUrl: '/consulting/scott-turnbull',
+  bookingLabel: 'Book an Appointment',
 };
 
 export default function Contact() {
@@ -55,6 +58,17 @@ export default function Contact() {
               {contact.email}
             </a>
           </div>
+        </div>
+
+        {/* Book Appointment Button */}
+        <div className="pt-4">
+          <Link
+            href={contact.bookingUrl}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            <Calendar className="h-5 w-5" aria-hidden />
+            {contact.bookingLabel}
+          </Link>
         </div>
       </div>
 

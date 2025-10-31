@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Linkedin } from 'lucide-react';
 
 const profile = {
   heading: 'Who We Are',
   image: { src: '/assets/img/ScottSpeakingSCC.jpg', alt: 'Scott Turnbull speaking at Smart Cities Connect', width: 700, height: 500 },
   leaderName: 'Scott Turnbull',
+  leaderProfileUrl: '/consulting/scott-turnbull',
   leaderLinkedIn: 'https://www.linkedin.com/in/scott-turnbull-b2b01b8/',
   leaderBio:
     'a veteran tech executive with over 25 years of experience guiding mission-driven organizations — from universities and nonprofits to municipalities and federal agencies like the UN, NSF, NIST, and DoD — through digital transformation, AI strategy, and data modernization.',
@@ -110,15 +112,13 @@ export default function Profile() {
         <div className="text-lg text-light/90 leading-relaxed space-y-4">
           <p>
             Tech Tavern is led by{' '}
-            <a
-              href={profile.leaderLinkedIn}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={profile.leaderProfileUrl}
               className="text-accent hover:text-accent-dark transition-colors underline decoration-2 underline-offset-2 focus-ring-light"
-              aria-label={`${profile.leaderName}'s LinkedIn profile`}
+              aria-label={`${profile.leaderName}'s consulting profile`}
             >
               {profile.leaderName}
-            </a>
+            </Link>
             , {profile.leaderBio}
           </p>
           
