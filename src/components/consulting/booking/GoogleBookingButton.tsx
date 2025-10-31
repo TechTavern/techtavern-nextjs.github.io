@@ -1,5 +1,6 @@
 'use client';
 
+import { ExternalLink } from "lucide-react";
 import type { BookingButtonProps } from "./types";
 
 export default function GoogleBookingButton({
@@ -20,6 +21,7 @@ export default function GoogleBookingButton({
       style={color ? { backgroundColor: color } : undefined}
     >
       {label}
+      <ExternalLink className="h-5 w-5" aria-hidden />
     </button>
   );
 }

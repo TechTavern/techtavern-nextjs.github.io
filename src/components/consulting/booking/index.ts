@@ -9,7 +9,7 @@ import type { BookingComponentId, BookingProvider } from "@/lib/profiles";
 export type BookingComponentType = (props: BookingButtonProps) => ReactElement;
 
 const DEFAULT_BUTTON_CLASSES =
-  "inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg";
+  "inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg";
 
 const PROVIDER_COMPONENT_MAP: Record<BookingProvider, BookingComponentType> = {
   "google-booking": GoogleBookingButton,
