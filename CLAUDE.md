@@ -18,7 +18,7 @@ This is a Next.js-based static blog for Tech Tavern, LLC, configured for GitHub 
 
 ```bash
 # Development
-npm run dev          # Start development server
+npm run dev:webpack          # Start development server
 npm run dev:watch    # Dev server with MDX change notifications
 
 # Build and Deploy
