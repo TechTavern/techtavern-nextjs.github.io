@@ -31,6 +31,10 @@ const HUBSPOT_CONNECT_HOSTS = [
 ];
 
 const GOOGLE_BOOKING_HOST = "https://calendar.google.com";
+const CALENDLY_SCRIPT_HOST = "https://assets.calendly.com";
+const CALENDLY_APP_HOST = "https://calendly.com";
+const HUBSPOT_MEETINGS_SCRIPT_HOST = "https://static.hsappstatic.net";
+const HUBSPOT_MEETINGS_FRAME_HOST = "https://meetings.hubspot.com";
 
 export function buildContentSecurityPolicy({
   includeUnsafeEval = false,
@@ -40,6 +44,8 @@ export function buildContentSecurityPolicy({
     "'unsafe-inline'",
     "https://www.googletagmanager.com",
     GOOGLE_BOOKING_HOST,
+    CALENDLY_SCRIPT_HOST,
+    HUBSPOT_MEETINGS_SCRIPT_HOST,
     ...HUBSPOT_SCRIPT_HOSTS,
   ];
 
@@ -51,6 +57,7 @@ export function buildContentSecurityPolicy({
     "'self'",
     "https://www.google-analytics.com",
     GOOGLE_BOOKING_HOST,
+    CALENDLY_APP_HOST,
     ...HUBSPOT_CONNECT_HOSTS,
   ];
 
@@ -60,8 +67,14 @@ export function buildContentSecurityPolicy({
     "connect-src": connectSrc,
     "img-src": ["'self'", "data:", "https:"],
     "font-src": ["'self'"],
-    "style-src": ["'self'", "'unsafe-inline'"],
-    "frame-src": ["'self'", "https://forms.hsforms.com", GOOGLE_BOOKING_HOST],
+    "style-src": ["'self'", "'unsafe-inline'", CALENDLY_SCRIPT_HOST],
+    "frame-src": [
+      "'self'",
+      "https://forms.hsforms.com",
+      GOOGLE_BOOKING_HOST,
+      CALENDLY_APP_HOST,
+      HUBSPOT_MEETINGS_FRAME_HOST,
+    ],
   };
 
   return Object.entries(directives)

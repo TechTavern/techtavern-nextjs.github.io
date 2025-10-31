@@ -6,6 +6,16 @@ import { z } from "zod";
 
 const PROFILES_DIR = path.join(process.cwd(), "content", "profiles");
 
+export const BOOKING_PROVIDERS = ["google-booking", "calendly", "hubspot"] as const;
+export type BookingProvider = (typeof BOOKING_PROVIDERS)[number];
+
+export const BOOKING_COMPONENT_IDS = [
+  "GoogleBookingButton",
+  "CalendlyBookingButton",
+  "HubSpotBookingButton",
+] as const;
+export type BookingComponentId = (typeof BOOKING_COMPONENT_IDS)[number];
+
 const ServiceSchema = z.object({
   title: z.string(),
   description: z.string(),
@@ -20,10 +30,11 @@ const CaseStudySchema = z.object({
 });
 
 const BookingSchema = z.object({
-  provider: z.enum(["google-booking", "calendly"]).default("google-booking"),
+  provider: z.enum(BOOKING_PROVIDERS).default("google-booking"),
   link: z.string().url(),
   ctaLabel: z.string().optional(),
-  embedComponent: z.enum(["GoogleBookingButton"]).optional(),
+  color: z.string().optional(),
+  embedComponent: z.enum(BOOKING_COMPONENT_IDS).optional(),
 });
 
 export type BookingConfig = z.infer<typeof BookingSchema>;

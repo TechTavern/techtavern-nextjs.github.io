@@ -9,6 +9,8 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).toContain("https://js-na2.hs-banner.com");
     expect(csp).toContain("https://js-na2.hs-analytics.net");
     expect(csp).toContain("https://calendar.google.com");
+    expect(csp).toContain("https://assets.calendly.com");
+    expect(csp).toContain("https://static.hsappstatic.net");
   });
 
   it("includes connect hosts for HubSpot APIs", () => {
@@ -19,6 +21,7 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).toContain("https://api.hsforms.com");
     expect(csp).toContain("https://forms-na2.hscollectedforms.net");
     expect(csp).toContain("https://calendar.google.com");
+    expect(csp).toContain("https://calendly.com");
   });
 
   it("adds unsafe-eval when requested", () => {

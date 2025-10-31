@@ -60,6 +60,7 @@ booking:
   link: "https://calendar.google.com/calendar/appointments/schedules/00000000000000000000000000000000?gv=true"
   ctaLabel: "Book a Consultation"
   embedComponent: "GoogleBookingButton"
+  color: "#2D6AE0"
 
 services:
   - title: "Ethical AI Governance Audit"
@@ -164,6 +165,16 @@ const PROFILES_DIR = path.join(process.cwd(), 'content/profiles');
 /**
  * Zod schema for service offerings.
  */
+export const BOOKING_PROVIDERS = ['google-booking', 'calendly', 'hubspot'] as const;
+export type BookingProvider = (typeof BOOKING_PROVIDERS)[number];
+
+export const BOOKING_COMPONENT_IDS = [
+  'GoogleBookingButton',
+  'CalendlyBookingButton',
+  'HubSpotBookingButton',
+] as const;
+export type BookingComponentId = (typeof BOOKING_COMPONENT_IDS)[number];
+
 const ServiceSchema = z.object({
   title: z.string(),
   description: z.string(),
@@ -171,32 +182,22 @@ const ServiceSchema = z.object({
   duration: z.string(),
 });
 
-/**
- * Zod schema for case studies.
- */
 const CaseStudySchema = z.object({
   title: z.string(),
   description: z.string(),
   pdf_url: z.string(),
 });
 
-/**
- * Zod schema for booking configuration.
- * Supports multiple scheduling providers (Google Booking, Calendly, etc.).
- */
 const BookingSchema = z.object({
-  provider: z.enum(['google-booking', 'calendly']).default('google-booking'),
+  provider: z.enum(BOOKING_PROVIDERS).default('google-booking'),
   link: z.string().url(),
   ctaLabel: z.string().optional(),
-  embedComponent: z.enum(['GoogleBookingButton']).optional(),
+  color: z.string().optional(),
+  embedComponent: z.enum(BOOKING_COMPONENT_IDS).optional(),
 });
 
 export type BookingConfig = z.infer<typeof BookingSchema>;
 
-/**
- * Zod schema for profile frontmatter.
- * Validates all required fields from MDX files.
- */
 const ProfileFrontmatterSchema = z.object({
   name: z.string(),
   slug: z.string(),
@@ -282,7 +283,11 @@ import { getAllProfiles, getProfileBySlug } from '@/lib/profiles';
 import { getMDXComponents } from '@/mdx-components';
 import { mdxOptions } from '@/lib/mdx-options';
 import type { Metadata } from 'next';
-import GoogleBookingButton from '@/components/consulting/GoogleBookingButton';
+import { getBaseUrl, withBasePath } from '@/lib/site.server';
+import {
+  resolveBookingComponent,
+  buildBookingButtonProps,
+} from '@/components/consulting/booking';
 
 /**
  * Generates static params for all profiles at build time.
@@ -302,14 +307,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const profile = await getProfileBySlug(slug);
   if (!profile) return {};
-  
+
+  const baseUrl = getBaseUrl();
+  const pageUrl = new URL(withBasePath(profile.url) ?? profile.url, baseUrl).toString();
+  const imageUrl = profile.image
+    ? new URL(withBasePath(profile.image) ?? profile.image, baseUrl).toString()
+    : undefined;
+
   return {
-    title: `${profile.name} - ${profile.title}`,
+    title: `${profile.name} | ${profile.title}`,
     description: profile.bio_short,
+    alternates: {
+      canonical: pageUrl,
+    },
     openGraph: {
       title: profile.name,
       description: profile.bio_short,
-      images: profile.image ? [{ url: profile.image }] : undefined,
+      url: pageUrl,
+      type: 'profile',
+      images: imageUrl ? [{ url: imageUrl, alt: profile.name }] : undefined,
     },
   };
 }
@@ -335,6 +351,16 @@ export default async function ProfilePage({ params }: Props) {
 
   const booking = profile.booking;
   const ctaLabel = booking?.ctaLabel ?? 'Book a Consultation';
+  const BookingComponent = booking
+    ? resolveBookingComponent(booking.provider, booking.embedComponent)
+    : null;
+  const bookingButtonProps = booking
+    ? buildBookingButtonProps({
+        bookingLink: booking.link,
+        label: ctaLabel,
+        color: booking.color,
+      })
+    : null;
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -352,11 +378,8 @@ export default async function ProfilePage({ params }: Props) {
         </h1>
         <p className="text-xl text-dark/70 mb-6">{profile.title}</p>
         {booking ? (
-          booking.embedComponent === 'GoogleBookingButton' ? (
-            <GoogleBookingButton
-              bookingLink={booking.link}
-              label={ctaLabel}
-            />
+          BookingComponent && bookingButtonProps ? (
+            <BookingComponent {...bookingButtonProps} />
           ) : (
             <Link
               href={booking.link}
@@ -438,73 +461,61 @@ export default async function ProfilePage({ params }: Props) {
 }
 ```
 
-### 3.2 Create Google Booking Button Component
+### 3.2 Booking Component Registry
 
-**File**: `src/components/consulting/GoogleBookingButton.tsx`
+**File**: `src/components/consulting/booking/index.ts`
 
-This client component loads the Google Booking script once, renders the official scheduling button, and keeps a graceful fallback if the widget fails to initialize.
+Central registry that maps scheduling providers to their React components and applies shared button styling.
 
 ```typescript
-'use client';
+import GoogleBookingButton from './GoogleBookingButton';
+import CalendlyBookingButton from './CalendlyBookingButton';
+import HubSpotBookingButton from './HubSpotBookingButton';
+import type { BookingButtonProps } from './types';
+import type { BookingComponentId, BookingProvider } from '@/lib/profiles';
 
-import { useCallback, useEffect, useRef } from 'react';
-import Script from 'next/script';
+export type BookingComponentType = (props: BookingButtonProps) => JSX.Element;
 
-type GoogleBookingButtonProps = {
-  bookingLink: string;
-  label: string;
+const DEFAULT_BUTTON_CLASSES =
+  'inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg';
+
+const PROVIDER_COMPONENT_MAP: Record<BookingProvider, BookingComponentType> = {
+  'google-booking': GoogleBookingButton,
+  calendly: CalendlyBookingButton,
+  hubspot: HubSpotBookingButton,
 };
 
-export default function GoogleBookingButton({
-  bookingLink,
-  label,
-}: GoogleBookingButtonProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+const COMPONENT_ID_MAP: Record<BookingComponentId, BookingComponentType> = {
+  GoogleBookingButton,
+  CalendlyBookingButton,
+  HubSpotBookingButton,
+};
 
-  const renderWidget = useCallback(() => {
-    // Google injects window.google.calendar.schedulingButton after the script loads.
-    const googleCalendar = (window as typeof window & {
-      google?: { calendar?: { schedulingButton?: any } };
-    }).google?.calendar?.schedulingButton;
+export function resolveBookingComponent(
+  provider: BookingProvider,
+  componentId?: BookingComponentId,
+): BookingComponentType | null {
+  if (componentId) {
+    return COMPONENT_ID_MAP[componentId] ?? null;
+  }
+  return PROVIDER_COMPONENT_MAP[provider] ?? null;
+}
 
-    if (!googleCalendar || !containerRef.current) return;
-
-    googleCalendar.load({
-      url: bookingLink,
-      color: '#2D6AE0', // TODO: align with brand palette if needed
-      label,
-      target: containerRef.current,
-    });
-  }, [bookingLink, label]);
-
-  useEffect(() => {
-    renderWidget();
-  }, [renderWidget]);
-
-  return (
-    <>
-      <Script
-        src="https://calendar.google.com/calendar/scheduling-button-script.js"
-        strategy="afterInteractive"
-        onReady={renderWidget}
-      />
-      <div ref={containerRef}>
-        <button
-          type="button"
-          onClick={() =>
-            window.open(bookingLink, '_blank', 'noopener,noreferrer')
-          }
-          className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
-        >
-          {label}
-        </button>
-      </div>
-    </>
-  );
+export function buildBookingButtonProps(
+  props: Omit<BookingButtonProps, 'className'>,
+): BookingButtonProps {
+  return {
+    ...props,
+    className: DEFAULT_BUTTON_CLASSES,
+  };
 }
 ```
 
-> ⚠️ Verify the Google Booking embed API (`window.google.calendar.schedulingButton`) against the latest documentation—adjust method names or options if Google updates their SDK.
+Additional files in the same directory:
+- `GoogleBookingButton.tsx` — wraps the Google Scheduling SDK (loads script + stylesheet safely, provides fallback).
+- `CalendlyBookingButton.tsx` — opens the Calendly popup widget via their script (falls back to new tab).
+- `HubSpotBookingButton.tsx` — initializes the HubSpot Meetings embed when available, otherwise opens the booking link.
+- `types.ts` — shared `BookingButtonProps` interface.
 
 ### 3.3 Create Consulting Section Layout
 
@@ -602,7 +613,7 @@ export default nextConfig;
 
 **File**: `src/app/layout.tsx`
 
-- No inline script is required because `GoogleBookingButton` uses `next/script`.
+- No inline script is required because booking components load their SDKs via `next/script`.
 - Confirm the `<meta httpEquiv="Content-Security-Policy">` continues to call `buildContentSecurityPolicy()` with the new domains included.
 
 ---
@@ -626,14 +637,14 @@ npm run dev
 
 # Verify all sections render:
 # - Profile image and name
-# - Call-to-action button (Google Booking modal/button)
+# - Call-to-action button (Google Booking link)
 # - Biography (MDX content)
 # - Certifications list
 # - Services grid (2 columns on desktop)
 # - Case studies with PDF links
 
 # Test external links:
-# - Click "Book a Consultation" → opens Google Booking modal
+# - Click "Book a Consultation" → opens Google Booking in a new tab
 # - Click case study cards → PDFs open in new tab
 
 # Test responsive layout:
@@ -679,7 +690,7 @@ npx serve out
 - [ ] `/scott` redirects to `/consulting/scott-turnbull`
 - [ ] Profile page renders all sections correctly
 - [ ] Profile image loads and displays properly
-- [ ] "Book a Consultation" button opens Google Booking modal or link
+- [ ] "Book a Consultation" button opens Google Booking in a new tab
 - [ ] Biography (MDX content) renders with proper formatting
 - [ ] Certifications list displays all items
 - [ ] Services grid shows 2 columns on desktop, 1 on mobile

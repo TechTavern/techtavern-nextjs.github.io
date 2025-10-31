@@ -6,8 +6,11 @@ import type { Metadata } from "next";
 import { getAllProfiles, getProfileBySlug } from "@/lib/profiles";
 import { getMDXComponents } from "@/mdx-components";
 import { mdxOptions } from "@/lib/mdx-options";
-import GoogleBookingButton from "@/components/consulting/GoogleBookingButton";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import {
+  resolveBookingComponent,
+  buildBookingButtonProps,
+} from "@/components/consulting/booking";
 
 type PageParams = Promise<{ slug: string }>;
 
@@ -64,6 +67,16 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
 
   const booking = profile.booking;
   const ctaLabel = booking?.ctaLabel ?? "Book a Consultation";
+  const BookingComponent = booking
+    ? resolveBookingComponent(booking.provider, booking.embedComponent)
+    : null;
+  const bookingButtonProps = booking
+    ? buildBookingButtonProps({
+        bookingLink: booking.link,
+        label: ctaLabel,
+        color: booking.color,
+      })
+    : null;
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -79,8 +92,8 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-dark mb-2">{profile.name}</h1>
         <p className="text-xl text-dark/70 mb-6">{profile.title}</p>
         {booking ? (
-          booking.embedComponent === "GoogleBookingButton" ? (
-            <GoogleBookingButton bookingLink={booking.link} label={ctaLabel} />
+          BookingComponent && bookingButtonProps ? (
+            <BookingComponent {...bookingButtonProps} />
           ) : (
             <Link
               href={booking.link}
