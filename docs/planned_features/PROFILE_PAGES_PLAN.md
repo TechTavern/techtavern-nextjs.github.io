@@ -1009,6 +1009,37 @@ All are already installed in the project.
 
 ## Future Enhancements
 
+### Consulting Typography & UI Normalization
+
+1. **Hero Alignment**
+   - Match article hero heading scale: `text-3xl md:text-4xl lg:text-5xl` with `leading-tight`.
+   - Restyle subtitle using `text-lg md:text-xl text-dark/70 leading-relaxed`.
+   - Ensure booking CTA + social icons use `text-dark/60 hover:text-accent` for consistency with article metadata.
+
+2. **Shared Section Headings**
+   - Update `SectionHeading` mapping:
+     - level 2 → `text-3xl md:text-4xl` with `mb-6`.
+     - level 3 → `text-2xl md:text-3xl` with `mb-4 mt-8`.
+   - Keep anchors `text-inherit`, `no-underline`, with article-style focus rings.
+   - Replace manual `h3`/`h4` in services and case studies with the component for consistent styling.
+
+3. **Card Typography Cleanup**
+   - Extract shared card typography (title, body, meta) to utility classes or shared tailwind compose:
+     - Title: `text-xl font-heading font-semibold text-dark`.
+     - Body: `text-base text-dark/70 leading-relaxed`.
+     - Meta lines: `text-sm text-dark/60 font-medium`.
+   - Apply to certifications, services, additional services, and case studies.
+
+4. **Meta & Accent Elements**
+   - Update social icons to use `text-dark/60` idle, `hover:text-accent`, with consistent spacing.
+   - Optional: wrap icons in subtle background chips (`bg-secondary/10 rounded-full`).
+   - Align case-study link styling with article tag buttons (`text-accent font-semibold`).
+
+5. **Implementation Notes**
+   - Adjust `SectionHeading` component and any related tests.
+   - Refactor `page.tsx` styles to consume shared classes.
+   - Validate using `npm run lint && npm run test` and capture before/after screenshots for visual QA.
+
 ### Consulting Index Page
 
 Create `src/app/consulting/page.tsx` to list all consultants:
