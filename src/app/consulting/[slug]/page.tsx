@@ -99,6 +99,10 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
     youtube: Youtube,
   };
 
+  const CARD_TITLE_CLASS = "text-xl font-heading font-semibold text-dark";
+  const CARD_BODY_CLASS = "text-base text-dark/70 leading-relaxed";
+  const CARD_META_CLASS = "text-sm text-dark/60 font-medium";
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
       <header className="text-center border-b border-secondary/20 pb-8 mb-12">
@@ -110,8 +114,10 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
           className="mx-auto rounded-full object-cover mb-6"
           priority
         />
-        <h1 className="text-4xl md:text-5xl font-heading font-bold text-dark mb-2">{profile.name}</h1>
-        <p className="text-xl text-dark/70 mb-6">{profile.title}</p>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-dark leading-tight mb-3">
+          {profile.name}
+        </h1>
+        <p className="text-lg md:text-xl text-dark/70 leading-relaxed mb-6">{profile.title}</p>
         {booking ? (
           BookingComponent && bookingButtonProps ? (
             <BookingComponent {...bookingButtonProps} />
@@ -128,7 +134,7 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
         ) : null}
 
         {profile.socials && profile.socials.length > 0 ? (
-          <div className="mt-6 flex items-center justify-center gap-4">
+          <div className="mt-6 flex items-center justify-center gap-3">
             {profile.socials.map((social) => {
               const Icon = SOCIAL_ICON_MAP[social.service as SocialService];
               if (!Icon) return null;
@@ -138,7 +144,7 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-dark/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-full p-2 transition-colors"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-dark/60 transition-colors duration-200 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   aria-label={`Follow on ${social.service}`}
                 >
                   <Icon className="h-5 w-5" aria-hidden />
@@ -216,9 +222,9 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
               key={service.title}
               className="border border-secondary/30 rounded-lg p-6 hover:shadow-md transition-shadow"
             >
-              <h3 className="text-xl font-heading font-semibold mb-3">{service.title}</h3>
-              <p className="text-dark/70 mb-4">{service.description}</p>
-              <div className="text-sm text-dark/60">
+              <h3 className={`${CARD_TITLE_CLASS} mb-3`}>{service.title}</h3>
+              <p className={`${CARD_BODY_CLASS} mb-4`}>{service.description}</p>
+              <div className={CARD_META_CLASS}>
                 <span className="font-semibold">{service.price}</span> • {service.duration}
               </div>
             </div>
@@ -241,9 +247,9 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
                   key={service.title}
                   className="border border-secondary/30 rounded-lg p-6 hover:shadow-md transition-shadow"
                 >
-                  <h3 className="text-xl font-heading font-semibold mb-3">{service.title}</h3>
-                  <p className="text-dark/70 mb-4">{service.description}</p>
-                  <div className="text-sm text-dark/60">
+                  <h3 className={`${CARD_TITLE_CLASS} mb-3`}>{service.title}</h3>
+                  <p className={`${CARD_BODY_CLASS} mb-4`}>{service.description}</p>
+                  <div className={CARD_META_CLASS}>
                     <span className="font-semibold">{service.price}</span> • {service.duration}
                   </div>
                 </div>
@@ -264,8 +270,8 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h3 className="text-xl font-heading font-semibold mb-3">{study.title}</h3>
-              <p className="text-dark/70 mb-3">{study.description}</p>
+              <h3 className={`${CARD_TITLE_CLASS} mb-3`}>{study.title}</h3>
+              <p className={`${CARD_BODY_CLASS} mb-3`}>{study.description}</p>
               <span className="text-accent font-semibold">View PDF →</span>
             </Link>
           ))}

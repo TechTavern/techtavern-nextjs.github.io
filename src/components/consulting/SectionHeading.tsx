@@ -9,9 +9,9 @@ type SectionHeadingProps = {
 };
 
 const LEVEL_CLASS_MAP: Record<NonNullable<SectionHeadingProps["level"]>, string> = {
-  2: "text-3xl",
-  3: "text-2xl",
-  4: "text-xl",
+  2: "text-3xl md:text-4xl lg:text-5xl leading-tight mb-6",
+  3: "text-2xl md:text-3xl leading-snug mt-8 mb-4",
+  4: "text-xl md:text-2xl leading-snug mt-6 mb-3",
 };
 
 const LEVEL_TAG_MAP: Record<NonNullable<SectionHeadingProps["level"]>, ElementType> = {
@@ -27,11 +27,11 @@ export default function SectionHeading({ level = 2, children, className = "" }: 
   return (
     <Tag
       id={id}
-      className={`font-heading font-bold text-dark mb-6 flex items-center gap-2 ${LEVEL_CLASS_MAP[level]} ${className}`.trim()}
+      className={`font-heading font-bold text-dark first:mt-0 ${LEVEL_CLASS_MAP[level]} ${className}`.trim()}
     >
       <Link
         href={`#${id}`}
-        className="no-underline text-inherit hover:text-accent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded"
+        className="inline-flex items-center gap-2 no-underline text-inherit transition-colors duration-200 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded"
         aria-label={`${children} section`}
       >
         {children}
