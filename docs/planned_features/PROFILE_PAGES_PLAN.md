@@ -50,10 +50,15 @@ image: "/images/profiles/scott-turnbull.jpg"
 bio_short: "Leveraging two decades of AI, data, and cloud leadership to help mission-driven organizations harness AI responsibly and efficiently."
 
 certifications:
-  - "PMP (Project Management Professional)"
-  - "Google Gen-AI Leader"
-  - "AWS Solutions Architect"
-  - "Certified Scrum Master"
+  - title: "PMP (Project Management Professional)"
+    badge_image: "/images/badges/project-management-professional-pmp.webp"
+    link: "https://www.pmi.org/certifications/project-management-pmp"
+  - title: "Google Gen-AI Leader"
+    badge_image: "/images/badges/generative-ai-leader-certification.webp"
+  - title: "AWS Solutions Architect"
+    badge_image: "/images/badges/project-management-professional-pmp.webp"
+  - title: "Certified Scrum Master"
+    badge_image: "/images/badges/generative-ai-leader-certification.webp"
 
 booking:
   provider: "google-booking"
@@ -62,12 +67,18 @@ booking:
   embedComponent: "GoogleBookingButton"
   color: "#2D6AE0"
 
+socials:
+  - service: "linkedin"
+    url: "https://www.linkedin.com/in/scott-tech-tavern"
+  - service: "twitter"
+    url: "https://twitter.com/scott-tech-tavern"
+
 services:
   - title: "Ethical AI Governance Audit"
     description: "Review, roadmap, and ISO-27001 checklist."
     price: "$750–$1,200"
     duration: "5 days"
-  
+
   - title: "AI Strategy Workshop"
     description: "2-hour Zoom session plus a comprehensive roadmap PDF."
     price: "$750"
@@ -87,6 +98,12 @@ services:
     description: "Grant outline review with a comprehensive tech appendix."
     price: "$1,500"
     duration: "5 days"
+
+additional_services:
+  - title: "AI Ethics Policy Drafting"
+    description: "Collaborative policy sprint to codify AI principles and review checkpoints."
+    price: "$1,000"
+    duration: "3 days"
 
 case_studies:
   - title: "AI Governance for a Mid-Sized Nonprofit"
@@ -188,6 +205,20 @@ const CaseStudySchema = z.object({
   pdf_url: z.string(),
 });
 
+const CertificationSchema = z.object({
+  title: z.string(),
+  badge_image: z.string(),
+  link: z.string().url().optional(),
+});
+
+export const SOCIAL_SERVICES = ['linkedin', 'twitter', 'instagram', 'facebook', 'github', 'gitlab', 'youtube'] as const;
+export type SocialService = (typeof SOCIAL_SERVICES)[number];
+
+const SocialProfileSchema = z.object({
+  service: z.enum(SOCIAL_SERVICES),
+  url: z.string().url(),
+});
+
 const BookingSchema = z.object({
   provider: z.enum(BOOKING_PROVIDERS).default('google-booking'),
   link: z.string().url(),
@@ -204,9 +235,11 @@ const ProfileFrontmatterSchema = z.object({
   title: z.string(),
   image: z.string(),
   bio_short: z.string(),
-  certifications: z.array(z.string()),
+  certifications: z.array(CertificationSchema),
   booking: BookingSchema.optional(),
   services: z.array(ServiceSchema),
+  additional_services: z.array(ServiceSchema).optional(),
+  socials: z.array(SocialProfileSchema).optional(),
   case_studies: z.array(CaseStudySchema),
 });
 
@@ -288,6 +321,7 @@ import {
   resolveBookingComponent,
   buildBookingButtonProps,
 } from '@/components/consulting/booking';
+import SectionHeading from '@/components/consulting/SectionHeading';
 
 /**
  * Generates static params for all profiles at build time.
@@ -400,9 +434,9 @@ export default async function ProfilePage({ params }: Props) {
 
       {/* Certifications */}
       <section className="mb-12">
-        <h2 className="text-3xl font-heading font-bold text-dark mb-6">
+        <SectionHeading>
           Certifications
-        </h2>
+        </SectionHeading>
         <ul className="feature-list space-y-2">
           {profile.certifications.map((cert) => (
             <li key={cert}>{cert}</li>
@@ -412,9 +446,9 @@ export default async function ProfilePage({ params }: Props) {
 
       {/* Services Grid */}
       <section className="mb-12">
-        <h2 className="text-3xl font-heading font-bold text-dark mb-6">
+        <SectionHeading>
           Service Offerings
-        </h2>
+        </SectionHeading>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {profile.services.map((service) => (
             <div 
@@ -433,11 +467,40 @@ export default async function ProfilePage({ params }: Props) {
         </div>
       </section>
 
+      {profile.additional_services && profile.additional_services.length > 0 ? (
+        <section className="mb-12">
+          <details className="group border border-secondary/30 rounded-lg p-6 bg-light/80" role="group">
+            <summary className="flex items-center justify-between cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
+              <SectionHeading level={3} className="m-0">
+                Additional Services
+              </SectionHeading>
+              <ChevronDown className="ml-4 h-5 w-5 text-dark/60 transition-transform duration-200 group-open:-rotate-180" />
+            </summary>
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {profile.additional_services.map((service) => (
+                <div 
+                  key={service.title} 
+                  className="border border-secondary/30 rounded-lg p-6 hover:shadow-md transition-shadow"
+                >
+                  <h3 className="text-xl font-heading font-semibold mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-dark/70 mb-4">{service.description}</p>
+                  <div className="text-sm text-dark/60">
+                    <span className="font-semibold">{service.price}</span> • {service.duration}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
+      ) : null}
+
       {/* Case Studies */}
       <section>
-        <h2 className="text-3xl font-heading font-bold text-dark mb-6">
+        <SectionHeading>
           Case Studies
-        </h2>
+        </SectionHeading>
         <div className="grid grid-cols-1 gap-6">
           {profile.case_studies.map((study) => (
             <Link
@@ -639,8 +702,9 @@ npm run dev
 # - Profile image and name
 # - Call-to-action button (Google Booking link)
 # - Biography (MDX content)
-# - Certifications list
+# - Certifications badge cards display correctly
 # - Services grid (2 columns on desktop)
+# - Collapsible "Additional Services" section (if provided)
 # - Case studies with PDF links
 
 # Test external links:
@@ -692,8 +756,10 @@ npx serve out
 - [ ] Profile image loads and displays properly
 - [ ] "Book a Consultation" button opens Google Booking in a new tab
 - [ ] Biography (MDX content) renders with proper formatting
-- [ ] Certifications list displays all items
+- [ ] Certifications badge cards display all configured items and link out when provided
 - [ ] Services grid shows 2 columns on desktop, 1 on mobile
+- [ ] Additional services accordion renders and toggles when extra services are configured
+- [ ] Social profile icons render in a single row and open links in new tabs
 - [ ] Case study cards link to PDF files
 - [ ] External links open in new tabs with proper security attributes
 - [ ] Responsive layout works on mobile/tablet/desktop

@@ -29,6 +29,28 @@ const CaseStudySchema = z.object({
   pdf_url: z.string(),
 });
 
+const CertificationSchema = z.object({
+  title: z.string(),
+  badge_image: z.string(),
+  link: z.string().url().optional(),
+});
+
+export const SOCIAL_SERVICES = [
+  "linkedin",
+  "twitter",
+  "instagram",
+  "facebook",
+  "github",
+  "gitlab",
+  "youtube",
+] as const;
+export type SocialService = (typeof SOCIAL_SERVICES)[number];
+
+const SocialProfileSchema = z.object({
+  service: z.enum(SOCIAL_SERVICES),
+  url: z.string().url(),
+});
+
 const BookingSchema = z.object({
   provider: z.enum(BOOKING_PROVIDERS).default("google-booking"),
   link: z.string().url(),
@@ -45,9 +67,11 @@ const ProfileFrontmatterSchema = z.object({
   title: z.string(),
   image: z.string(),
   bio_short: z.string(),
-  certifications: z.array(z.string()),
+  certifications: z.array(CertificationSchema),
   booking: BookingSchema.optional(),
   services: z.array(ServiceSchema),
+  additional_services: z.array(ServiceSchema).optional(),
+  socials: z.array(SocialProfileSchema).optional(),
   case_studies: z.array(CaseStudySchema),
 });
 
