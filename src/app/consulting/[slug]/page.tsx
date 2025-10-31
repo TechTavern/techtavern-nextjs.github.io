@@ -118,21 +118,6 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
           {profile.name}
         </h1>
         <p className="text-lg md:text-xl text-dark/70 leading-relaxed mb-6">{profile.title}</p>
-        {booking ? (
-          BookingComponent && bookingButtonProps ? (
-            <BookingComponent {...bookingButtonProps} />
-          ) : (
-            <Link
-              href={booking.link}
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {ctaLabel}
-            </Link>
-          )
-        ) : null}
-
         {profile.socials && profile.socials.length > 0 ? (
           <div className="mt-6 flex items-center justify-center gap-3">
             {profile.socials.map((social) => {
@@ -152,6 +137,25 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
               );
             })}
           </div>
+        ) : null}
+
+        {booking ? (
+          BookingComponent && bookingButtonProps ? (
+            <div className="mt-6">
+              <BookingComponent {...bookingButtonProps} />
+            </div>
+          ) : (
+            <div className="mt-6">
+              <Link
+                href={booking.link}
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-light bg-primary hover:bg-primary-dark transition-colors duration-300 rounded-lg shadow-lg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {ctaLabel}
+              </Link>
+            </div>
+          )
         ) : null}
       </header>
 
