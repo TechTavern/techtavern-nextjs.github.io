@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1168 1168" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-0.627244,-8.12069)">
+        <g>
+            <g id="_-Right-T-Polygon-Deep-Saffron" serif:id=" Right T Polygon Deep Saffron" transform="matrix(1,0,0,1,-0.908254,0)">
+                <path d="M586.443,297.534L586.443,427.075L664.068,458.867L664.068,837.708L774.474,886.708L774.474,497.881L892.497,549.631L892.497,433.256L586.443,297.534Z" style="fill:rgb(232,160,59);stroke:rgb(232,160,59);stroke-width:1px;"/>
+            </g>
+            <g id="Left-T-Polygon-Crimson" serif:id="Left T Polygon Crimson" transform="matrix(1,0,0,1,-0.908254,0)">
+                <path d="M278.574,430.553L278.574,548.053L394.824,500.053L394.824,886.158L518.573,833.408L518.573,455.824L731.876,362.955L586.072,297.815L278.574,430.553Z" style="fill:rgb(154,16,16);stroke:rgb(154,16,16);stroke-width:1px;"/>
+            </g>
+        </g>
+    </g>
+</svg>

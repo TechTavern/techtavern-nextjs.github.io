@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 5300 1168" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-0.627244,-8.12069)">
+        <g>
+            <g id="_-Right-T-Polygon-Deep-Saffron" serif:id=" Right T Polygon Deep Saffron" transform="matrix(1,0,0,1,-0.908254,0)">
+                <path d="M586.443,297.534L586.443,427.075L664.068,458.867L664.068,837.708L774.474,886.708L774.474,497.881L892.497,549.631L892.497,433.256L586.443,297.534Z" style="fill:rgb(232,160,59);stroke:rgb(232,160,59);stroke-width:1px;"/>
+            </g>
+            <g id="Left-T-Polygon-Crimson" serif:id="Left T Polygon Crimson" transform="matrix(1,0,0,1,-0.908254,0)">
+                <path d="M278.574,430.553L278.574,548.053L394.824,500.053L394.824,886.158L518.573,833.408L518.573,455.824L731.876,362.955L586.072,297.815L278.574,430.553Z" style="fill:rgb(154,16,16);stroke:rgb(154,16,16);stroke-width:1px;"/>
+            </g>
+        </g>
+    </g>
+    <g transform="matrix(1,0,0,1,0,-13.302)">
+        <g id="TechTavern">
+            <g>
+                <text x="1007.8px" y="815.327px" style="font-family:'OpenSans-Bold', 'Open Sans', sans-serif;font-weight:700;font-size:610.41px;fill:rgb(225,228,234);">TECH</text>
+                <g transform="matrix(610.41,0,0,610.41,2717.73,815.327)">
+                    <path d="M0.251,-0L0.251,-0.626L0.022,-0.626L0.022,-0.723L0.578,-0.723L0.578,-0.626L0.359,-0.626L0.359,-0L0.251,-0Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,3029.95,815.327)">
+                    <path d="M0.038,-0L0.298,-0.723L0.417,-0.723L0.677,-0L0.569,-0L0.501,-0.19L0.214,-0.19L0.146,-0L0.038,-0ZM0.241,-0.286L0.473,-0.286L0.357,-0.619L0.241,-0.286Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,3397.11,815.327)">
+                    <path d="M0.277,-0L0.022,-0.723L0.127,-0.723L0.34,-0.123L0.554,-0.723L0.659,-0.723L0.404,-0L0.277,-0Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,3812.8,815.327)">
+                    <path d="M0.091,-0L0.091,-0.723L0.558,-0.723L0.558,-0.63L0.199,-0.63L0.199,-0.411L0.519,-0.411L0.519,-0.319L0.198,-0.319L0.198,-0.095L0.567,-0.094L0.567,-0L0.091,-0Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,4197.36,815.327)">
+                    <path d="M0.091,-0L0.091,-0.723L0.378,-0.723C0.432,-0.723 0.477,-0.715 0.512,-0.698C0.547,-0.682 0.574,-0.658 0.591,-0.628C0.608,-0.598 0.617,-0.562 0.617,-0.52C0.617,-0.482 0.611,-0.449 0.597,-0.423C0.584,-0.397 0.567,-0.376 0.546,-0.359C0.525,-0.343 0.503,-0.33 0.48,-0.321L0.62,-0L0.508,-0L0.38,-0.302L0.198,-0.302L0.198,-0L0.091,-0ZM0.198,-0.389L0.35,-0.389C0.4,-0.389 0.439,-0.4 0.466,-0.422C0.494,-0.443 0.508,-0.475 0.508,-0.516C0.508,-0.556 0.495,-0.586 0.47,-0.607C0.445,-0.627 0.411,-0.638 0.368,-0.638L0.198,-0.638L0.198,-0.389Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,4613.35,815.327)">
+                    <path d="M0.091,-0L0.091,-0.723L0.195,-0.723L0.563,-0.184L0.563,-0.723L0.67,-0.723L0.67,-0L0.574,-0L0.198,-0.55L0.198,-0L0.091,-0Z" style="fill:rgb(225,228,234);fill-rule:nonzero;"/>
+                </g>
+                <g transform="matrix(610.41,0,0,610.41,5078.18,815.327)">
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
