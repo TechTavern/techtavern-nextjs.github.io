@@ -66,7 +66,7 @@ export default function Navigation() {
           <div className="flex-shrink-0">
             <Link
               href="/"
-              className="flex items-center transition-opacity duration-300 hover:opacity-80 focus-ring"
+              className="flex items-center transition-opacity duration-300 hover:opacity-80"
               aria-label={`${siteMeta.title} - Home`}
             >
               <Image
@@ -93,8 +93,8 @@ export default function Navigation() {
                       key={item.href}
                       href={item.href}
                       className={`px-3 py-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                          ? 'text-gray-900 hover:text-blue-600 focus-ring'
-                          : 'text-white hover:text-blue-200 focus-ring-light'
+                        ? 'text-gray-900 hover:text-blue-600 focus-ring'
+                        : 'text-white hover:text-blue-200 focus-ring-light'
                         }`}
                       onClick={handleLinkClick}
                       role="menuitem"
@@ -110,8 +110,8 @@ export default function Navigation() {
                     key={item.href}
                     href={item.href}
                     className={`px-3 py-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                        ? 'text-gray-900 hover:text-blue-600 focus-ring'
-                        : 'text-white hover:text-blue-200 focus-ring-light'
+                      ? 'text-gray-900 hover:text-blue-600 focus-ring'
+                      : 'text-white hover:text-blue-200 focus-ring-light'
                       }`}
                     onClick={handleLinkClick}
                     role="menuitem"
@@ -129,8 +129,8 @@ export default function Navigation() {
             <button
               onClick={handleMenuToggle}
               className={`inline-flex items-center justify-center p-2 rounded-md transition-colors duration-300 touch-target ${isScrolled
-                  ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-100 focus-ring'
-                  : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
+                ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-100 focus-ring'
+                : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
                 }`}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -165,8 +165,8 @@ export default function Navigation() {
                       key={item.href}
                       href={item.href}
                       className={`block px-3 py-2 text-base font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                          ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-50 focus-ring'
-                          : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
+                        ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-50 focus-ring'
+                        : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
                         } rounded-md`}
                       onClick={handleLinkClick}
                       role="menuitem"
@@ -182,8 +182,8 @@ export default function Navigation() {
                     key={item.href}
                     href={item.href}
                     className={`block px-3 py-2 text-base font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                        ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-50 focus-ring'
-                        : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
+                      ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-50 focus-ring'
+                      : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
                       } rounded-md`}
                     onClick={handleLinkClick}
                     role="menuitem"

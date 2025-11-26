@@ -19,7 +19,7 @@ export default function Header({ variant }: HeaderProps) {
         <div className="flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center transition-opacity duration-300 hover:opacity-80 focus-ring-light"
+            className="flex items-center transition-opacity duration-300 hover:opacity-80"
             aria-label="Tech Tavern - Return to homepage"
           >
             <Image
