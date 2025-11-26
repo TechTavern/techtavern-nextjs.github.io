@@ -1,0 +1,17 @@
+
+> techtavern-nextjs.github.io@0.1.0 dev
+> next dev
+
+   Γû▓ Next.js 16.0.3 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.129:3000
+   - Experiments (use with caution):
+     ┬╖ cpus: 1
+
+ Γ£ô Starting...
+C:\Users\strea\CodingProjects\techtavern-nextjs.github.io\node_modules\next\dist\build\swc\index.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+C:\Users\strea\CodingProjects\techtavern-nextjs.github.io\node_modules\next\dist\server\dev\hot-reloader-turbopack.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+C:\Users\strea\CodingProjects\techtavern-nextjs.github.io\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+Error: loader C:\Users\strea\CodingProjects\techtavern-nextjs.github.io\node_modules\@next\mdx\mdx-js-loader.js for match "{*,next-mdx-rule}" does not have serializable options. Ensure that options passed are plain JavaScript objects and values.
+    at ignore-listed frames
+[?25h
