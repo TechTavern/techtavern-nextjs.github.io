@@ -1,0 +1,87 @@
+---
+title: "Consumer vs Enterprise AI: The Line That Will Save Your Nonprofit From A Privacy Incident"
+date: "2025-12-08"
+slug: "consumer-vs-enterprise-ai-the-line-that-will-save-your-nonprofit"
+excerpt: "Now that you understand how identity drift affects privacy, this article breaks down what protections AI services actually provide. It explains the differences between consumer and enterprise tiers and offers a clear comparison of major providers so nonprofits can choose tools safely."
+tags: ["ai governance", "ai safety", "nonprofit ai", "data privacy"]
+featuredImage: "/images/consumer-vs-enterprise-ai.webp"
+ogTitle: "Consumer vs Enterprise AI: The Line That Will Save Your Nonprofit"
+ogDescription: "A clear guide to AI privacy protections across major providers, helping nonprofits choose tools safely."
+ogImage: "/images/consumer-vs-enterprise-ai.webp"
+canonicalUrl: "https://techtavern.com/articles/2025/12/08/consumer-vs-enterprise-ai-the-line-that-will-save-your-nonprofit/"
+draft: false
+---
+Last week I wrote about [the invisible AI touching your nonprofit's data](/articles/2025/12/01/the-invisible-ai-touching-your-data/) and introduced the concept of identity drift. The short version: staff can unknowingly route sensitive information through personal accounts when using AI features embedded in everyday tools. The fix I recommended was simple. Make sure everyone works inside your organization's managed accounts.
+
+Now that we've addressed the identity question, the next challenge is figuring out what you can actually do safely across different services. Privacy isn't a single switch you flip. It's a set of capabilities that vary dramatically depending on which tool you're using, which tier you're on, and what agreements you have in place.
+
+This article is meant to help nonprofit leaders make sense of those differences. I'll explain the key distinctions between consumer and enterprise AI, define the compliance terms you'll encounter, and provide a reference table you can actually use when evaluating what belongs where.
+
+## The Same Tool, Two Different Worlds
+
+When your program manager opens ChatGPT at home, they're using a consumer product. When they log into ChatGPT through your organization's enterprise agreement, they're using something that looks identical but operates under completely different rules.
+
+Consumer AI services treat your inputs as potential training material. They may store your conversations indefinitely. Human reviewers might read samples to improve the system. None of this is hidden. It's all disclosed in terms of service that almost no one reads.
+
+Enterprise AI services work differently. Your data stays out of model training by default. Retention policies are controlled by your organization. Access is governed by your admin settings. The provider acts as a processor of your data rather than a controller of it.
+
+This pattern holds across every major provider. The consumer version and the enterprise version of the same tool can look identical on screen while operating under fundamentally different privacy architectures.
+
+## The Practical Differences That Matter
+
+Before we get to the reference table, it helps to understand what the compliance terms actually mean. These four categories appear repeatedly when evaluating AI services, and each one answers a different question about how your data will be handled.
+
+**Data Processing Addendum (DPA):** This is a contract that establishes the AI provider as a "processor" of your data rather than a "controller." Under regulations like GDPR, that distinction matters. A processor can only use your data according to your instructions. A controller can use it for their own purposes. Consumer services typically treat the provider as controller. Enterprise agreements with a DPA flip that relationship.
+
+**Business Associate Agreement (BAA):** If your nonprofit handles health information covered by HIPAA, you need a BAA with any vendor who might access that data. A BAA makes the vendor legally responsible for protecting health information according to HIPAA's requirements. Without one, using an AI tool with protected health information is a compliance violation, full stop.
+
+**SOC 2 Certification:** SOC 2 is an independent audit that verifies a company's security controls meet established standards for handling customer data. It covers things like access controls, encryption, monitoring, and incident response. When an AI provider has SOC 2 certification, it means a third party has verified their security practices. Consumer tiers typically aren't covered by these audits.
+
+**FedRAMP Authorization:** FedRAMP is the federal government's security framework for cloud services. Authorization means a service has met rigorous security requirements and can be used by federal agencies. For nonprofits, FedRAMP authorization is most relevant if you handle government contracts or federal grant data. It's also a signal of mature security practices even if you don't have federal compliance requirements.
+
+## The Reference Table
+
+The table below covers the four major AI providers your staff are most likely to encounter. I've split each provider into consumer and enterprise rows so you can see the differences at a glance.
+
+| Provider | Tier | DPA Available | HIPAA BAA | SOC 2 | FedRAMP |
+|----------|------|---------------|-----------|-------|---------|
+| **OpenAI** | Consumer (Free/Plus) | No | No | No | No |
+| | Enterprise (Business/Enterprise/API) | Yes | Yes (sales contract required) | Yes (Type II) | In progress (expected 2026) |
+| **Anthropic** | Consumer (Free/Pro/Max) | No | No | No | No |
+| | Enterprise (Team/Enterprise/API) | Yes | API with zero-retention only | Yes (Type II) | Yes (via AWS GovCloud, Google Vertex) |
+| **Google** | Consumer (Gemini) | No | No | No | No |
+| | Enterprise (Workspace with Gemini, Vertex AI) | Yes | Yes | Yes | Yes (FedRAMP High) |
+| **Microsoft** | Consumer (Copilot Free, Bing Chat) | No | No | No | No |
+| | Enterprise (M365 Copilot, Azure OpenAI) | Yes | Yes | Yes | Yes (FedRAMP High) |
+
+## What This Table Tells You
+
+The pattern is consistent across providers. Consumer tiers offer none of the formal compliance protections that enterprise tiers provide. That's not an accident. It's the business model. Enterprise customers pay more because they're buying contractual assurances, not just features.
+
+A few things stand out when you look at the specifics.
+
+Every enterprise tier offers a DPA, which means your organization can establish clear data processing boundaries. None of the consumer tiers do. If staff are using personal accounts for work tasks, there's no contractual framework protecting that data.
+
+HIPAA coverage varies significantly even among enterprise offerings. OpenAI requires a sales-managed contract for a BAA. Anthropic only covers their API in zero-retention mode, not the chat interface. Google and Microsoft have broader BAA coverage because their enterprise AI is integrated into platforms (Workspace, M365, Azure) that already support healthcare customers. If your nonprofit handles any health-adjacent information, this distinction matters.
+
+FedRAMP authorization is most mature at Google and Microsoft, which makes sense given their long history with government customers. OpenAI is working toward authorization but isn't there yet. Anthropic achieves FedRAMP coverage through cloud partners rather than direct authorization. For most nonprofits, FedRAMP isn't a requirement, but it's a useful signal of security maturity.
+
+SOC 2 certification is table stakes for enterprise tiers. All four providers have it for their business offerings. None of them extend those audits to consumer products.
+
+## What This Means for Your Organization
+
+The practical takeaway is that account type determines protection level. A staff member using ChatGPT through your enterprise agreement has contractual safeguards, audit trails, and clear data handling commitments. The same staff member using the free version on their personal account has none of those protections, even if they're discussing the same work.
+
+If your nonprofit doesn't have enterprise AI agreements in place, you have two options. You can establish policies that keep sensitive information out of AI tools entirely, using the green/yellow/red framework I described in my previous article. Or you can pursue enterprise agreements that give you the contractual protections your work requires.
+
+Most organizations will need both approaches. Enterprise agreements for the tools you use regularly. Clear policies for everything else.
+
+## The Conversation Worth Having
+
+I realize this might feel overwhelming. The landscape is complicated and it changes frequently. Providers adjust their policies. New services emerge. The compliance requirements for your specific situation depend on what kind of data you handle and what agreements govern your work.
+
+The good news is that the core principle stays constant. Know which tier your staff are using. Know what protections that tier provides. Match the sensitivity of the data to the level of protection available.
+
+I'm working with several organizations right now on exactly these questions. If your team is trying to figure out where AI fits into your work and how to use it responsibly, I'd welcome the conversation.
+
+Next in this series, I'll be looking at a specific category of AI tools that creates unique risks: transcription and note-taking services. The privacy surface there is different, and in some ways more acute, than the embedded AI features we've been discussing.
