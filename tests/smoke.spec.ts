@@ -45,9 +45,8 @@ test.describe('Primary smoke journeys', () => {
     await page.goto('/');
     await waitForAppReady(page);
 
-    const snapshot = await page.accessibility.snapshot();
-    expect(snapshot).toBeTruthy();
-    const hasMainLandmark = snapshot?.children?.some((child) => child.role === 'main');
-    expect(hasMainLandmark).toBe(true);
+    await expect(page.getByRole('navigation')).toBeVisible();
+    await expect(page.getByRole('main')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 });
