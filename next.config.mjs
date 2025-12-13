@@ -1,13 +1,11 @@
 import createMDX from "@next/mdx";
 import bundleAnalyzer from "@next/bundle-analyzer";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+// Plugin imports removed - using string-based names for Turbopack compatibility
 
 const withMDX = createMDX({
     options: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: "wrap" }]],
+        remarkPlugins: ['remark-gfm'],
+        rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: "wrap" }]],
     }
 });
 
