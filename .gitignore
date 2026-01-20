@@ -52,3 +52,6 @@ techtavern.github.io/
 
 # Mostly for SpecKit CLI but could be useful for other things.
 .codex/
+
+/temp/
+/tmp
