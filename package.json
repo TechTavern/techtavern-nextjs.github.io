@@ -32,7 +32,7 @@
     "class-variance-authority": "^0.7.1",
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^0.562.0",
+    "lucide-react": "^0.563.0",
     "next": "^16.0.10",
     "next-mdx-remote": "^5.0.0",
     "react": "^19.2.3",
@@ -40,7 +40,7 @@
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "zod": "^4.1.13"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
@@ -56,7 +56,7 @@
     "@types/node": "^24.10.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "baseline-browser-mapping": "^2.9.7",
+    "baseline-browser-mapping": "^2.9.18",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.1.0",
     "eslint": "^9.39.2",
