@@ -2,37 +2,6 @@
 
 This document contains Milestone plans for features of the Tech Tavern Site.
 
-## M1 - Script for AI enhancement of front matter excerpt and tagging 
-
-Goal: Create a script that can be executed in the development environment using `npm run <scriptname>`.  It should use the official openai library, previously installed via npm as a depdency requirement.
-
-Environment / dependencies:
-- CommonJS module syntax, Node 18+ (global `fetch` available).
-- Use the official openai library and assume it is installed as a dependency requirement.
-
-Functional requirements:
-1. If supplied with an `.mdx` file, act only on that file.  If supplied with a directory discover every `.mdx` file under `content/articles/` (non-recursive).
-2. Parse each file’s frontmatter and body with `gray-matter`.
-3. Determine whether the frontmatter needs enrichment for these two fields:
-   - `excerpt`: string, trimmed length between 100 and 160 characters inclusive, single paragraph (no newlines). It should include the primary keywords in the first sentence, uses active voice with specific numbers or benefits, addresses a clear pain point, and ends with a value proposition that creates curiosity without giving away the solution.
-   - `tags`: array of 2–5 strings; every entry trimmed, non-empty, and Title Case (first letter capitalized, remaining lower except interior spaces).
-   - Skip any field that exist and are not empty or null.
-   - Skip the whole file if both fields exist and are not empty or null.
-4. For files needing enrichment, call OpenAI’s Responses API (`POST https://api.openai.com/v1/responses`) with:
-   - `model`: value from `OPENAI_MODEL` env var or `.env.local`, default `'gpt-4.1-mini'`.
-   - `input`: a list containing one `role: "system"` instruction (restate the excerpt/tag rules) and one `role: "user"` message with article title plus full Markdown body.
-   - Authorization header using `OPENAI_API_KEY`.
-5. Expect the model to return a JSON object `{ "excerpt": "...", "tags": ["..."] }` in its first text segment. Parse it defensively, re-validate the excerpt/tag rules, and bail on that file with a clear error if parsing or validation fails.
-6. When enrichment succeeds, update the frontmatter in place while preserving markdown body formatting.
-7. Add a CLI `--dry-run` flag (or `DRY_RUN=1`) that skips API calls and file writes but prints which files would be processed.
-8. Log progress with concise, human-friendly messages and print a summary totals line (updated / skipped / errors) when finished.
-9. Exit with status code 1 if any unexpected error bubbles out.
-
-Implementation notes:
-- Provide a small helper to read `.env.local` (key=value, `#` comments) and merge with `process.env`. Throw a descriptive error if the API key is missing after merge.
-- Wrap the main loop in `async function main()` and call it at the end with `.catch`.
-- Keep the script well-structured (helpers like `needsEnrichment`, `callOpenAI`, `updateFrontmatter`). Use early returns instead of deep nesting. Add minimal inline comments only where logic is non-obvious.
-
 ## M2 - Styling & Design System Improvements
 
 Based on comprehensive analysis by tailwind-ui-designer agent, the following phased implementation plan addresses critical accessibility, CSS architecture, and design system improvements.

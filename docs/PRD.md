@@ -142,11 +142,6 @@
 - Google Analytics enabled only when `NEXT_PUBLIC_GA_ID` is present.
 - Inject GA script lazily (`lazyOnload`) via `next/script` component.
 
-### 7.7 Content Enrichment (Optional Dev Tooling)
-- Script `npm run article-enrichment` uses OpenAI to generate missing excerpts and tags for articles.
-- Requires `OPENAI_API_KEY` in `.env.local`.
-- Skips articles that already have sufficient metadata.
-
 ## 8. Non‑Functional Requirements
 
 ### 8.1 Performance
@@ -281,7 +276,6 @@
   - Environment: `.env.local` can define `SITE_URL` for local absolute links.
 - Content Authoring
   - Create new article: `npm run new-article` and fill prompts.
-  - Enrich articles: `npm run article-enrichment` (requires `OPENAI_API_KEY`).
 - Deployment
   - Merge to `main` triggers build + staging deploy to repo subdirectory.
   - Manual `workflow_dispatch` can deploy to production; custom domain supported via Actions Var/Secret `SITE_URL
