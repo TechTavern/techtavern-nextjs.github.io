@@ -1,0 +1,104 @@
+---
+title: "What Claude Code gets right, what it gets wrong, and what's still missing"
+date: "2026-04-06"
+slug: "what-claude-code-gets-right-what-it-gets-wrong-and-what-s-still-missing"
+excerpt: "Claude Code's architecture reveals impressive engineering, but also exposes where agentic AI design falls short. From state management stuck in a file-based paradigm to permission fatigue undermining security, the patterns point in the right direction while stopping short of the distributed systems thinking these tools actually need."
+tags: ["ai-agents", "claude-code", "distributed-systems", "software-architecture", "ai-engineering", "developer-tools"]
+featuredImage: "/images/claude-code-right-and-wrong.webp"
+ogTitle: "What Claude Code gets right, what it gets wrong, and what's still missing"
+ogDescription: "An honest assessment of Claude Code's architecture — where the patterns succeed, where security creates its own risks, and why agent systems need distributed systems thinking."
+ogImage: "/images/claude-code-right-and-wrong.webp"
+canonicalUrl: "https://techtavern.com/articles/2026/04/06/what-claude-code-gets-right-what-it-gets-wrong-and-what-s-still-missing/"
+draft: false
+---
+Yesterday I published a [technical breakdown of the engineering patterns inside Claude Code's architecture](/articles/2026/04/05/what-claude-code-s-architecture-teaches-us-about-building-production-ai-agents/). If you haven't read it, start there. Today I'm sharing what I actually think about those patterns, where they succeed, where they fall short, and what I believe is fundamentally missing from the way we're building agentic AI systems right now.
+
+I want to be absolutly clear, what Anthropic built is impressive engineering. The patterns are real, the architectural instincts are sound, and many of them validate techniques that independent practitioners like me have been developing on our own. It's amazing to me that so many of us have convered on a similar place. But this is a starting point and not the final destination. When you get to look inside a system built by one of the best-resourced AI teams on the planet, you're also looking for the north star. And in a few important places, I don't think we got one.
+
+The reason, I think, comes down to something the industry hasn't fully reckoned with yet. Agent systems are distributed systems pretending not to be. We're building networks of semi-autonomous processes that communicate, coordinate, share state, and fail independently, but we're not applying the engineering disciplines that distributed systems require. The patterns from Claude Code show flashes of that thinking, but they stop short of following it through. That gap is where most of our current failure modes live.
+
+## State management needs a different paradigm
+
+I said yesterday that Claude Code's state management is "genuinely interesting." It is. The separation between session persistence, workflow state, and tiered memory is thoughtful. The strategic forgetting and token budgeting are mature. As a professional analysis of what exists, there's a lot to respect.
+
+Here's what I actually think. State management is the poorest element of agentic design right now, and Claude Code doesn't change that.
+
+Most agent projects manage state with files. Anthropic's JSONL approach and tiered memory are a small step up, but at the core it's still the same paradigm. Write state to disk. Read it back. Hope nothing went sideways in between.
+
+What's missing isn't a specific technology. It's message-oriented thinking. Reliable delivery. Ordering guarantees. Replay capability. Decoupled producers and consumers. These are solved problems in distributed systems engineering. Lightweight message queues, event logs, even simple pub/sub patterns would give agent systems something they desperately lack right now: confidence that a state change actually happened, in the order it was supposed to happen, and that nothing was lost in transit.
+
+I'm not arguing that every agent project needs a full message broker. The operational overhead and eventual consistency challenges that come with queue infrastructure aren't trivial, and most agent toolchains aren't built for idempotent consumers yet. But the architectural thinking behind message-oriented systems should be informing agent design even when the implementation is lightweight.
+
+We're going to look back someday, laughing or crying, at the era when we had to ask agents if they actually did something. "Did that file write go through? Are you still working on it? Did you already run that tool?" That uncertainty isn't a prompting problem. It's a state management problem. A reliable communication layer would eliminate an entire category of agentic failure modes that we currently treat as inherent to the technology. They aren't inherent. They're a design choice we haven't revisited.
+
+I'm disappointed that Anthropic doesn't push this thinking further. If anyone has the resources and the architectural instincts to model a better approach, it's them. Instead, the state-of-the-art is still files with slightly better structure.
+
+That said, tune in for my article in six months about why markdown is the only state manager you need. 😉
+
+## Tool registries are where the real leverage is
+
+If state management is where I'm most critical, tool registry design is where I'm most aligned with what Claude Code demonstrates.
+
+Metadata-first tool definitions, dynamic pool assembly, execution partitioning by mutation risk. These aren't optional features for a serious agent system. They're foundational. If your agent has to execute a tool to find out what it does, you've already lost control of the system. If every tool is loaded into every session, you're wasting prompt space and expanding your attack surface for no reason.
+
+When I design systems, I pre-load a few vital tool definitions as first-class skills. Everything else gets dynamically loaded after metadata discovery. I'll put pointers into specific skills for context-specific tools, giving the agent enough to know where to look without carrying the full definition in memory.
+
+The failure mode nobody talks about is metadata drift. Tools evolve. New capabilities get added. Descriptions drift out of sync with what the tool actually does. If your metadata layer is stale, your dynamic assembly is making decisions based on bad information. Systems rot at the metadata layer long before they fail visibly, and by the time you notice, the agent has been routing tasks to the wrong tools for weeks.
+
+I recently implemented a small index for a larger set of tools and it works surprisingly well. Just a lightweight lookup that maps capability categories to tool locations, letting the agent find what it needs without loading everything. I think the broader AI development community is sleeping on index-driven connections between architectural layers. Not everything needs to be in the prompt. Sometimes a good index and a metadata query is all you need to keep the system fast and focused.
+
+## The security tradeoff we're not being honest about
+
+I want to be careful here because I genuinely applaud the effort Anthropic put into the security architecture. Twenty-three shell security checks. Tiered trust. Predictive auto-permissions. Permission audit trails. The engineering is thorough.
+
+The question isn't whether the security works. Parts of it clearly do. The shell security checks address real, specific attack vectors. The tiered trust model enforces meaningful boundaries. The audit trail enables accountability. On the threat model side, these are genuine risk reductions.
+
+The question is what the security costs, and whether that cost creates its own risks.
+
+[Pliny](https://x.com/elder_plinius) has demonstrated repeatedly that a moderately skilled attacker can break most LLM security constraints. That doesn't make the constraints worthless. Locks don't stop determined burglars either, but they still serve a purpose. The problem is when the lock is so cumbersome that the people who live in the house start propping the door open.
+
+When I use Claude Code in practice, I'm interrupted constantly. "Can I read this file?" Yes. "Can I write to this directory?" Yes. "Can I run this shell command?" It's the command I just asked you to run, so yes. The auto-permissions classifier catches some of these routine operations, but it misses enough that the interruptions become a pattern. And patterns create habits.
+
+That's where the real risk emerges. When your security model's primary user-facing effect is training people to click "yes" without reading, you've created a new vulnerability. Users learn that permission prompts are noise. The one time the prompt is actually important, protecting against a genuinely dangerous operation, they'll click through it just like the hundred routine prompts before it. The security mechanism has conditioned the very behavior it was supposed to prevent.
+
+This is a known pattern in security design, and it has a name: [alarm fatigue](https://en.wikipedia.org/wiki/Alarm_fatigue). It happens in hospitals, in industrial control systems, and in cybersecurity dashboards. The solution is never "more alarms." It's better signal-to-noise ratio.
+
+I don't have a clean alternative for agent security. But I know the current approach is spending credibility it can't afford to lose. The threat model needs to account for user behavior, not just attacker behavior.
+
+## When orchestration fails, it fails ugly
+
+The "prompts as architecture" pattern for multi-agent orchestration is genuinely clever, and it validates what a lot of independent practitioners have been building. Coordination through instructions rather than code-level control flow is more adaptable, easier to iterate, and natural for systems where the coordinator is itself an LLM.
+
+But prompts are coordination logic, not communication infrastructure. And when communication fails in a prompt-orchestrated system, the results are ugly in ways that structural channels would prevent.
+
+I've spent time building and experimenting with multi-agent systems in the OpenClaw ecosystem, and they all display some version of the same failure loop. The orchestrator decides a task needs a specialist, a research agent or a writing agent, and hands it off. Then the handoff fails. Maybe the subagent times out. Maybe it encounters an error it can't recover from. Maybe the context didn't carry enough information for the subagent to do meaningful work.
+
+In the best case, nothing comes back and you can at least question what happened. In the worst case, the subagent fails silently and falls back to an inferior tool, or it fills the gap with an "educated guess" that the rest of us call a hallucination. The orchestrator receives this confidently wrong output, treats it as a completed task, and proceeds to build on it. Sibling agents inherit the bad information. Downstream work compounds the error. By the time you notice something is off, the damage has propagated across multiple agent contexts and unwinding it means unwinding everything.
+
+This is the cascade problem, and it's rooted in the fact that reasoning and communication share the same channel. When the orchestrator can't distinguish between "the subagent completed its work" and "the subagent failed and produced a plausible-looking substitute," every failure becomes invisible until it's catastrophic.
+
+A structural communication layer gives you different failure semantics. A message either arrived or it didn't. A task either completed with a verified result or it returned an explicit failure state. You can replay it, inspect it, route it elsewhere, dead-letter it for investigation. None of that is available when the only signal is "the subagent's text output looked reasonable to another LLM."
+
+The security concern maps here too. Once you're past the permission layer in a prompt-orchestrated system, there's nothing structural to stop corrupted information from propagating. The orchestrator trusts the prompts. The workers trust the orchestrator. The permission checks happened at the boundary. Inside, it's open. A subagent that produces bad output, whether through failure or manipulation, can cascade that through the system because the orchestrator is reasoning about text, not enforcing contracts.
+
+Defense in depth should mean layers all the way through, not just at the gates.
+
+## The observability bright spot
+
+I don't have much to argue with in the observability and reliability patterns. Structured streaming events, separated system logs, circuit breakers, cache economics as an architectural driver. These are solid, well-implemented, and worth adopting.
+
+The circuit breaker story is the one I keep coming back to. An autocompact failure burning 250,000 wasted API calls per day, fixed with three lines of code. If you're building agents and you don't have circuit breakers on every retry loop, stop reading this and go add them. I'll wait.
+
+The cache economics patterns deserve close study too. When you're paying per token, cache invalidation stops being an engineering problem and starts being an accounting problem. Tracking break vectors, using sticky latches, keeping system prompts stable. These aren't optimizations. They're cost architecture. If you're running agents at any non-trivial scale and you haven't modeled your cache behavior, you're flying blind on cost.
+
+## Where we actually are
+
+Agent systems are distributed systems. They involve multiple semi-autonomous processes communicating over unreliable channels, sharing mutable state, coordinating work, and failing independently. The sooner we treat them that way, the sooner the failure modes that plague current agentic design start having known solutions instead of novel surprises.
+
+The patterns from Claude Code show that the architectural instincts are pointing in the right direction. Separation of concerns, defense in depth, observability, cost awareness. These are the right things to care about. But the implementations are still borrowing from a paradigm where the agent is a single process having a conversation, not a node in a distributed system doing coordinated work.
+
+State management needs reliable communication primitives, not better file formats. Security needs to account for user behavior as seriously as it accounts for attacker behavior. Orchestration needs structural communication channels so that failures produce clear signals instead of plausible hallucinations. And all of it needs the kind of engineering discipline that distributed systems have been developing for decades.
+
+We don't need to reinvent that discipline. We need to apply it.
+
+If you're building agents and wrestling with any of these patterns, I'd love to hear what you've landed on. Are you using message-oriented patterns for agent communication? Have you solved the permission fatigue problem? Are your subagents actually isolated, or is it more of a polite suggestion? The conversation matters more than any single architecture.
