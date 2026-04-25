@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Linkedin } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 const profile = {
   heading: 'Who We Are',
@@ -47,7 +47,7 @@ const profile = {
 };
 
 export default function Profile() {
-  const LinkedInIcon = Linkedin;
+  const LinkedInIcon = Users;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12">
       {/* Image Column - appears second on mobile, first on desktop */}

@@ -4,15 +4,15 @@ import Link from "next/link";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import {
+  Camera,
   ChevronDown,
+  Code,
   ExternalLink,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Facebook,
-  Github,
-  Gitlab,
-  Youtube,
+  GitFork,
+  MessageCircle,
+  Users,
+  Video,
+  type LucideIcon,
 } from "lucide-react";
 import { getAllProfiles, getProfileBySlug, type SocialService } from "@/lib/profiles";
 import { getMDXComponents } from "@/mdx-components";
@@ -90,14 +90,14 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
       })
     : null;
 
-  const SOCIAL_ICON_MAP: Partial<Record<SocialService, typeof Linkedin>> = {
-    linkedin: Linkedin,
-    twitter: Twitter,
-    instagram: Instagram,
-    facebook: Facebook,
-    github: Github,
-    gitlab: Gitlab,
-    youtube: Youtube,
+  const SOCIAL_ICON_MAP: Partial<Record<SocialService, LucideIcon>> = {
+    linkedin: Users,
+    twitter: MessageCircle,
+    instagram: Camera,
+    facebook: Users,
+    github: Code,
+    gitlab: GitFork,
+    youtube: Video,
   };
 
 
@@ -163,6 +163,7 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
         {booking && (
           <div className="flex justify-center md:justify-start mt-6 pt-6 border-t border-secondary/10">
             {BookingComponent && bookingButtonProps ? (
+              // eslint-disable-next-line react-hooks/static-components -- resolved from a top-level booking component registry
               <BookingComponent {...bookingButtonProps} />
             ) : (
               <Link
