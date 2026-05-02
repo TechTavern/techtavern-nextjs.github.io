@@ -31,7 +31,7 @@
     "class-variance-authority": "^0.7.1",
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^1.11.0",
+    "lucide-react": "^1.14.0",
     "next": "^16.2.4",
     "next-mdx-remote": "^6.0.0",
     "react": "^19.2.5",
@@ -39,10 +39,10 @@
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "zod": "^4.3.6"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.2",
+    "@axe-core/playwright": "^4.11.3",
     "@eslint/eslintrc": "^3.3.5",
     "@next/bundle-analyzer": "^16.2.4",
     "@playwright/test": "^1.59.1",
@@ -55,7 +55,7 @@
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "baseline-browser-mapping": "^2.10.21",
+    "baseline-browser-mapping": "^2.10.25",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.1.0",
     "eslint": "^9.39.4",
@@ -63,9 +63,14 @@
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "playwright": "^1.59.1",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.13",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "whatwg-url": "^16.0.1"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "$postcss"
+    }
   }
 }
