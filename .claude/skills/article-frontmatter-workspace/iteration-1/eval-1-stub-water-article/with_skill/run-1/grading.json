@@ -1,0 +1,58 @@
+{
+  "eval_id": 1,
+  "eval_name": "stub-water-article",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Identifies stub excerpt 'A brief description of this article.'",
+      "passed": true,
+      "evidence": "Line 24: 'excerpt: stub \u2014 current value is the literal scaffold string'"
+    },
+    {
+      "text": "Identifies stub ogDescription scaffold string",
+      "passed": true,
+      "evidence": "Line 25: 'ogDescription: stub \u2014 current value is the literal scaffold string'"
+    },
+    {
+      "text": "Flags ['technology','programming'] tags as scaffold defaults",
+      "passed": true,
+      "evidence": "Line 26: 'tags: stub \u2014 current value is exactly [\"technology\", \"programming\"], the scripts/new-article.js default'"
+    },
+    {
+      "text": "Proposed tags are all kebab-case-lowercase",
+      "passed": true,
+      "evidence": "All 6 proposed: ai-impact, data-centers, sustainability, water-infrastructure, infrastructure-policy, pfas"
+    },
+    {
+      "text": "At least one proposed tag is reused from existing corpus catalog",
+      "passed": true,
+      "evidence": "ai-impact, data-centers, sustainability all explicitly noted as existing in catalog with counts"
+    },
+    {
+      "text": "Proposed excerpt and ogDescription are not identical strings",
+      "passed": true,
+      "evidence": "Explicit 'note the deliberate divergence' section explaining how they differ"
+    },
+    {
+      "text": "Proposed excerpt within 80-280 char target range",
+      "passed": true,
+      "evidence": "228 chars (with 180-char tighter alternative also offered)"
+    },
+    {
+      "text": "Proposed ogDescription within 100-220 char range",
+      "passed": true,
+      "evidence": "166 chars (with 155-char tighter variant offered)"
+    },
+    {
+      "text": "Review consults the tag catalog explicitly",
+      "passed": true,
+      "evidence": "Cites specific catalog entries with counts ('AI Impact x2', 'data-centers x1') in catalog notes section"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "eval_id": 3,
+  "eval_name": "broken-schema-fixture",
+  "configuration": "baseline",
+  "expectations": [
+    {
+      "text": "Flags invalid date format '06-01-2026' as a schema violation",
+      "passed": true,
+      "evidence": "Blocking issue #1 explicitly cites the Zod regex"
+    },
+    {
+      "text": "Flags canonicalUrl as invalid (missing https://) or mismatched",
+      "passed": true,
+      "evidence": "Blocking issue #2 (missing protocol) plus content issue #3 (wrong path)"
+    },
+    {
+      "text": "Flags the filename slug vs frontmatter slug mismatch",
+      "passed": true,
+      "evidence": "Issue #4 'Filename date does not match frontmatter date' covers slug too"
+    },
+    {
+      "text": "Schema violations are surfaced BEFORE proposed content edits",
+      "passed": true,
+      "evidence": "Document structure: 'Blocking issues' section appears before 'Content / consistency issues'"
+    },
+    {
+      "text": "Still proposes non-stub excerpt and ogDescription",
+      "passed": true,
+      "evidence": "Both proposed within the issues #5 and #6 sections; corrected frontmatter at bottom"
+    },
+    {
+      "text": "Proposed tags are kebab-case and topically relevant",
+      "passed": true,
+      "evidence": "Tags proposed: ai, ai-memory, governance, vendor-lock-in, privacy \u2014 all single-word or kebab, all topical"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

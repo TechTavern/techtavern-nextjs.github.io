@@ -1,0 +1,43 @@
+{
+  "eval_id": 2,
+  "eval_name": "clean-power-grid-article",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "Does NOT flag the excerpt as a stub",
+      "passed": true,
+      "evidence": "Line 32: 'excerpt: OK. ...Treating it as the corpus's chosen-by-example excerpt. No rewrite proposed.'"
+    },
+    {
+      "text": "Does NOT flag the ogDescription as a stub",
+      "passed": true,
+      "evidence": "Line 33: 'ogDescription: OK.' \u2014 not flagged as stub, only length noted"
+    },
+    {
+      "text": "Does NOT propose replacing the existing excerpt",
+      "passed": true,
+      "evidence": "Line 83: 'excerpt: no change proposed.'"
+    },
+    {
+      "text": "Does NOT propose replacing the existing ogDescription (optional alternative is OK)",
+      "passed": true,
+      "evidence": "Offers an optional tighter SERP-clean variant explicitly framed as optional; does not insist on replacement"
+    },
+    {
+      "text": "Confirms tags are already kebab-case",
+      "passed": true,
+      "evidence": "Line 34: 'All six are kebab-case-lowercase and topical'"
+    },
+    {
+      "text": "Confirms canonicalUrl issue is flagged (visibile typo)",
+      "passed": true,
+      "evidence": "Issue 1 'canonicalUrl: MISMATCH' with explicit visibile vs visible diff"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

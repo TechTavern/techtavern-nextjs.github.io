@@ -1,0 +1,43 @@
+{
+  "eval_id": 2,
+  "eval_name": "clean-power-grid-article",
+  "configuration": "baseline",
+  "expectations": [
+    {
+      "text": "Does NOT flag the excerpt as a stub",
+      "passed": true,
+      "evidence": "Excerpt is noted as long (~370 chars) but never flagged as stub or placeholder"
+    },
+    {
+      "text": "Does NOT flag the ogDescription as a stub",
+      "passed": true,
+      "evidence": "ogDescription confirmed 'Distinct from excerpt, good' in the schema conformance table"
+    },
+    {
+      "text": "Does NOT propose replacing the existing excerpt",
+      "passed": true,
+      "evidence": "'Consider tightening' language used but no replacement string proposed in the corrected frontmatter"
+    },
+    {
+      "text": "Does NOT propose replacing the existing ogDescription",
+      "passed": true,
+      "evidence": "ogDescription kept as-is in suggested final state"
+    },
+    {
+      "text": "Confirms tags are already kebab-case",
+      "passed": true,
+      "evidence": "Schema conformance table row for tags: 'all kebab-case'"
+    },
+    {
+      "text": "Confirms canonicalUrl issue is flagged (visibile typo)",
+      "passed": true,
+      "evidence": "Issue 1 marked BLOCKING \u2014 canonicalUrl points to misspelled slug"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

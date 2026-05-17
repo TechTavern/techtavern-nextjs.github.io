@@ -1,0 +1,383 @@
+{
+  "metadata": {
+    "skill_name": "article-frontmatter",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-05-17T05:22:28Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "baseline",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6667,
+        "passed": 6,
+        "failed": 3,
+        "total": 9,
+        "time_seconds": 74.9,
+        "tokens": 34576,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies stub excerpt 'A brief description of this article.'",
+          "passed": true,
+          "evidence": "Section 'Placeholder excerpt (BLOCKER for publish quality)' identifies the exact scaffold string"
+        },
+        {
+          "text": "Identifies stub ogDescription scaffold string",
+          "passed": true,
+          "evidence": "Section 'Placeholder ogDescription' identifies the exact scaffold default"
+        },
+        {
+          "text": "Flags ['technology','programming'] tags as scaffold defaults",
+          "passed": true,
+          "evidence": "Section 'tags are wrong / scaffold defaults' \u2014 'Neither tag describes this article. \"Programming\" is actively misleading'"
+        },
+        {
+          "text": "Proposed tags are all kebab-case-lowercase",
+          "passed": true,
+          "evidence": "All 6 proposed: ai-infrastructure, water-policy, data-centers, infrastructure, tech-strategy, sustainability"
+        },
+        {
+          "text": "At least one proposed tag is reused from existing corpus catalog",
+          "passed": true,
+          "evidence": "ai-infrastructure, data-centers, tech-strategy, sustainability all already exist as kebab in corpus"
+        },
+        {
+          "text": "Proposed excerpt and ogDescription are not identical strings",
+          "passed": true,
+          "evidence": "Two distinct proposed strings"
+        },
+        {
+          "text": "Proposed excerpt within 80-280 char target range",
+          "passed": false,
+          "evidence": "Proposed excerpt is ~415 chars \u2014 significantly above the upper bound"
+        },
+        {
+          "text": "Proposed ogDescription within 100-220 char range",
+          "passed": false,
+          "evidence": "Proposed ogDescription is ~290 chars \u2014 above range; will be truncated by Google"
+        },
+        {
+          "text": "Review consults the tag catalog explicitly",
+          "passed": false,
+          "evidence": "No tag_catalog.sh invocation; tag choices referenced from the companion grid article only, not the broader catalog"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "baseline",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 56.8,
+        "tokens": 30381,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT flag the excerpt as a stub",
+          "passed": true,
+          "evidence": "Excerpt is noted as long (~370 chars) but never flagged as stub or placeholder"
+        },
+        {
+          "text": "Does NOT flag the ogDescription as a stub",
+          "passed": true,
+          "evidence": "ogDescription confirmed 'Distinct from excerpt, good' in the schema conformance table"
+        },
+        {
+          "text": "Does NOT propose replacing the existing excerpt",
+          "passed": true,
+          "evidence": "'Consider tightening' language used but no replacement string proposed in the corrected frontmatter"
+        },
+        {
+          "text": "Does NOT propose replacing the existing ogDescription",
+          "passed": true,
+          "evidence": "ogDescription kept as-is in suggested final state"
+        },
+        {
+          "text": "Confirms tags are already kebab-case",
+          "passed": true,
+          "evidence": "Schema conformance table row for tags: 'all kebab-case'"
+        },
+        {
+          "text": "Confirms canonicalUrl issue is flagged (visibile typo)",
+          "passed": true,
+          "evidence": "Issue 1 marked BLOCKING \u2014 canonicalUrl points to misspelled slug"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "baseline",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 57.7,
+        "tokens": 25269,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Flags invalid date format '06-01-2026' as a schema violation",
+          "passed": true,
+          "evidence": "Blocking issue #1 explicitly cites the Zod regex"
+        },
+        {
+          "text": "Flags canonicalUrl as invalid (missing https://) or mismatched",
+          "passed": true,
+          "evidence": "Blocking issue #2 (missing protocol) plus content issue #3 (wrong path)"
+        },
+        {
+          "text": "Flags the filename slug vs frontmatter slug mismatch",
+          "passed": true,
+          "evidence": "Issue #4 'Filename date does not match frontmatter date' covers slug too"
+        },
+        {
+          "text": "Schema violations are surfaced BEFORE proposed content edits",
+          "passed": true,
+          "evidence": "Document structure: 'Blocking issues' section appears before 'Content / consistency issues'"
+        },
+        {
+          "text": "Still proposes non-stub excerpt and ogDescription",
+          "passed": true,
+          "evidence": "Both proposed within the issues #5 and #6 sections; corrected frontmatter at bottom"
+        },
+        {
+          "text": "Proposed tags are kebab-case and topically relevant",
+          "passed": true,
+          "evidence": "Tags proposed: ai, ai-memory, governance, vendor-lock-in, privacy \u2014 all single-word or kebab, all topical"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 77.0,
+        "tokens": 38578,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies stub excerpt 'A brief description of this article.'",
+          "passed": true,
+          "evidence": "Line 24: 'excerpt: stub \u2014 current value is the literal scaffold string'"
+        },
+        {
+          "text": "Identifies stub ogDescription scaffold string",
+          "passed": true,
+          "evidence": "Line 25: 'ogDescription: stub \u2014 current value is the literal scaffold string'"
+        },
+        {
+          "text": "Flags ['technology','programming'] tags as scaffold defaults",
+          "passed": true,
+          "evidence": "Line 26: 'tags: stub \u2014 current value is exactly [\"technology\", \"programming\"], the scripts/new-article.js default'"
+        },
+        {
+          "text": "Proposed tags are all kebab-case-lowercase",
+          "passed": true,
+          "evidence": "All 6 proposed: ai-impact, data-centers, sustainability, water-infrastructure, infrastructure-policy, pfas"
+        },
+        {
+          "text": "At least one proposed tag is reused from existing corpus catalog",
+          "passed": true,
+          "evidence": "ai-impact, data-centers, sustainability all explicitly noted as existing in catalog with counts"
+        },
+        {
+          "text": "Proposed excerpt and ogDescription are not identical strings",
+          "passed": true,
+          "evidence": "Explicit 'note the deliberate divergence' section explaining how they differ"
+        },
+        {
+          "text": "Proposed excerpt within 80-280 char target range",
+          "passed": true,
+          "evidence": "228 chars (with 180-char tighter alternative also offered)"
+        },
+        {
+          "text": "Proposed ogDescription within 100-220 char range",
+          "passed": true,
+          "evidence": "166 chars (with 155-char tighter variant offered)"
+        },
+        {
+          "text": "Review consults the tag catalog explicitly",
+          "passed": true,
+          "evidence": "Cites specific catalog entries with counts ('AI Impact x2', 'data-centers x1') in catalog notes section"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 81.4,
+        "tokens": 38188,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Does NOT flag the excerpt as a stub",
+          "passed": true,
+          "evidence": "Line 32: 'excerpt: OK. ...Treating it as the corpus's chosen-by-example excerpt. No rewrite proposed.'"
+        },
+        {
+          "text": "Does NOT flag the ogDescription as a stub",
+          "passed": true,
+          "evidence": "Line 33: 'ogDescription: OK.' \u2014 not flagged as stub, only length noted"
+        },
+        {
+          "text": "Does NOT propose replacing the existing excerpt",
+          "passed": true,
+          "evidence": "Line 83: 'excerpt: no change proposed.'"
+        },
+        {
+          "text": "Does NOT propose replacing the existing ogDescription (optional alternative is OK)",
+          "passed": true,
+          "evidence": "Offers an optional tighter SERP-clean variant explicitly framed as optional; does not insist on replacement"
+        },
+        {
+          "text": "Confirms tags are already kebab-case",
+          "passed": true,
+          "evidence": "Line 34: 'All six are kebab-case-lowercase and topical'"
+        },
+        {
+          "text": "Confirms canonicalUrl issue is flagged (visibile typo)",
+          "passed": true,
+          "evidence": "Issue 1 'canonicalUrl: MISMATCH' with explicit visibile vs visible diff"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 69.5,
+        "tokens": 35357,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Flags invalid date format '06-01-2026' as a schema violation",
+          "passed": true,
+          "evidence": "Schema validation FAIL #1: 'date: \"06-01-2026\" \u2014 fails the Zod regex'"
+        },
+        {
+          "text": "Flags canonicalUrl as invalid (missing https://) or mismatched",
+          "passed": true,
+          "evidence": "Schema validation FAIL #2 flags both missing scheme AND date/slug mismatch"
+        },
+        {
+          "text": "Flags the filename slug vs frontmatter slug mismatch",
+          "passed": true,
+          "evidence": "Convention checks: 'filename slug vs frontmatter slug: mismatch'"
+        },
+        {
+          "text": "Schema violations are surfaced BEFORE proposed content edits",
+          "passed": true,
+          "evidence": "Document structure: Schema validation \u2192 Convention checks \u2192 Stub detection \u2192 Proposed edits"
+        },
+        {
+          "text": "Still proposes non-stub excerpt and ogDescription",
+          "passed": true,
+          "evidence": "Both proposed in the 'Proposed edits' section with rationale"
+        },
+        {
+          "text": "Proposed tags are kebab-case and topically relevant (ai-memory/governance, not generic defaults)",
+          "passed": true,
+          "evidence": "Tags proposed: ai-memory, ai-governance, data-privacy, nonprofit-tech, responsible-ai \u2014 all kebab, all topical, all reused from catalog"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "baseline": {
+      "pass_rate": {
+        "mean": 0.8889,
+        "stddev": 0.1924,
+        "min": 0.6667,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 63.1333,
+        "stddev": 10.2002,
+        "min": 56.8,
+        "max": 74.9
+      },
+      "tokens": {
+        "mean": 30075.3333,
+        "stddev": 4661.0231,
+        "min": 25269,
+        "max": 34576
+      }
+    },
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 75.9667,
+        "stddev": 6.0169,
+        "min": 69.5,
+        "max": 81.4
+      },
+      "tokens": {
+        "mean": 37374.3333,
+        "stddev": 1757.9108,
+        "min": 35357,
+        "max": 38578
+      }
+    },
+    "delta": {
+      "pass_rate": "-0.11",
+      "time_seconds": "-12.8",
+      "tokens": "-7299"
+    }
+  },
+  "notes": []
+}

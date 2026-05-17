@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "article-frontmatter", "runs": [{"id": "eval-1-stub-water-article-baseline", "prompt": "(No prompt found)", "eval_id": 1, "outputs": [{"name": "review.md", "type": "text", "content": "# Frontmatter Review: `2026-05-18-the-u-s-water-system-was-already-broken.mdx`\n\nReviewed against the Zod schema in `src/lib/posts.ts` (`FrontmatterSchema`) and the conventions established by recently published Tech Tavern articles \u2014 in particular the companion grid piece (`2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx`), which this article is explicitly paired with.\n\n## Current frontmatter\n\n```yaml\ntitle: \"The U.S. Water System was Already Broken. AI just made it visible.\"\ndate: \"2026-05-18\"\nslug: \"the-u-s-water-system-was-already-broken\"\nexcerpt: \"A brief description of this article.\"\ntags: [\"technology\", \"programming\"]\nfeaturedImage: \"/images/the-us-water-system.webp\"\nogTitle: \"The U.S. Water System was Already Broken\"\nogDescription: \"A brief description of this article for social media sharing.\"\nogImage: \"/images/the-us-water-system.webp\"\ncanonicalUrl: \"https://techtavern.com/articles/2026/05/18/the-u-s-water-system-was-already-broken/\"\ndraft: false\n```\n\n## Schema validity check (`src/lib/posts.ts`)\n\nAll required fields are present and well-formed; the build will not fail:\n\n- `title` \u2014 non-empty string. OK.\n- `date` \u2014 matches `^\\d{4}-\\d{2}-\\d{2}$`, and agrees with the filename prefix `2026-05-18-`. OK.\n- `slug` \u2014 non-empty, matches the filename slug. OK.\n- `canonicalUrl` \u2014 valid absolute URL, matches the URL the site will actually generate (`/articles/2026/05/18/the-u-s-water-system-was-already-broken/`). OK.\n- `draft: false` \u2014 boolean. OK (will publish on next build).\n- Optional fields are all the right types.\n\nConclusion: the file passes schema validation. **All findings below are quality / SEO / consistency issues, not blocking errors.**\n\n## Issues to fix before publishing\n\n### 1. Placeholder `excerpt` (BLOCKER for publish quality)\n\n```yaml\nexcerpt: \"A brief description of this article.\"\n```\n\nThis is the `new-article.js` scaffold default. It will be used as the article preview on listing pages and in feeds, and is one of the most visible pieces of marketing copy for the post. It must be replaced.\n\n**Proposed replacement** (drawn from the article's own framing \u2014 Summary section + \"The demand collision\" + \"The obstacle is the way\"):\n\n```yaml\nexcerpt: \"AI didn't break the U.S. water system \u2014 it just exposed a century of underinvestment that was already failing. Pipes from the 1800s, PFAS in a quarter of the supply, six billion gallons a day lost to leaks, and a workforce a decade from retirement. The fast path to a 10x water system isn't new dams; it's hyperscale recycling on the Orange County model, AI-powered leak detection, and PFAS retrofit at the plant scale.\"\n```\n\nThis intentionally mirrors the structure of the grid piece's excerpt (\"AI didn't break the U.S. power grid \u2014 it just turned the lights on...\") since the two papers are companions and the parallelism is editorially load-bearing.\n\n### 2. Placeholder `ogDescription` (BLOCKER for publish quality)\n\n```yaml\nogDescription: \"A brief description of this article for social media sharing.\"\n```\n\nSame scaffold-default problem. This is what shows up in Twitter / LinkedIn / Slack previews and matters a great deal for a position paper that is meant to circulate.\n\n**Proposed replacement** (shorter and punchier than the excerpt, per the convention in the grid and Claude Code pieces):\n\n```yaml\nogDescription: \"The U.S. water system was aging out before AI showed up \u2014 data centers just made the bill impossible to ignore. Why hyperscale recycling, leak detection, and PFAS retrofit are the fast path to a 10x water system, and why institutional fragmentation (not engineering) is the real bottleneck.\"\n```\n\n### 3. `tags` are wrong / scaffold defaults (HIGH PRIORITY)\n\n```yaml\ntags: [\"technology\", \"programming\"]\n```\n\nNeither tag describes this article. \"Programming\" is actively misleading \u2014 this is a public-policy / infrastructure position paper with no code in it. These are the `new-article.js` defaults that were never updated.\n\nThe companion grid piece uses `[\"ai-infrastructure\", \"energy-policy\", \"data-centers\", \"power-grid\", \"tech-strategy\", \"sustainability\"]`. For consistency (these two papers should cluster on tag pages) and accuracy, I recommend:\n\n```yaml\ntags: [\"ai-infrastructure\", \"water-policy\", \"data-centers\", \"infrastructure\", \"tech-strategy\", \"sustainability\"]\n```\n\nRationale:\n- `ai-infrastructure`, `data-centers`, `tech-strategy`, `sustainability` \u2014 keep parity with the grid piece so the two cluster together.\n- `water-policy` \u2014 direct analog of `energy-policy` on the grid piece; this is the article's primary subject.\n- `infrastructure` \u2014 broader umbrella that ties into the in-progress third piece referenced in the Notes section.\n- Drop `power-grid` (wrong subject) and drop the generic `technology` / `programming` defaults.\n\nIf the site already has an established controlled vocabulary you'd rather hew to, swap `water-policy` for whatever the canonical tag is \u2014 but do not ship `[\"technology\", \"programming\"]`.\n\n### 4. `title` vs `ogTitle` inconsistency (MEDIUM)\n\n```yaml\ntitle:   \"The U.S. Water System was Already Broken. AI just made it visible.\"\nogTitle: \"The U.S. Water System was Already Broken\"\n```\n\nThe `ogTitle` drops the second sentence (\"AI just made it visible.\"), which is the load-bearing half of the headline and the part that ties it to the grid piece. The grid article keeps the full headline in both fields. Recommend matching that:\n\n```yaml\nogTitle: \"The U.S. Water System was Already Broken. AI just made it visible.\"\n```\n\nLength is ~70 chars \u2014 well within the ~60\u201370 char range that renders cleanly on most social cards.\n\n### 5. Title capitalization consistency (LOW / editorial)\n\nCurrent: `\"The U.S. Water System was Already Broken. AI just made it visible.\"`\n\nMixed case here is intentional and matches the grid piece (`\"The Power Grid was already broken. AI just made it visible.\"`), so I'd leave it. Minor nit: the grid piece uses lowercase `\"was already broken\"` while this one uses `\"was Already Broken\"`. If you want strict parallelism with the companion piece, change to:\n\n```yaml\ntitle: \"The U.S. Water System was already broken. AI just made it visible.\"\n```\n\nNot a blocker either way \u2014 just flagging so the choice is intentional.\n\n### 6. Optional: consider adding `lastModified` (OPTIONAL)\n\nThe schema supports `lastModified` (yyyy-mm-dd). It falls back to `date` if omitted, so it's not needed at first publish. Worth knowing it exists for future revisions to this position paper, since you've indicated a third piece will tie back to both companions.\n\n## Things that are good as-is\n\n- `featuredImage` / `ogImage` both point at `/images/the-us-water-system.webp`, which exists in `public/images/`. Confirmed on disk.\n- `canonicalUrl` is structurally correct and matches the URL `getAllPosts()` will generate from `date` + `slug`. (Unlike the grid piece, the slug here is not misspelled \u2014 the grid piece has `visibile` in its canonical URL, which is a pre-existing bug in that file but is **not** something to copy here.)\n- `draft: false` \u2014 correct for an intended publish.\n- Filename, `date`, and `slug` all agree.\n\n## Proposed final frontmatter\n\n```yaml\n---\ntitle: \"The U.S. Water System was already broken. AI just made it visible.\"\ndate: \"2026-05-18\"\nslug: \"the-u-s-water-system-was-already-broken\"\nexcerpt: \"AI didn't break the U.S. water system \u2014 it just exposed a century of underinvestment that was already failing. Pipes from the 1800s, PFAS in a quarter of the supply, six billion gallons a day lost to leaks, and a workforce a decade from retirement. The fast path to a 10x water system isn't new dams; it's hyperscale recycling on the Orange County model, AI-powered leak detection, and PFAS retrofit at the plant scale.\"\ntags: [\"ai-infrastructure\", \"water-policy\", \"data-centers\", \"infrastructure\", \"tech-strategy\", \"sustainability\"]\nfeaturedImage: \"/images/the-us-water-system.webp\"\nogTitle: \"The U.S. Water System was already broken. AI just made it visible.\"\nogDescription: \"The U.S. water system was aging out before AI showed up \u2014 data centers just made the bill impossible to ignore. Why hyperscale recycling, leak detection, and PFAS retrofit are the fast path to a 10x water system, and why institutional fragmentation (not engineering) is the real bottleneck.\"\nogImage: \"/images/the-us-water-system.webp\"\ncanonicalUrl: \"https://techtavern.com/articles/2026/05/18/the-u-s-water-system-was-already-broken/\"\ndraft: false\n---\n```\n\n## Summary of priorities\n\n| Priority | Issue | Action |\n| --- | --- | --- |\n| Blocker (quality) | `excerpt` is scaffold default | Replace with real excerpt |\n| Blocker (quality) | `ogDescription` is scaffold default | Replace with real social description |\n| High | `tags` are wrong | Replace with subject-accurate, grid-piece-aligned tags |\n| Medium | `ogTitle` drops the second sentence | Match full `title` |\n| Low | Title capitalization vs grid piece | Optional: lowercase \"already broken\" for parallelism |\n| None | Schema validation | Already passes \u2014 safe to build |\n"}], "grading": null}, {"id": "eval-1-stub-water-article-with_skill", "prompt": "(No prompt found)", "eval_id": 1, "outputs": [{"name": "review.md", "type": "text", "content": "## Frontmatter review: 2026-05-18-the-u-s-water-system-was-already-broken.mdx\n\n### Schema validation\n\n- **pass**. All required fields are present and well-formed:\n  - `title`: non-empty string\n  - `date`: `\"2026-05-18\"` matches `^\\d{4}-\\d{2}-\\d{2}$`\n  - `slug`: `\"the-u-s-water-system-was-already-broken\"` non-empty\n  - `canonicalUrl`: well-formed URL\n  - `draft`: boolean `false`\n  - No `lastModified` field present (optional, fine to omit)\n\nNothing here will break `npm run build`. All remaining issues are convention/stub problems, not schema failures.\n\n### Convention checks\n\n- **canonicalUrl**: ok \u2014 `https://techtavern.com/articles/2026/05/18/the-u-s-water-system-was-already-broken/` matches both `date` (2026-05-18 \u2192 2026/05/18) and `slug`.\n- **ogTitle**: present \u2014 `\"The U.S. Water System was Already Broken\"`. Sensibly shorter than the full title (drops the \"AI just made it visible.\" trailing clause), which is a reasonable share-preview decision. Keep as-is.\n- **filename slug vs frontmatter slug**: match \u2014 filename `2026-05-18-the-u-s-water-system-was-already-broken.mdx` aligns with `slug: \"the-u-s-water-system-was-already-broken\"`.\n- **featuredImage**: custom \u2014 `/images/the-us-water-system.webp` (not the default placeholder). `ogImage` mirrors it. No action needed, assuming the image actually exists at that path.\n\n### Stub detection\n\n- **excerpt**: **stub** \u2014 current value is the literal scaffold string `\"A brief description of this article.\"` (also under the 40-char threshold). Must be rewritten.\n- **ogDescription**: **stub** \u2014 current value is the literal scaffold string `\"A brief description of this article for social media sharing.\"` Must be rewritten.\n- **tags**: **stub** \u2014 current value is exactly `[\"technology\", \"programming\"]`, the `scripts/new-article.js` default. These are also irrelevant to the article (it's a water/infrastructure position paper, not a programming piece).\n\n### Proposed edits\n\n**tags** (kebab-case, reused from catalog where possible):\n\n```yaml\ntags:\n  - ai-impact            # existing \u2014 \"AI Impact\" x2 in catalog; fits \"AI didn't break it, it exposed it\" frame\n  - data-centers         # existing \u2014 \"data-centers\" x1; the demand-side trigger named in the piece\n  - sustainability       # existing \u2014 \"Sustainability\" x1, \"sustainability\" x1; broad fit for infrastructure-resilience pieces\n  - water-infrastructure # NEW \u2014 no existing tag in catalog; closest analog is `power-grid` (1 use) from the companion piece\n  - infrastructure-policy # NEW \u2014 no existing tag; closest analog is `energy-policy` (1 use). Captures the governance / 50,000-utilities thesis\n  - pfas                 # NEW \u2014 no existing tag; specific searchable term for the contamination angle, appears in summary, diagnosis, toolkit, and takeaways sections\n```\n\nCatalog notes:\n- For the companion grid article, the corpus uses `power-grid` and `energy-policy` (both 1 use, kebab-case). The proposed `water-infrastructure` and `infrastructure-policy` follow that same pattern and pair the two papers cleanly as a series.\n- `ai-impact` already exists in two casings (`AI Impact` x2). The kebab-case form proposed here is the canonical one going forward \u2014 older articles use Title Case but are not in scope to change.\n- `data-centers` is already kebab-case in the catalog; reuse as-is.\n- Six tags is at the top of the recommended 3\u20136 range. If you'd prefer to trim to five, the easiest drop is `sustainability` (most generic of the set); `pfas` is more searchable. If you'd prefer four, drop both `sustainability` and `infrastructure-policy` and keep the four most concrete.\n\n**excerpt** (editorial hook, ~140\u2013200 chars):\n\n> AI didn't break the U.S. water system \u2014 it just turned the lights on a century of underinvestment. The fast path forward isn't new dams. It's hyperscale recycling, AI leak detection, and PFAS retrofit on the pipes we already have.\n\n(228 chars \u2014 slightly over the 200 target, but mirrors the structure of the companion grid article's excerpt, which is also longer. Trim option: drop the third sentence's \"and PFAS retrofit\" to land at ~200.)\n\nTighter alternative (~180 chars):\n\n> AI didn't break the U.S. water system \u2014 it just exposed a century of underinvestment. The fix isn't new dams. It's hyperscale recycling, AI leak detection, and PFAS retrofit on the pipes we already have.\n\n**ogDescription** (SEO / social, ~150\u2013160 chars, declarative, keyword-front-loaded):\n\n> U.S. water infrastructure was failing before AI data centers arrived. Hyperscale wastewater recycling, AI leak detection, and PFAS retrofit are the fast path forward.\n\n(166 chars \u2014 one over Google's 160 soft cap. Keyword-front-loaded: \"U.S. water infrastructure\", \"AI data centers\", \"wastewater recycling\", \"AI leak detection\", \"PFAS retrofit\" all appear in the first 160 chars.)\n\nTighter variant (~155 chars), if you want to stay strictly inside Google's window:\n\n> U.S. water infrastructure was failing before AI data centers arrived. Hyperscale recycling, AI leak detection, and PFAS retrofit are the fast path forward.\n\nNote the deliberate divergence from the excerpt:\n- The excerpt uses the em-dash \"didn't break it, just exposed it\" framing for voice consistency with the companion grid piece, and names *what's on the pipes today* (recycling, leak detection, retrofit) as the hook.\n- The ogDescription drops the em dash (Google sometimes rewrites stylized punctuation), front-loads the searchable phrase \"U.S. water infrastructure\", and pairs \"AI data centers\" as a high-volume search term that anchors the article's angle in the SERP.\n\n### Open questions for the user\n\n- **Tag count and shape**: I'm proposing six tags, three of which are new to the catalog (`water-infrastructure`, `infrastructure-policy`, `pfas`). Are you OK coining all three, or do you want to drop to four-five and pick only the most necessary new tag? My recommendation, if trimming: keep `water-infrastructure` and `pfas` (both highly searchable and article-specific), drop `infrastructure-policy` (overlaps with the thesis-level framing already covered by `ai-impact` + `data-centers`).\n- **Series pairing with the grid article**: The piece explicitly frames itself as the companion to your power-grid position paper. Should the two articles share an identical core tag set so they show up together on tag pages? If yes, I'd suggest both end up with `ai-impact`, `data-centers`, `sustainability`, plus their topic-specific tag (`power-grid` vs `water-infrastructure`) and policy tag (`energy-policy` vs `infrastructure-policy`).\n- **excerpt length**: My preferred draft is 228 chars, which is above the 200 char guideline but matches the rhythm of your companion grid excerpt. The 180-char tighter variant is also offered. Which do you want?\n- **ogDescription length**: 166 vs 155. The 155 version is safer for Google's truncation window; the 166 version is two words richer. Pick one.\n- **ogTitle**: Currently `\"The U.S. Water System was Already Broken\"`. Reasonable, but worth confirming you want the share preview to drop the \"AI just made it visible.\" second clause \u2014 that clause is the article's actual frame and might earn its keep in the preview. Optional alternative: `\"The U.S. Water System Was Already Broken \u2014 AI Just Made It Visible\"`.\n- **featuredImage**: `/images/the-us-water-system.webp` is set as a custom path (not the default placeholder). Worth a quick `ls public/images/` check to confirm the file actually exists before publish \u2014 if it doesn't, the build will still pass but the social card will be broken.\n"}], "grading": null}, {"id": "eval-2-clean-power-grid-article-baseline", "prompt": "(No prompt found)", "eval_id": 2, "outputs": [{"name": "review.md", "type": "text", "content": "# Frontmatter Review: `2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx`\n\n**File:** `/home/streamweaver/codingprojects/techtavern-nextjs.github.io/content/articles/2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx`\n\n**Schema reference:** `src/lib/posts.ts` (`FrontmatterSchema`)\n\n**Reviewer note:** Per instructions, no edits were made to the article. Findings below are recommendations only.\n\n---\n\n## Verdict\n\nThe frontmatter will **pass** Zod validation as-is \u2014 every required field is present and well-formed. However, there is one **blocking SEO bug** (canonical URL points to a misspelled path that the site will never actually serve) and a related filename typo that should be fixed before commit. A couple of smaller polish items are noted at the end.\n\n---\n\n## Issue 1 \u2014 BLOCKING: `canonicalUrl` references a misspelled slug\n\n```yaml\ncanonicalUrl: \"https://techtavern.com/articles/2026/05/02/the-power-grid-was-already-broken-ai-just-made-it-visibile/\"\n```\n\nThe path segment ends in `visibile` (extra `i`), but the actual `slug` field is the correctly spelled `the-power-grid-was-already-broken-ai-just-made-it-visible`. Per `src/lib/posts.ts:115`, the route is generated from the `slug` field:\n\n```ts\nurl: `/articles/${year}/${month}/${day}/${fm.slug}/`,\n```\n\nSo the site will publish the article at `.../visible/` while the canonical tag declares the URL is `.../visibile/`. Search engines following the canonical will get a 404. This silently undoes the SEO benefit of having a canonical at all, and it survives Zod validation because `z.string().url()` only checks URL shape, not slug consistency.\n\n**Suggested fix:** change `visibile` \u2192 `visible` in `canonicalUrl` so it matches the generated route.\n\n## Issue 2 \u2014 Filename contains the same typo\n\n```\n2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx\n                                                                ^^^^^^^^\n```\n\nThe filename slug (`visibile`) does not match the frontmatter `slug` (`visible`). Functionally this is harmless \u2014 the build reads the frontmatter slug, not the filename \u2014 but:\n\n- It breaks the project convention documented in `CLAUDE.md` (\"YYYY-MM-DD-slug.mdx\") of filename slug matching frontmatter slug.\n- It's confusing in `git log`, in editor tabs, and in any tooling that greps by filename.\n- The companion article committed on `develop` (`2026-05-18-the-u-s-water-system-was-already-broken.mdx`) follows the matching convention, so this one is the outlier.\n\n**Suggested fix:** rename the file to `2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visible.mdx` (use `git mv` to preserve history).\n\n## Issue 3 \u2014 Title capitalization is inconsistent\n\n```yaml\ntitle:   \"The Power Grid was already broken. AI just made it visible.\"\nogTitle: \"The Power Grid was already broken. AI just made it visible.\"\n```\n\n\"Power Grid\" is title-cased while \"was already broken\" and \"just made it visible\" are sentence-cased. It reads as a typo even though it isn't. Either commit to sentence case (\"The power grid was already broken\u2026\") or to title case (\"The Power Grid Was Already Broken\u2026\"). The other recent articles in `content/articles/` mostly use sentence case in the body slug, so sentence case would be more consistent with house style.\n\nThis is stylistic, not a schema problem.\n\n---\n\n## Schema conformance checklist\n\nVerified against `FrontmatterSchema` in `src/lib/posts.ts`:\n\n| Field | Required? | Present | Valid | Notes |\n|---|---|---|---|---|\n| `title` | yes | yes | yes | See Issue 3 (style only) |\n| `date` | yes | yes | yes | `2026-05-02` matches `^\\d{4}-\\d{2}-\\d{2}$` |\n| `slug` | yes | yes | yes | Correct spelling (`visible`) |\n| `excerpt` | no | yes | yes | 369 chars \u2014 long but no schema cap |\n| `tags` | no | yes (6) | yes | Reasonable set; all kebab-case |\n| `featuredImage` | no | yes | yes | `/images/the-power-grid-was-already-broken.webp` exists in `public/images/` |\n| `ogTitle` | no | yes | yes | Duplicates `title` (fine) |\n| `ogDescription` | no | yes | yes | Distinct from `excerpt`, good |\n| `ogImage` | no | yes | yes | Same as `featuredImage` \u2014 fine, but redundant since `posts.ts:96` falls back to `featuredImage` when `ogImage` is missing |\n| `canonicalUrl` | no | yes | **passes Zod but semantically wrong** | See Issue 1 |\n| `draft` | no | `false` | yes | Explicit false \u2014 fine |\n| `lastModified` | no | absent | n/a | Falls back to `date` per `posts.ts:97` \u2014 fine |\n\nNo unknown fields are present that would surprise the parser (Zod does not strip unknowns here, but nothing extra is declared).\n\n---\n\n## Smaller observations (non-blocking)\n\n- **`ogImage` is redundant** with `featuredImage`. `posts.ts:96` already falls back. Keeping it is fine, but if you want a leaner frontmatter you can drop it.\n- **`excerpt` length**: at ~370 characters this is fine for the post page but will get truncated in most social-card previews (which clip around 155\u2013200 chars). Consider tightening the first sentence into a true under-200-char hook and letting the longer copy live in `ogDescription` (which is already a tighter ~290 chars).\n- **No `lastModified`**: not required, but the article references \"the larger article on AI's real cost will follow\" and a companion water piece \u2014 if you edit this piece after publishing those, set `lastModified` so the schema-driven sitemap/RSS picks up the change.\n\n---\n\n## Recommended pre-commit action\n\n1. Fix `canonicalUrl` (`visibile` \u2192 `visible`). **This is the only real bug.**\n2. Rename the file to drop the extra `i` (`git mv` to keep history).\n3. Optionally: normalize the title capitalization.\n\nEverything else passes.\n"}], "grading": null}, {"id": "eval-2-clean-power-grid-article-with_skill", "prompt": "(No prompt found)", "eval_id": 2, "outputs": [{"name": "review.md", "type": "text", "content": "## Frontmatter review: 2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx\n\n**Headline:** The frontmatter content (excerpt, ogDescription, tags, ogTitle, ogImage, featuredImage) is in good shape and matches the corpus style guide closely \u2014 the excerpt is even used as the worked example in `references/style.md`. The one real problem is a typo (`visibile`) that has propagated into the **filename** and the **`canonicalUrl`**, but is correctly spelled in the `slug` field. That mismatch needs fixing before commit.\n\n### Schema validation\n\n- `title`: pass \u2014 non-empty string.\n- `date`: pass \u2014 `2026-05-02` matches `^\\d{4}-\\d{2}-\\d{2}$`.\n- `slug`: pass \u2014 non-empty string (`the-power-grid-was-already-broken-ai-just-made-it-visible`).\n- `canonicalUrl`: pass on Zod (valid URL), **fails Tech Tavern convention** (see below).\n- `draft`: pass \u2014 boolean `false`.\n- All other fields well-formed.\n\nZod will not reject this file. The build will succeed. The problem is downstream of the schema.\n\n### Convention checks\n\n- **canonicalUrl: MISMATCH.**\n  - Current: `https://techtavern.com/articles/2026/05/02/the-power-grid-was-already-broken-ai-just-made-it-visibile/`\n  - Expected (per `slug`): `https://techtavern.com/articles/2026/05/02/the-power-grid-was-already-broken-ai-just-made-it-visible/`\n  - The canonicalUrl contains `visibile` (typo); the `slug` field contains the correctly-spelled `visible`. This means the article advertises a canonical URL pointing at a path that the routing layer will never generate from this slug \u2014 bad for SEO and almost certainly a copy-paste from the filename.\n- **Filename vs frontmatter slug: MISMATCH.**\n  - Filename: `2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx` (typo: `visibile`)\n  - Frontmatter slug: `the-power-grid-was-already-broken-ai-just-made-it-visible` (correct)\n  - The dynamic route at `src/app/articles/[year]/[month]/[day]/[slug]/page.tsx` uses the frontmatter slug for URL generation, so the published URL will be the correct `\u2026-visible/`. But the on-disk filename advertises the typo, which is friction for grep, git history, and any future link-by-filename tooling.\n- **ogTitle:** present, mirrors `title`. OK.\n- **featuredImage:** custom (`/images/the-power-grid-was-already-broken.webp`) \u2014 not the default placeholder. OK.\n- **ogImage:** present and matches `featuredImage`. OK.\n\n### Stub detection\n\n- **excerpt:** OK. ~340 chars \u2014 longer than the 140\u2013200 target in `references/style.md`, but the content is high-quality and this exact string is used as the canonical worked example *in the style guide itself* (`references/style.md`, lines 47\u201348 and 101\u2013105). Treating it as the corpus's chosen-by-example excerpt. No rewrite proposed.\n- **ogDescription:** OK. ~280 chars \u2014 over Google's ~160-char SERP truncation point, so the back half (`\u2026and why permitting (not engineering) is the real bottleneck.`) will likely be cut. Front half is well-tuned: keywords `U.S. grid`, `AI`, `data centers`, `reconductoring`, `SMRs`, `interconnection reform`, `10x grid` are all present in the first 160 chars. Optional tightening proposed below if you want a SERP-clean version; otherwise leave as-is.\n- **tags:** OK. All six are kebab-case-lowercase and topical. Two reuse existing catalog entries (`tech-strategy`, `sustainability`); four are new but well-formed and earn their keep against the article's themes.\n\n### Tag catalog notes\n\nAll six current tags are valid kebab-case. Reuse / new breakdown:\n\n| Tag | Status in catalog |\n|---|---|\n| `ai-infrastructure` | NEW (first use in corpus) \u2014 topical fit; good coinage |\n| `energy-policy` | NEW \u2014 topical fit; good coinage |\n| `data-centers` | NEW \u2014 topical fit; good coinage |\n| `power-grid` | NEW \u2014 topical fit; good coinage |\n| `tech-strategy` | EXISTING (1 prior use as `tech-strategy`; also `tech strategy` legacy x1) |\n| `sustainability` | EXISTING (1 prior use as `sustainability`; also `Sustainability` legacy x1) |\n\nNo semantically duplicate variants found that should have been reused instead. Four new tags in one article is on the high side, but each one names a real subject the piece is genuinely about, and `energy-policy` / `power-grid` / `data-centers` are likely to recur in the announced companion pieces on water and the larger AI-cost article \u2014 so they earn their place in the taxonomy now rather than later.\n\nLegacy-cased duplicates exist in older posts (`Sustainability`, `tech strategy`) but per the skill, those are not touched here.\n\n### Proposed edits\n\nThe only required edits are the spelling fix in **canonicalUrl** and the **filename** rename. Everything else is optional polish.\n\n**1. Fix canonicalUrl typo (required)**\n\n```yaml\ncanonicalUrl: \"https://techtavern.com/articles/2026/05/02/the-power-grid-was-already-broken-ai-just-made-it-visible/\"\n```\n(Change `visibile` \u2192 `visible` to match the `slug` field.)\n\n**2. Rename the file (required, requires `git mv`)**\n\n```\ncontent/articles/2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx\n  \u2192\ncontent/articles/2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visible.mdx\n```\nUse `git mv` so history tracks the rename. Per the user's instructions to this review, I have NOT edited the file myself.\n\n**3. (Optional) Tighten ogDescription for SERP**\n\nCurrent version is ~280 chars and will be visibly truncated by Google. If you want a clean ~155-char alternative that preserves keyword density:\n\n> U.S. grid capacity has lagged for decades; AI data centers exposed it. Reconductoring, SMRs, and interconnection reform are the fast path to a 10x grid.\n\n(This is essentially the style.md worked example, lightly extended. Use only if you want the SERP-clean version \u2014 the existing string is editorially fine, just truncated.)\n\n**tags:** no change proposed.\n\n**excerpt:** no change proposed.\n\n### Open questions for the user\n\n- **Filename rename:** Do you want to rename the `.mdx` file from `\u2026-visibile.mdx` to `\u2026-visible.mdx` (recommended) to match the corrected slug and canonical URL? If yes, use `git mv` to preserve history. (Note that the published article URL is driven by the frontmatter `slug`, not the filename, so the live URL is already correct \u2014 this is a hygiene fix, not a routing fix.)\n- **ogDescription length:** Keep the longer, more editorial version (current), or swap in the ~155-char SERP-tuned version above? No wrong answer; depends on whether you weight social-share preview readability or Google SERP cleanliness higher for this piece.\n- **No other questions.** Tags, excerpt, ogTitle, featuredImage, and ogImage are all good.\n"}], "grading": null}, {"id": "eval-3-broken-schema-fixture-baseline", "prompt": "(No prompt found)", "eval_id": 3, "outputs": [{"name": "review.md", "type": "text", "content": "# Frontmatter Review: `2026-06-01-broken-fixture.mdx`\n\n**File reviewed:** `/home/streamweaver/codingprojects/techtavern-nextjs.github.io/.claude/skills/article-frontmatter/evals/fixtures/2026-06-01-broken-fixture.mdx`\n**Schema reference:** `src/lib/posts.ts` (`FrontmatterSchema`)\n\n## Summary\n\nThe frontmatter has two **build-breaking** schema violations and several **content/consistency** problems that would harm SEO and reader experience even if the build passed. As written, `getAllPosts()` would throw an `Invalid frontmatter` error at build time and the site would not build.\n\n---\n\n## Blocking issues (will fail Zod validation at build time)\n\n### 1. `date` is in the wrong format\n\n```yaml\ndate: \"06-01-2026\"\n```\n\nThe schema enforces ISO `yyyy-mm-dd`:\n\n```ts\ndate: z.string().regex(/^\\d{4}-\\d{2}-\\d{2}$/, \"date must be yyyy-mm-dd\")\n```\n\n`\"06-01-2026\"` is `MM-DD-YYYY`, which fails the regex. This is also the format Tech Tavern's date-based URL routing depends on \u2014 `splitDate()` in `src/lib/posts.ts` splits on `-` and assigns the first segment to `year`, so even if the regex were lenient, the resulting URL would be `/articles/06/01/2026/...` instead of `/articles/2026/06/01/...`.\n\n**Fix:** `date: \"2026-06-01\"` (matches the filename prefix).\n\n### 2. `canonicalUrl` is not a valid URL\n\n```yaml\ncanonicalUrl: \"techtavern.com/articles/2026/05/30/wrong-slug/\"\n```\n\nThe schema requires a full, parseable URL:\n\n```ts\ncanonicalUrl: z.string().url().optional(),\n```\n\n`\"techtavern.com/...\"` has no protocol (`https://`) and Zod's `.url()` will reject it.\n\n**Fix:** prefix with `https://` \u2014 but see issue #3 below before fixing, because the URL itself is also wrong.\n\n---\n\n## Content / consistency issues (would pass schema, but are still wrong)\n\n### 3. `canonicalUrl` points to the wrong article\n\nEven once the protocol is added, the path doesn't match this post:\n\n- Filename / intended date: `2026-06-01`\n- Slug in frontmatter: `when-the-cloud-forgets`\n- Canonical URL path: `/articles/2026/05/30/wrong-slug/`\n\nBoth the date segment (`2026/05/30`) and the slug (`wrong-slug`) disagree with this post's own frontmatter. A canonical URL pointing to a different page is worse than no canonical URL at all \u2014 it tells search engines to deindex this article in favor of a URL that doesn't exist.\n\n**Fix:** Either remove `canonicalUrl` entirely (it's optional and only needed when republishing content that lives elsewhere), or set it to `https://techtavern.com/articles/2026/06/01/when-the-cloud-forgets/`.\n\n### 4. Filename date does not match frontmatter date\n\n- Filename: `2026-06-01-broken-fixture.mdx`\n- Frontmatter `date`: `06-01-2026` (same calendar day, wrong format)\n- Frontmatter `slug`: `when-the-cloud-forgets`\n\nThe filename slug (`broken-fixture`) also doesn't match the frontmatter slug. For a normal article in `content/articles/` this would be confusing for authors editing the file later; for a fixture named \"broken-fixture\" the mismatch is presumably intentional, but worth flagging.\n\n### 5. `excerpt` is a placeholder\n\n```yaml\nexcerpt: \"A brief description of this article.\"\n```\n\nThis is the literal default string emitted by `scripts/new-article.js`. It needs to be replaced with a real one-to-two-sentence summary of the article \u2014 e.g., something like *\"Persistent AI memory shipped across all three major vendors in 2026. The real question isn't whether your assistant remembers you \u2014 it's who owns the record and what happens when memory stops being free.\"*\n\n### 6. `ogDescription` is also a placeholder\n\n```yaml\nogDescription: \"A brief description of this article for social media sharing.\"\n```\n\nSame problem \u2014 this is the new-article scaffold default. Social cards will look unfinished. Either write a dedicated 1\u20132 sentence social blurb (often a tighter version of `excerpt`) or remove the field so the page falls back to `excerpt`.\n\n### 7. `tags` are generic and unrelated to the topic\n\n```yaml\ntags: [\"technology\", \"programming\"]\n```\n\nThe article is about AI memory, vendor lock-in, governance, and data ownership \u2014 there is no programming content. Suggested tags:\n\n```yaml\ntags: [\"ai\", \"ai-memory\", \"governance\", \"vendor-lock-in\", \"privacy\"]\n```\n\nUse whatever tag vocabulary Tech Tavern is already standardizing on, but `programming` should go.\n\n### 8. `ogTitle` is shorter than `title` (minor)\n\n```yaml\ntitle: \"When the Cloud Forgets: AI Memory and the Cost of Continuity\"\nogTitle: \"When the Cloud Forgets\"\n```\n\nThis is allowed and sometimes deliberate (social cards prefer punchier titles), so it's not necessarily wrong \u2014 but the trimmed version drops the subject matter (\"AI Memory\"), which is the part that would actually drive a click. Consider `\"When the Cloud Forgets: AI Memory in 2026\"` or similar.\n\n---\n\n## Suggested corrected frontmatter\n\n```yaml\n---\ntitle: \"When the Cloud Forgets: AI Memory and the Cost of Continuity\"\ndate: \"2026-06-01\"\nslug: \"when-the-cloud-forgets\"\nexcerpt: \"Persistent AI memory shipped across Anthropic, OpenAI, and Google in 2026. The real question isn't whether your assistant remembers you \u2014 it's who owns the record, who can subpoena it, and what happens when memory stops being free.\"\ntags: [\"ai\", \"ai-memory\", \"governance\", \"privacy\", \"vendor-lock-in\"]\nfeaturedImage: \"/images/tech-tavern-default-featured.webp\"\nogTitle: \"When the Cloud Forgets: AI Memory in 2026\"\nogDescription: \"Persistent AI memory is now a default, not a feature. Here's why nonprofits and regulated industries should be writing memory policy before the first incident.\"\nogImage: \"/images/tech-tavern-default-featured.webp\"\n# canonicalUrl omitted \u2014 only needed when republishing from another canonical source\ndraft: false\n---\n```\n\n## Severity ranking\n\n| # | Issue | Severity | Build-blocking? |\n|---|-------|----------|-----------------|\n| 1 | `date` wrong format | Critical | Yes |\n| 2 | `canonicalUrl` missing protocol | Critical | Yes |\n| 3 | `canonicalUrl` points to wrong page | High (SEO) | No |\n| 4 | Filename/slug/date mismatch | Medium | No |\n| 5 | Placeholder `excerpt` | Medium | No |\n| 6 | Placeholder `ogDescription` | Medium | No |\n| 7 | Off-topic `tags` | Low\u2013Medium | No |\n| 8 | `ogTitle` drops key phrase | Low | No |\n"}], "grading": null}, {"id": "eval-3-broken-schema-fixture-with_skill", "prompt": "(No prompt found)", "eval_id": 3, "outputs": [{"name": "review.md", "type": "text", "content": "## Frontmatter review: 2026-06-01-broken-fixture.mdx\n\n### Schema validation\n\n**FAIL.** Two hard schema errors will break `npm run build`:\n\n1. **`date: \"06-01-2026\"`** \u2014 fails the Zod regex `^\\d{4}-\\d{2}-\\d{2}$` in `src/lib/posts.ts`. The format is MM-DD-YYYY but must be YYYY-MM-DD. Based on the filename (`2026-06-01-...`), the intended value is `2026-06-01`.\n2. **`canonicalUrl: \"techtavern.com/articles/2026/05/30/wrong-slug/\"`** \u2014 fails `z.string().url()`. No scheme (`https://`) and the host needs `https://`. Independent of the schema failure, the path is wrong on two axes: wrong date (`2026/05/30` vs article date `2026/06/01`) and wrong slug (`wrong-slug` vs `when-the-cloud-forgets`).\n\nBoth must be fixed before this article will load via `getAllPosts()`.\n\n### Convention checks\n\n- **canonicalUrl**: mismatch. Expected `https://techtavern.com/articles/2026/06/01/when-the-cloud-forgets/`; got `techtavern.com/articles/2026/05/30/wrong-slug/`. Looks like a copy-paste from another article that was never updated.\n- **ogTitle**: present (`\"When the Cloud Forgets\"`). It's a shortened form of the article title, which is reasonable for share previews \u2014 the full title is on the long side for OG cards. Acceptable as-is.\n- **filename slug vs frontmatter slug**: mismatch. Filename slug is `broken-fixture`; frontmatter slug is `when-the-cloud-forgets`. The frontmatter slug matches the article title, so I'm assuming the file was renamed (or is a fixture) and the frontmatter slug is the intended one. Worth confirming \u2014 if the filename is authoritative this is a different fix.\n- **featuredImage**: DEFAULT (`/images/tech-tavern-default-featured.webp`) \u2014 placeholder still in place.\n- **ogImage**: DEFAULT (same placeholder). Will follow featuredImage once a real one is generated.\n\n### Stub detection\n\n- **excerpt**: stub \u2014 current value: `\"A brief description of this article.\"` Exact scaffold string from `scripts/new-article.js`.\n- **ogDescription**: stub \u2014 current value: `\"A brief description of this article for social media sharing.\"` Exact scaffold string.\n- **tags**: stub \u2014 current value: `[\"technology\", \"programming\"]`. Exact scaffold default. Also: both legacy lowercase forms, not kebab-case (though \"technology\" and \"programming\" are single words so casing isn't the issue \u2014 the issue is they're the placeholder defaults and don't describe what the article is actually about: AI memory governance).\n\n### Proposed edits\n\n**date** (schema fix, required to build):\n```\ndate: \"2026-06-01\"\n```\n\n**canonicalUrl** (schema + shape fix):\n```\ncanonicalUrl: \"https://techtavern.com/articles/2026/06/01/when-the-cloud-forgets/\"\n```\n\n**tags** (kebab-case, reused from catalog where possible):\n```\ntags:\n  - ai-memory\n  - ai-governance\n  - data-privacy\n  - nonprofit-tech\n  - responsible-ai\n```\nCatalog notes:\n- `ai-memory` already appears twice in the corpus (both as `\"AI Memory\"` legacy Title Case). Kebab-case is canonical going forward.\n- `ai-governance` is the most-used tag in the corpus (7 uses across 4 casings: `AI Governance`, `AI governance`, `ai governance`, `ai-governance`). Use kebab-case here.\n- `data-privacy` exists once as `\"data privacy\"`. Kebab is canonical.\n- `nonprofit-tech` exists once already in kebab form. The article also discusses regulated industries \u2014 if a `regulated-industries` tag matters more to you than `nonprofit-tech`, it would be a new coinage (not in catalog). I'd lean `nonprofit-tech` because the piece explicitly names nonprofits.\n- `responsible-ai` exists once as `\"responsible ai\"`. Kebab is canonical. This tag captures the \"governance event\" framing well.\n\n**excerpt** (editorial hook, ~140\u2013200 chars):\n> AI memory just became a competitive feature instead of a courtesy. The question isn't whether your AI remembers you \u2014 it's who owns the record, who can subpoena it, and what happens when the vendor decides memory is no longer free.\n\n(~270 chars \u2014 slightly long; tighten if you want a card-friendly version below.)\n\nTighter alternative (~190 chars):\n> AI memory stopped being a courtesy and became a competitive feature in 2026. The real question isn't whether your AI remembers you \u2014 it's who owns the record, and who can subpoena it.\n\n**ogDescription** (SEO/social, ~150\u2013160 chars, declarative, keyword-front-loaded):\n> Persistent AI memory from Anthropic, OpenAI, and Google is a governance event for nonprofits and regulated industries. A guide to ownership, privacy, and policy.\n\n(~163 chars \u2014 front-loads \"Persistent AI memory\", names the three vendors as searchable keywords, and signals the audience and topic \u2014 ownership, privacy, policy.)\n\n### Open questions for the user\n\n- **Filename vs slug**: the filename is `2026-06-01-broken-fixture.mdx` but the frontmatter slug is `when-the-cloud-forgets`. I'm assuming the slug is right and the filename is a fixture artifact. If this were a real article, the file should be renamed to `2026-06-01-when-the-cloud-forgets.mdx`. Confirm?\n- **featuredImage / ogImage**: both still the default placeholder. Generate a real featured image before publishing?\n- **Tag count**: I proposed 5 tags. If you want to trim to 4, drop `responsible-ai` (it's the most thematic-overlap with `ai-governance`). If you want to expand to 6, `ai-safety` (3 uses in catalog) is a defensible add given the subpoena/governance framing \u2014 but it leans more \"model behavior\" than this piece warrants. Recommend leaving it off.\n- **Excerpt length**: my preferred version is ~270 chars (corpus has examples at that length, e.g., the power-grid article excerpt). The tighter ~190-char version hits the style.md target more cleanly. Pick one.\n"}], "grading": null}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"metadata": {"skill_name": "article-frontmatter", "skill_path": "<path/to/skill>", "executor_model": "<model-name>", "analyzer_model": "<model-name>", "timestamp": "2026-05-17T05:22:28Z", "evals_run": [1, 2, 3], "runs_per_configuration": 3}, "runs": [{"eval_id": 1, "configuration": "baseline", "run_number": 1, "result": {"pass_rate": 0.6667, "passed": 6, "failed": 3, "total": 9, "time_seconds": 74.9, "tokens": 34576, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Identifies stub excerpt 'A brief description of this article.'", "passed": true, "evidence": "Section 'Placeholder excerpt (BLOCKER for publish quality)' identifies the exact scaffold string"}, {"text": "Identifies stub ogDescription scaffold string", "passed": true, "evidence": "Section 'Placeholder ogDescription' identifies the exact scaffold default"}, {"text": "Flags ['technology','programming'] tags as scaffold defaults", "passed": true, "evidence": "Section 'tags are wrong / scaffold defaults' \u2014 'Neither tag describes this article. \"Programming\" is actively misleading'"}, {"text": "Proposed tags are all kebab-case-lowercase", "passed": true, "evidence": "All 6 proposed: ai-infrastructure, water-policy, data-centers, infrastructure, tech-strategy, sustainability"}, {"text": "At least one proposed tag is reused from existing corpus catalog", "passed": true, "evidence": "ai-infrastructure, data-centers, tech-strategy, sustainability all already exist as kebab in corpus"}, {"text": "Proposed excerpt and ogDescription are not identical strings", "passed": true, "evidence": "Two distinct proposed strings"}, {"text": "Proposed excerpt within 80-280 char target range", "passed": false, "evidence": "Proposed excerpt is ~415 chars \u2014 significantly above the upper bound"}, {"text": "Proposed ogDescription within 100-220 char range", "passed": false, "evidence": "Proposed ogDescription is ~290 chars \u2014 above range; will be truncated by Google"}, {"text": "Review consults the tag catalog explicitly", "passed": false, "evidence": "No tag_catalog.sh invocation; tag choices referenced from the companion grid article only, not the broader catalog"}], "notes": []}, {"eval_id": 2, "configuration": "baseline", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 56.8, "tokens": 30381, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Does NOT flag the excerpt as a stub", "passed": true, "evidence": "Excerpt is noted as long (~370 chars) but never flagged as stub or placeholder"}, {"text": "Does NOT flag the ogDescription as a stub", "passed": true, "evidence": "ogDescription confirmed 'Distinct from excerpt, good' in the schema conformance table"}, {"text": "Does NOT propose replacing the existing excerpt", "passed": true, "evidence": "'Consider tightening' language used but no replacement string proposed in the corrected frontmatter"}, {"text": "Does NOT propose replacing the existing ogDescription", "passed": true, "evidence": "ogDescription kept as-is in suggested final state"}, {"text": "Confirms tags are already kebab-case", "passed": true, "evidence": "Schema conformance table row for tags: 'all kebab-case'"}, {"text": "Confirms canonicalUrl issue is flagged (visibile typo)", "passed": true, "evidence": "Issue 1 marked BLOCKING \u2014 canonicalUrl points to misspelled slug"}], "notes": []}, {"eval_id": 3, "configuration": "baseline", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 57.7, "tokens": 25269, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Flags invalid date format '06-01-2026' as a schema violation", "passed": true, "evidence": "Blocking issue #1 explicitly cites the Zod regex"}, {"text": "Flags canonicalUrl as invalid (missing https://) or mismatched", "passed": true, "evidence": "Blocking issue #2 (missing protocol) plus content issue #3 (wrong path)"}, {"text": "Flags the filename slug vs frontmatter slug mismatch", "passed": true, "evidence": "Issue #4 'Filename date does not match frontmatter date' covers slug too"}, {"text": "Schema violations are surfaced BEFORE proposed content edits", "passed": true, "evidence": "Document structure: 'Blocking issues' section appears before 'Content / consistency issues'"}, {"text": "Still proposes non-stub excerpt and ogDescription", "passed": true, "evidence": "Both proposed within the issues #5 and #6 sections; corrected frontmatter at bottom"}, {"text": "Proposed tags are kebab-case and topically relevant", "passed": true, "evidence": "Tags proposed: ai, ai-memory, governance, vendor-lock-in, privacy \u2014 all single-word or kebab, all topical"}], "notes": []}, {"eval_id": 1, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 9, "failed": 0, "total": 9, "time_seconds": 77.0, "tokens": 38578, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Identifies stub excerpt 'A brief description of this article.'", "passed": true, "evidence": "Line 24: 'excerpt: stub \u2014 current value is the literal scaffold string'"}, {"text": "Identifies stub ogDescription scaffold string", "passed": true, "evidence": "Line 25: 'ogDescription: stub \u2014 current value is the literal scaffold string'"}, {"text": "Flags ['technology','programming'] tags as scaffold defaults", "passed": true, "evidence": "Line 26: 'tags: stub \u2014 current value is exactly [\"technology\", \"programming\"], the scripts/new-article.js default'"}, {"text": "Proposed tags are all kebab-case-lowercase", "passed": true, "evidence": "All 6 proposed: ai-impact, data-centers, sustainability, water-infrastructure, infrastructure-policy, pfas"}, {"text": "At least one proposed tag is reused from existing corpus catalog", "passed": true, "evidence": "ai-impact, data-centers, sustainability all explicitly noted as existing in catalog with counts"}, {"text": "Proposed excerpt and ogDescription are not identical strings", "passed": true, "evidence": "Explicit 'note the deliberate divergence' section explaining how they differ"}, {"text": "Proposed excerpt within 80-280 char target range", "passed": true, "evidence": "228 chars (with 180-char tighter alternative also offered)"}, {"text": "Proposed ogDescription within 100-220 char range", "passed": true, "evidence": "166 chars (with 155-char tighter variant offered)"}, {"text": "Review consults the tag catalog explicitly", "passed": true, "evidence": "Cites specific catalog entries with counts ('AI Impact x2', 'data-centers x1') in catalog notes section"}], "notes": []}, {"eval_id": 2, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 81.4, "tokens": 38188, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Does NOT flag the excerpt as a stub", "passed": true, "evidence": "Line 32: 'excerpt: OK. ...Treating it as the corpus's chosen-by-example excerpt. No rewrite proposed.'"}, {"text": "Does NOT flag the ogDescription as a stub", "passed": true, "evidence": "Line 33: 'ogDescription: OK.' \u2014 not flagged as stub, only length noted"}, {"text": "Does NOT propose replacing the existing excerpt", "passed": true, "evidence": "Line 83: 'excerpt: no change proposed.'"}, {"text": "Does NOT propose replacing the existing ogDescription (optional alternative is OK)", "passed": true, "evidence": "Offers an optional tighter SERP-clean variant explicitly framed as optional; does not insist on replacement"}, {"text": "Confirms tags are already kebab-case", "passed": true, "evidence": "Line 34: 'All six are kebab-case-lowercase and topical'"}, {"text": "Confirms canonicalUrl issue is flagged (visibile typo)", "passed": true, "evidence": "Issue 1 'canonicalUrl: MISMATCH' with explicit visibile vs visible diff"}], "notes": []}, {"eval_id": 3, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 69.5, "tokens": 35357, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Flags invalid date format '06-01-2026' as a schema violation", "passed": true, "evidence": "Schema validation FAIL #1: 'date: \"06-01-2026\" \u2014 fails the Zod regex'"}, {"text": "Flags canonicalUrl as invalid (missing https://) or mismatched", "passed": true, "evidence": "Schema validation FAIL #2 flags both missing scheme AND date/slug mismatch"}, {"text": "Flags the filename slug vs frontmatter slug mismatch", "passed": true, "evidence": "Convention checks: 'filename slug vs frontmatter slug: mismatch'"}, {"text": "Schema violations are surfaced BEFORE proposed content edits", "passed": true, "evidence": "Document structure: Schema validation \u2192 Convention checks \u2192 Stub detection \u2192 Proposed edits"}, {"text": "Still proposes non-stub excerpt and ogDescription", "passed": true, "evidence": "Both proposed in the 'Proposed edits' section with rationale"}, {"text": "Proposed tags are kebab-case and topically relevant (ai-memory/governance, not generic defaults)", "passed": true, "evidence": "Tags proposed: ai-memory, ai-governance, data-privacy, nonprofit-tech, responsible-ai \u2014 all kebab, all topical, all reused from catalog"}], "notes": []}], "run_summary": {"baseline": {"pass_rate": {"mean": 0.8889, "stddev": 0.1924, "min": 0.6667, "max": 1.0}, "time_seconds": {"mean": 63.1333, "stddev": 10.2002, "min": 56.8, "max": 74.9}, "tokens": {"mean": 30075.3333, "stddev": 4661.0231, "min": 25269, "max": 34576}}, "with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 75.9667, "stddev": 6.0169, "min": 69.5, "max": 81.4}, "tokens": {"mean": 37374.3333, "stddev": 1757.9108, "min": 35357, "max": 38578}}, "delta": {"pass_rate": "-0.11", "time_seconds": "-12.8", "tokens": "-7299"}}, "notes": []}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

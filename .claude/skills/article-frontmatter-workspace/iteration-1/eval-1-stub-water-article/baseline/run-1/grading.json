@@ -1,0 +1,58 @@
+{
+  "eval_id": 1,
+  "eval_name": "stub-water-article",
+  "configuration": "baseline",
+  "expectations": [
+    {
+      "text": "Identifies stub excerpt 'A brief description of this article.'",
+      "passed": true,
+      "evidence": "Section 'Placeholder excerpt (BLOCKER for publish quality)' identifies the exact scaffold string"
+    },
+    {
+      "text": "Identifies stub ogDescription scaffold string",
+      "passed": true,
+      "evidence": "Section 'Placeholder ogDescription' identifies the exact scaffold default"
+    },
+    {
+      "text": "Flags ['technology','programming'] tags as scaffold defaults",
+      "passed": true,
+      "evidence": "Section 'tags are wrong / scaffold defaults' \u2014 'Neither tag describes this article. \"Programming\" is actively misleading'"
+    },
+    {
+      "text": "Proposed tags are all kebab-case-lowercase",
+      "passed": true,
+      "evidence": "All 6 proposed: ai-infrastructure, water-policy, data-centers, infrastructure, tech-strategy, sustainability"
+    },
+    {
+      "text": "At least one proposed tag is reused from existing corpus catalog",
+      "passed": true,
+      "evidence": "ai-infrastructure, data-centers, tech-strategy, sustainability all already exist as kebab in corpus"
+    },
+    {
+      "text": "Proposed excerpt and ogDescription are not identical strings",
+      "passed": true,
+      "evidence": "Two distinct proposed strings"
+    },
+    {
+      "text": "Proposed excerpt within 80-280 char target range",
+      "passed": false,
+      "evidence": "Proposed excerpt is ~415 chars \u2014 significantly above the upper bound"
+    },
+    {
+      "text": "Proposed ogDescription within 100-220 char range",
+      "passed": false,
+      "evidence": "Proposed ogDescription is ~290 chars \u2014 above range; will be truncated by Google"
+    },
+    {
+      "text": "Review consults the tag catalog explicitly",
+      "passed": false,
+      "evidence": "No tag_catalog.sh invocation; tag choices referenced from the companion grid article only, not the broader catalog"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 3,
+    "total": 9,
+    "pass_rate": 0.6667
+  }
+}

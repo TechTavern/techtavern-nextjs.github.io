@@ -1,0 +1,54 @@
+{
+  "skill_name": "article-frontmatter",
+  "evals": [
+    {
+      "id": 1,
+      "name": "stub-water-article",
+      "prompt": "I just finished writing the body of content/articles/2026-05-18-the-u-s-water-system-was-already-broken.mdx. Can you review the frontmatter and propose fixes before I publish? Write your proposed review to outputs/review.md — do not edit the article file itself.",
+      "expected_output": "A review identifying: stub excerpt, stub ogDescription, generic ['technology','programming'] tags, default featuredImage. Proposes an editorial-voice excerpt (~140-200 chars), a distinct keyword-rich ogDescription (~150-160 chars), and 3-6 kebab-case tags reusing existing catalog tags (e.g., ai-infrastructure, sustainability, tech-strategy) plus likely-new water-specific tags. Also confirms schema validation passes and canonicalUrl matches slug+date.",
+      "files": [],
+      "assertions": [
+        {"text": "Review identifies the stub excerpt string 'A brief description of this article.'"},
+        {"text": "Review identifies the stub ogDescription string 'A brief description of this article for social media sharing.'"},
+        {"text": "Review flags tags ['technology','programming'] as scaffold defaults"},
+        {"text": "Review flags the default featuredImage path /images/tech-tavern-default-featured.webp"},
+        {"text": "Proposed tags are all kebab-case-lowercase (no spaces, no capital letters)"},
+        {"text": "Proposed tags reuse at least one tag already present in the corpus catalog"},
+        {"text": "Proposed excerpt and ogDescription are not identical strings"},
+        {"text": "Proposed excerpt is between 80 and 280 characters"},
+        {"text": "Proposed ogDescription is between 100 and 220 characters"},
+        {"text": "Review consults the tag catalog (mentions running tag_catalog.sh or cites existing tag names from the corpus)"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "clean-power-grid-article",
+      "prompt": "Take a look at content/articles/2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx — I'm about to commit it. Anything to clean up in the frontmatter? Write your review to outputs/review.md.",
+      "expected_output": "A review confirming the frontmatter is well-formed: no stub fields, kebab-case tags already used, excerpt and ogDescription are distinct and on-voice. Should NOT propose unnecessary rewrites of already-good content. May note the canonicalUrl typo ('visibile' is misspelled in the slug — confirm intentional).",
+      "files": [],
+      "assertions": [
+        {"text": "Review does NOT flag the excerpt as a stub"},
+        {"text": "Review does NOT flag the ogDescription as a stub"},
+        {"text": "Review does NOT propose replacing the existing excerpt with a different one"},
+        {"text": "Review does NOT propose replacing the existing ogDescription with a different one"},
+        {"text": "Review confirms tags are already kebab-case"},
+        {"text": "Review confirms canonicalUrl is well-formed (or flags the visibile/visible spelling)"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "broken-schema-fixture",
+      "prompt": "Review the frontmatter on .claude/skills/article-frontmatter/evals/fixtures/2026-06-01-broken-fixture.mdx — I think something's off with it. Write your review to outputs/review.md.",
+      "expected_output": "A review leading with the schema violations: date format wrong (should be yyyy-mm-dd, not mm-dd-yyyy), canonicalUrl is not a valid URL (missing https://) AND points at a different date+slug than the article itself, filename slug (when-the-cloud-forgets-fixture) does not match frontmatter slug. Then secondary review of stub excerpt/ogDescription/tags with proposed replacements.",
+      "files": [".claude/skills/article-frontmatter/evals/fixtures/2026-06-01-broken-fixture.mdx"],
+      "assertions": [
+        {"text": "Review flags the invalid date format '06-01-2026' as a schema violation"},
+        {"text": "Review flags the canonicalUrl as either invalid (missing https://) or mismatched with the article's date/slug"},
+        {"text": "Review flags the filename slug vs frontmatter slug mismatch"},
+        {"text": "Schema violations are surfaced BEFORE proposed content edits (validation phase precedes generation phase)"},
+        {"text": "Review still proposes a non-stub excerpt and ogDescription for the fixture"},
+        {"text": "Proposed tags are kebab-case and topically relevant to AI memory / governance (not the generic technology+programming defaults)"}
+      ]
+    }
+  ]
+}
