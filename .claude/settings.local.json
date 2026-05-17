@@ -14,7 +14,12 @@
       "Bash(git checkout:*)",
       "Bash(git log:*)",
       "Bash(git merge:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(chmod +x /home/streamweaver/codingprojects/techtavern-nextjs.github.io/.claude/skills/article-frontmatter/scripts/tag_catalog.sh)",
+      "Bash(bash .claude/skills/article-frontmatter/scripts/tag_catalog.sh)",
+      "Bash(bash *)",
+      "Read(//home/streamweaver/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/**)",
+      "Bash(python -m scripts.aggregate_benchmark /home/streamweaver/codingprojects/techtavern-nextjs.github.io/.claude/skills/article-frontmatter-workspace/iteration-1 --skill-name article-frontmatter)"
     ],
     "deny": [],
     "ask": [],
