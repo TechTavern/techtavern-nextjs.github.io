@@ -28,6 +28,7 @@ export default function Header({ variant }: HeaderProps) {
               width={180}
               height={40}
               className="h-10 w-auto"
+              style={{ width: "auto" }}
             />
           </Link>
 

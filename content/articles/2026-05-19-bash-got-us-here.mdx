@@ -1,0 +1,82 @@
+---
+title: "Bash Got Us Here, It Won't Get Us There"
+date: "2026-05-19"
+slug: "bash-got-us-here"
+excerpt: "Bash became the de facto runtime for AI agents by accident — because shells were already everywhere. It got us here. It won't get us to the next layer, where discovery becomes governance."
+tags: ["ai-agents", "mcp", "agent-architecture", "developer-tools", "ai-engineering"]
+featuredImage: "/images/bash-got-us-here.webp"
+ogTitle: "Bash Got Us Here"
+ogDescription: "AI agents lean on Bash because CLIs are everywhere, but custom shell wrappers don't scale. Typed code execution, MCP tool search, and capability metadata are next."
+ogImage: "/images/bash-got-us-here.webp"
+canonicalUrl: "https://techtavern.com/articles/2026/05/19/bash-got-us-here/"
+draft: false
+---
+Over the last year I've watched Bash quietly become one of the common languages of AI agents, not because anyone decided that was the right design choice, but because shells were already everywhere. Every serious computing environment has one. Every cloud platform, database, deployment pipeline, and source control system seems to have a CLI attached to it, and that turns out to matter more than it usually gets credit for. CLIs sit at the messy edge between human intention and system behavior. They let you inspect, compose, retry, pipe, and recover. For agents, that's a real gift.
+
+Bash gives an agent a practical way to move through a system. It can list files, inspect logs, run help commands, call APIs through existing CLIs, test assumptions, and stitch together small pieces of work. It isn't elegant, but it works, and in early agent systems that's been enough.
+
+It helps to be honest about why. When an agent reaches for `grep`, `find`, `curl`, `git`, `jq`, `gh`, `aws`, or `kubectl`, it isn't starting from zero. These tools have stable conventions, lots of examples, and years of documentation. The model has seen them before. Bash becomes the least common denominator of system interaction, and that's genuinely valuable.
+
+_But least common denominator isn't the same thing as architecture._
+
+That's the mistake I keep seeing now. People are treating Bash as if it represents some final form for agent execution, and it doesn't. Bash is a provisional layer that works because our systems were already shaped around it, which is very different from saying it's the right long-term interface for agents that need to operate across thousands of tools, changing permissions, shared state, and organization-specific workflows.
+
+Bash got us here. It won't get us to where we need to go.
+
+## Bash Solve Basic Discovery by Accident
+
+One of the underrated things about giving an agent shell access is that the agent doesn't need to know what's possible up front. It can poke around. It can inspect directories, check what commands are installed, read help output, grep through documentation, examine configuration files, and run small tests. The process is clumsy, but it's progressive, and that matters more than it sounds like it should.
+
+The agent doesn't need the entire universe of possible actions loaded into its context before it starts working. That's worth preserving, because when we move from Bash to direct tool calling, we often lose it. Instead of a workspace, we hand the model a giant menu. Every MCP server exposes tools, every tool has a description, every description has a schema, and the model receives a huge catalog and is expected to pick the right thing. It looks cleaner than Bash, but it can actually be worse, because we haven't really solved the problem. We've just moved it into the context window.
+
+This is why Cloudflare's [Code Mode](https://blog.cloudflare.com/code-mode-mcp/) and Anthropic's code execution work are more interesting than the token numbers alone suggest. Code Mode exposes two tools, `search()` and `execute()`, while giving agents access to the entire Cloudflare API in roughly 1,000 tokens instead of about 1.17 million. The agent searches the API surface through code instead of receiving every endpoint upfront. Anthropic describes a [similar pattern](https://www.anthropic.com/engineering/code-execution-with-mcp) with MCP tools represented as TypeScript files. In their Google Drive to Salesforce example, the agent loads only the tool definitions it needs, dropping token usage from 150,000 to 2,000.
+
+The obvious story there is token savings. The deeper one, which I think matters more, is that agents work better when they can discover capabilities progressively. Bash already gave them a rough version of that. Code Mode and related approaches are trying to keep the discovery benefit while replacing the execution layer with something more typed, constrained, and manageable. That's the right direction.
+
+## Custom Bash Wappers are Wgere the Debt Starts
+
+Most teams building non-trivial agent systems end up writing custom Bash wrappers somewhere along the way. The agent needs to talk to a specific database, post to a particular Slack channel, generate a report in a particular format, or trigger an internal workflow. So somebody writes a script, gives it a name, documents the flags, and adds it to the agent's toolset. It works. Then a week later they need another one.
+
+Before long, you've got a pile of custom commands with names only your team understands. The agent has never seen your `org-grant-status` script in training. There's no standard man page, no shared conventions beyond the ones you remembered to write down. So you write more documentation, put it into the prompt or a skill file, and now you have the same tool sprawl problem you were trying to avoid.
+
+Worse, you've lost the main advantage Bash had in the first place. With standard tools, the model can lean on broad general knowledge. With custom wrappers, it has to learn your private interface from scratch, which gives you tool catalog bloat and non-standard semantics at the same time. That's the worst of both worlds.
+
+The lesson isn't that Bash is bad. Bash is fine as plumbing. The problem is that plumbing isn't architecture, and treating custom shell scripts as the long-term interface layer for agents means accepting a maintenance burden that compounds quietly until the system becomes hard to reason about.
+
+## When Discovery Becomes a Bottleneck
+
+Most of the conversation about agent tooling right now is framed as a choice between Bash and typed code execution, as if picking the right execution layer is what matters. It isn't, or at least it isn't what matters most. The harder problem is helping an agent find the right capability at the right time, and that problem doesn't go away just because you've picked a cleaner execution standard.
+
+Anthropic's [Tool Search Tool](https://www.anthropic.com/engineering/advanced-tool-use?ref=latitude-blog.ghost.io) makes this concrete. Instead of loading every tool definition into context, tools can be deferred and discovered on demand. Anthropic reports the pattern reduces token usage by 85 percent while keeping access to the full tool library, and its internal MCP evaluations showed accuracy improvements when tool search was enabled. The developer docs describe the same shift. Claude sees the search tool and a small number of always-loaded tools first, then discovers the rest only when it needs them.
+
+That's not just an optimization. It's a different architecture. The old pattern says, "Here is everything you might need. Choose carefully." The better one says, "Tell me what you're trying to do, and I'll help you find the right capability." That's much closer to how people actually work. We don't memorize every possible tool before starting a task. We search, inspect, narrow, compare, and choose. Agents need the same affordance.
+
+## Retriving isn't Enough
+
+Even with good search in place, there's a step that gets quietly glossed over. The agent still has to pick between whatever candidates the search returned, and the names of those candidates often don't tell it enough to make a safe choice. That gap is where most of the real failure modes live.
+
+Embedding-based retrieval can match language well while missing functional meaning entirely. A [recent paper on semantic routers](https://arxiv.org/html/2603.13426v1) puts this plainly. Static embedding similarity rewards surface-level textual similarity between prompts and tool descriptions rather than functional relevance, and in their ToolBench experiments, BM25 actually beat dense embedding retrieval on NDCG@5. That isn't the story people expect from modern semantic search.
+
+In plain English, a search system might return both `delete_customer` and `archive_customer` for a request like "remove this customer." The words line up. The consequences don't. One action is destructive and the other is reversible, and that distinction is exactly the kind of thing tool descriptions tend not to encode well.
+
+A real discovery layer needs more than names, descriptions, and JSON schemas. It needs structured capability metadata. Something that tells the agent whether a tool reads, writes, deletes, or creates an external side effect, whether the action is reversible, what permissions it requires, what conditions must be true before it runs, and what state changes after it succeeds. With that available, the agent doesn't just receive a match. It receives candidates with judgment behind them.
+
+It might sound like this. These two tools both fit your request, but one is destructive and requires confirmation while the other is reversible but slower. This one works on active records, that one only on archived. This one needs elevated permissions, that one is safe for read-only workflows. That's a fundamentally different interaction than scrolling through the top five search results, and it's the kind of judgment surface that separates capable agent systems from ones that are just getting lucky.
+
+## Don't Overbuild for a Problem You Don't Have
+
+Most agents being built right now don't actually need any of this. Michael Bargury made a useful point in his r[esponse to Anthropic's code execution article](https://www.mbgsec.com/weblog/2025-11-08-code-execution-with-mcp-building-more-efficient-ai-agents-anthropic/). The huge token numbers people quote often describe cutting-edge agents with hundreds or thousands of tools, not the simpler two-tool or three-tool agents that many enterprise teams are actually shipping. He's right. If your agent calls five tools and does it reliably, you probably don't need a full capability metadata architecture yet. What you need is good tests, clear permissions, and boring operational discipline.
+
+But architecture has a way of becoming a problem one step before you notice it. The moment your agent grows from five tools to fifty, the question changes. The moment a tool can delete, publish, spend money, expose sensitive data, or modify a production system, discovery quietly becomes governance.
+
+WunderGraph makes a [related point](https://wundergraph.com/blog/why-mcp-is-ceiling-enterprise-ai-agent-architecture) from the data side. MCP can standardize how agents invoke tools, but it doesn't govern the underlying fields, relationships, constraints, or sensitive data exposed through those tools. Connectivity isn't governance, and that's roughly the right tension for the whole space. Tool discovery, capability metadata, and data governance aren't substitutes for each other. They're layers of the same problem. Agents don't just need access. They need a structured understanding of what access means. Bash wrappes fit particularly poorly here and often promots "it's just a bash command" thinking in both LLMs and People.
+
+## Where this leaves us
+
+None of this is a vote against Bash. We should keep using it where it makes sense. It's everywhere, CLIs are powerful, and the model can lean on decades of public examples. That's a strong reason to use it now. It isn't a strong reason to build the next layer of agent architecture around custom shell wrappers and hope the complexity stays manageable.
+
+The future probably doesn't look like one perfect replacement for Bash. It looks like a better separation of concerns. Bash remains plumbing. Typed code execution becomes a better orchestration layer. Tool search gives agents progressive discovery. Capability metadata gives that discovery judgment. That's less exciting than saying "Bash is dead" or "MCP solved tools," but it's also more useful.
+
+The real question isn't whether agents should use Bash. Of course they should, when it's the right tool. The better question is what we build so agents no longer need Bash to understand what's possible.
+
+Bash got us here. It won't get where we need to go. But it did show us something important along the way. Agents don't need bigger menus. They need better ways to discover and judge the tools already around them.

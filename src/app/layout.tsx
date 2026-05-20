@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const hubspotPortalId = env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
   const hasAnalytics = Boolean(measurementId || hubspotPortalId);
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicons/favicon.ico" />
