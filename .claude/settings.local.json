@@ -19,7 +19,9 @@
       "Bash(bash .claude/skills/article-frontmatter/scripts/tag_catalog.sh)",
       "Bash(bash *)",
       "Read(//home/streamweaver/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown/skills/skill-creator/**)",
-      "Bash(python -m scripts.aggregate_benchmark /home/streamweaver/codingprojects/techtavern-nextjs.github.io/.claude/skills/article-frontmatter-workspace/iteration-1 --skill-name article-frontmatter)"
+      "Bash(python -m scripts.aggregate_benchmark /home/streamweaver/codingprojects/techtavern-nextjs.github.io/.claude/skills/article-frontmatter-workspace/iteration-1 --skill-name article-frontmatter)",
+      "Bash(npm audit *)",
+      "Bash(npm test *)"
     ],
     "deny": [],
     "ask": [],

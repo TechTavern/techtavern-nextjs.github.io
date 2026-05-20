@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view:*)",
+      "mcp__pinchtab__pinchtab_list_tabs",
+      "mcp__pinchtab__pinchtab_screenshot",
+      "mcp__pinchtab__pinchtab_wait_for_load"
+    ]
+  }
+}
