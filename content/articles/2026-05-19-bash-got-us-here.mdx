@@ -33,7 +33,7 @@ This is why Cloudflare's [Code Mode](https://blog.cloudflare.com/code-mode-mcp/)
 
 The obvious story there is token savings. The deeper one, which I think matters more, is that agents work better when they can discover capabilities progressively. Bash already gave them a rough version of that. Code Mode and related approaches are trying to keep the discovery benefit while replacing the execution layer with something more typed, constrained, and manageable. That's the right direction.
 
-## Custom Bash Wappers are Wgere the Debt Starts
+## Custom Bash Wappers are Where the Debt Starts
 
 Most teams building non-trivial agent systems end up writing custom Bash wrappers somewhere along the way. The agent needs to talk to a specific database, post to a particular Slack channel, generate a report in a particular format, or trigger an internal workflow. So somebody writes a script, gives it a name, documents the flags, and adds it to the agent's toolset. It works. Then a week later they need another one.
 
