@@ -16,6 +16,8 @@ describe('/scott redirect page', () => {
   it('renders a fallback link for no-JS visitors and crawlers', () => {
     render(<ScottRedirectPage />);
     const link = screen.getByRole('link', { name: /consulting profile/i });
-    expect(link).toHaveAttribute('href', '/consulting/scott-turnbull/');
+    // Link normalizes the trailing slash in jsdom; production applies
+    // trailingSlash + basePath at build time.
+    expect(link.getAttribute('href')).toMatch(/^\/consulting\/scott-turnbull\/?$/);
   });
 });

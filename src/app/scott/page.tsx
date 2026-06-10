@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import RedirectClient from './RedirectClient';
 
 // Server-side redirects() in next.config are ignored under output: "export",
@@ -16,9 +17,9 @@ export default function ScottRedirectPage() {
       <RedirectClient to={DESTINATION} />
       <p className="text-dark/80">
         Redirecting to{' '}
-        <a href={DESTINATION} className="text-accent underline">
+        <Link href={DESTINATION} className="text-accent underline">
           Scott Turnbull&rsquo;s consulting profile
-        </a>
+        </Link>
         &hellip;
       </p>
     </main>
