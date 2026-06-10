@@ -42,6 +42,7 @@ export default function GoogleAnalyticsRouterTracker({
         window.clearTimeout(timeout);
       };
     }
+    return undefined;
   }, [pathname, searchParams, measurementId]);
 
   return null;
