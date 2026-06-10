@@ -6,7 +6,7 @@ test.describe('Pagination integration (pre-implementation failing tests)', () =>
 
     await page.waitForLoadState('networkidle');
 
-    const nextButton = page.getByRole('button', { name: /next/i });
+    const nextButton = page.getByRole('link', { name: /next/i });
     await expect(nextButton).toBeVisible();
 
     await nextButton.click();

@@ -168,7 +168,7 @@ test.describe('Accessibility Tests', () => {
       await expect(paginationRegion).toBeVisible({ timeout: 10000 });
 
       // Verify current page button has correct ARIA attribute
-      const currentPage = paginationRegion.getByRole('button', { name: /page 1/i, exact: false });
+      const currentPage = paginationRegion.getByRole('link', { name: /page 1/i, exact: false });
       await expect(currentPage).toHaveAttribute('aria-current', 'page');
 
       // Run accessibility scan on the pagination component

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { PaginationData } from '@/lib/pagination.types';
 import type { PostMeta } from '@/lib/posts';
-import { ArticlesPagination } from '@/components/articles/ArticlesPagination';
+import { PaginationLinks } from '@/components/articles/PaginationLinks';
 import { formatDisplayDate } from '@/lib/format';
 
 export const ARTICLES_PAGE = {
@@ -142,7 +142,7 @@ export function ArticlesPageSections({ posts, pagination }: ArticlesPageSections
       {pagination.totalPages > 1 ? (
         <section className="pb-16">
           <div className="container mx-auto px-4 max-w-6xl">
-            <ArticlesPagination data={pagination} />
+            <PaginationLinks data={pagination} />
           </div>
         </section>
       ) : null}
