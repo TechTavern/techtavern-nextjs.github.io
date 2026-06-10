@@ -15,6 +15,9 @@ export default function Header({ variant }: HeaderProps) {
   // Interior header for articles and other inner pages
   return (
     <header className="bg-gradient-to-br from-seal-brown to-maroon text-light">
+      <a href="#main-content" className="skip-link focus-ring">
+        Skip to main content
+      </a>
       <nav className="container mx-auto px-4 py-4" aria-label="Interior navigation">
         <div className="flex items-center justify-between">
           <Link

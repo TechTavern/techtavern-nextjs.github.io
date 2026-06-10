@@ -21,7 +21,7 @@ export default function ArticlesLayout({ children }: ArticlesLayoutProps) {
       <Header variant="interior" />
 
       {/* Main Content */}
-      <main className="min-h-screen bg-light">
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-light">
         {children}
       </main>
 

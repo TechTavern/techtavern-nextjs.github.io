@@ -38,4 +38,10 @@ describe('Header', () => {
       screen.getByRole('link', { name: /contact/i })
     ).toHaveAttribute('href', '/#Contact');
   });
+
+  it('renders a skip link on interior pages', () => {
+    render(<Header variant="interior" />);
+    const link = screen.getByRole('link', { name: /skip to main content/i });
+    expect(link).toHaveAttribute('href', '#main-content');
+  });
 });

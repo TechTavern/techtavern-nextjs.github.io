@@ -18,7 +18,7 @@ export default function ConsultingLayout({ children }: ConsultingLayoutProps) {
   return (
     <>
       <Header variant="interior" />
-      <main className="min-h-screen bg-light">{children}</main>
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-light">{children}</main>
       <Footer />
     </>
   );

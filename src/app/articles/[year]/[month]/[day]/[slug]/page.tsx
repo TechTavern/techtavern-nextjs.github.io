@@ -188,7 +188,7 @@ export default async function ArticlePage({ params }: Props) {
       </header>
 
       {/* Article Content */}
-      <main className="py-12">
+      <div className="py-12">
         <div className="container mx-auto px-4">
           <article className="max-w-4xl mx-auto">
             <div className="prose prose-lg max-w-none
@@ -212,7 +212,7 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </article>
         </div>
-      </main>
+      </div>
 
       {/* Article Footer */}
       <footer className="bg-secondary/5 py-12 border-t border-secondary/20">
