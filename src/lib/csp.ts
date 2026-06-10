@@ -36,11 +36,21 @@ const CALENDLY_APP_HOST = "https://calendly.com";
 const HUBSPOT_MEETINGS_SCRIPT_HOST = "https://static.hsappstatic.net";
 const HUBSPOT_MEETINGS_FRAME_HOST = "https://meetings.hubspot.com";
 
+// DELIVERY LIMITATION: this policy is injected via <meta http-equiv> in
+// src/app/layout.tsx because GitHub Pages cannot set HTTP response headers.
+// Per the CSP spec, frame-ancestors, sandbox, and report-uri are IGNORED in
+// meta-delivered policies, so clickjacking protection is not achievable on
+// this host — they are deliberately omitted rather than silently broken.
 export function buildContentSecurityPolicy({
   includeUnsafeEval = false,
 }: BuildCspOptions = {}) {
   const scriptSrc = [
     "'self'",
+    // ACCEPTED RISK: the GA bootstrap, JSON-LD blocks, and the Calendly/HubSpot
+    // loaders all require inline scripts, and a static export cannot mint
+    // nonces per-request. Removing this entry requires reworking every
+    // third-party embed. Mitigation: all inline-interpolated values are
+    // schema-validated in src/lib/env.ts.
     "'unsafe-inline'",
     "https://www.googletagmanager.com",
     GOOGLE_BOOKING_HOST,
