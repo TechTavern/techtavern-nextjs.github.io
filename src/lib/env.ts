@@ -1,3 +1,4 @@
+import 'server-only';
 import { z } from 'zod';
 
 // Define the schema for environment variables we care about

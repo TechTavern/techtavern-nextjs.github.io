@@ -1,3 +1,4 @@
+import 'server-only';
 import { env } from './env';
 
 export function getBaseUrlWith(e: { SITE_URL?: string; NEXT_PUBLIC_BASE_PATH?: string }) {
