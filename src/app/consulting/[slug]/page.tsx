@@ -18,6 +18,7 @@ import { getAllProfiles, getProfileBySlug, type SocialService } from "@/lib/prof
 import { getMDXComponents } from "@/mdx-components";
 import { mdxOptions } from "@/lib/mdx-options";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import { proseHeadingAnchorReset } from "@/lib/prose";
 import {
   resolveBookingComponent,
   buildBookingButtonProps,
@@ -181,20 +182,19 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
       </header>
 
       <section
-        className="prose prose-lg md:prose-xl max-w-none mb-16
+        className={`prose prose-lg md:prose-xl max-w-none mb-16
           prose-headings:font-heading prose-headings:text-dark prose-headings:scroll-mt-24
           prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:font-bold prose-h2:mb-6 prose-h2:mt-10 prose-h2:border-b prose-h2:border-secondary/20 prose-h2:pb-3
           prose-h3:text-xl md:prose-h3:text-2xl prose-h3:font-semibold prose-h3:mb-4 prose-h3:mt-8
           prose-p:text-dark/80 prose-p:leading-relaxed prose-p:mb-5
           prose-a:text-accent prose-a:underline hover:prose-a:text-accent-dark prose-a:font-medium prose-a:decoration-2 prose-a:underline-offset-4 prose-a:transition-colors
-          [&_h1_a]:no-underline [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline
-          [&_h1_a]:text-inherit [&_h2_a]:text-inherit [&_h3_a]:text-inherit [&_h4_a]:text-inherit [&_h5_a]:text-inherit [&_h6_a]:text-inherit
+          ${proseHeadingAnchorReset}
           prose-strong:text-dark prose-strong:font-semibold
           prose-code:text-accent prose-code:bg-secondary/10 prose-code:px-1 prose-code:rounded prose-code:text-sm prose-code:font-mono
           prose-blockquote:border-l-4 prose-blockquote:border-accent/40 prose-blockquote:bg-accent/5 prose-blockquote:p-6 prose-blockquote:rounded-r-lg prose-blockquote:italic prose-blockquote:text-dark/70
           prose-ul:space-y-2 prose-ol:space-y-2
           prose-li:text-dark/80
-          prose-img:rounded-lg prose-img:shadow-lg"
+          prose-img:rounded-lg prose-img:shadow-lg`}
       >
         {content}
       </section>
