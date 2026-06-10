@@ -58,4 +58,14 @@ describe('env schema', () => {
     process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID = 'abc123';
     expect(() => parseEnv()).toThrow(/must be the numeric HubSpot portal ID/);
   });
+
+  it('rejects a malformed NEXT_PUBLIC_GA_ID', () => {
+    process.env.NEXT_PUBLIC_GA_ID = "G-123'); alert(1); //";
+    expect(() => parseEnv()).toThrow(/NEXT_PUBLIC_GA_ID/);
+  });
+
+  it('accepts a valid GA4 measurement ID', () => {
+    process.env.NEXT_PUBLIC_GA_ID = 'G-ABC123XYZ0';
+    expect(parseEnv().NEXT_PUBLIC_GA_ID).toBe('G-ABC123XYZ0');
+  });
 });

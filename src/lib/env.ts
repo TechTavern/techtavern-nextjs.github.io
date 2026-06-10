@@ -40,7 +40,13 @@ const EnvSchema = z.object({
       const trimmed = value.trim();
       return trimmed.length === 0 ? undefined : trimmed;
     },
-    z.string().optional()
+    z
+      .string()
+      .regex(/^G-[A-Z0-9]+$/, {
+        message:
+          'NEXT_PUBLIC_GA_ID must be a GA4 measurement ID (e.g. "G-XXXXXXXXXX") — it is interpolated into an inline script',
+      })
+      .optional()
   ),
   NEXT_PUBLIC_HUBSPOT_PORTAL_ID: z.preprocess(
     (value) => {
