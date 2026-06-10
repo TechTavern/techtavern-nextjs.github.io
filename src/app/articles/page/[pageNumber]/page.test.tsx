@@ -72,11 +72,11 @@ describe('Paginated articles page', () => {
     expect(params).toEqual([{ pageNumber: '2' }, { pageNumber: '3' }]);
   });
 
-  it('generates canonical metadata for page 1', async () => {
+  it('returns empty metadata for page 1 (page 1 lives at /articles/)', async () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '1' }) });
 
-    expect(metadata.title).toBe('Articles');
-    expect(metadata.alternates?.canonical).toBe('https://example.com/articles/');
+    // /articles/page/1/ is never generated; no metadata needed.
+    expect(metadata).toEqual({});
     expect(getPaginatedPostsMock).not.toHaveBeenCalled();
   });
 
@@ -138,6 +138,12 @@ describe('Paginated articles page', () => {
   it('throws notFound for page numbers less than one', async () => {
     await expect(
       PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: '0' }) }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
+  it('throws notFound for page 1 (canonically served at /articles/)', async () => {
+    await expect(
+      PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: '1' }) }),
     ).rejects.toThrow('NEXT_NOT_FOUND');
   });
 });

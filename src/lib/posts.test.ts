@@ -59,6 +59,7 @@ describe('pagination helpers (failing tests before implementation)', () => {
     expect(Array.isArray(params)).toBe(true);
     expect(params.length).toBeGreaterThan(0);
     expect(params[0]).toHaveProperty('pageNumber');
+    expect(params.some((p) => p.pageNumber === '1')).toBe(false);
   });
 });
 
@@ -80,8 +81,9 @@ describe('posts pagination utility helpers', () => {
     expect(() => getPostsForPage(posts, 99, 2)).toThrow('Page out of range');
   });
 
-  it('includes page one when the dataset fits on a single page', async () => {
+  it('returns empty array when the dataset fits on a single page', async () => {
     const params = await generatePaginationParams(10_000);
-    expect(params[0]).toEqual({ pageNumber: '1' });
+    // Page 1 is served canonically at /articles/ — never generated here.
+    expect(params).toEqual([]);
   });
 });

@@ -36,14 +36,8 @@ export async function generateMetadata({
   }
 
   if (page === 1) {
-    const canonical = new URL(withBasePath('/articles/')!, getBaseUrl()).toString();
-    return {
-      title: ARTICLES_PAGE.title,
-      description: siteMeta.description,
-      alternates: {
-        canonical,
-      },
-    };
+    // /articles/page/1/ is never generated; page 1 lives at /articles/.
+    return {};
   }
 
   const totalPages = await getTotalPages();
@@ -89,7 +83,8 @@ async function resolvePagination(pageParam: string): Promise<PaginationData<Post
 
   const page = Number.parseInt(pageParam, 10);
 
-  if (page < 1) {
+  if (page <= 1) {
+    // Page 1 is canonically /articles/; treat /articles/page/1/ as missing.
     notFound();
   }
 

@@ -216,11 +216,8 @@ export async function generatePaginationParams(
   itemsPerPage: number = paginationSettings.defaultItemsPerPage,
 ): Promise<Array<{ pageNumber: string }>> {
   const totalPages = await getTotalPages(itemsPerPage);
-  if (totalPages <= 1) {
-    return [{ pageNumber: '1' }];
-  }
-
-  return Array.from({ length: totalPages }, (_, index) => ({
-    pageNumber: String(index + 1),
+  // Page 1 is served canonically at /articles/ — generate only pages 2..N.
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => ({
+    pageNumber: String(index + 2),
   }));
 }

@@ -2,7 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export const dynamic = 'force-static';
 
-import { generatePaginationParams, getAllPosts } from '@/lib/posts';
+import { getAllPosts } from '@/lib/posts';
+import { paginationSettings } from '@/lib/site';
 import { getBaseUrl } from '@/lib/site.server';
 
 function formatYmd(date: Date): string {
@@ -27,12 +28,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/articles/`, lastModified: rootLastMod, changeFrequency: 'weekly', priority: 0.9 },
   ];
 
-  const paginatedRoutes = (await generatePaginationParams()).map(({ pageNumber }) => ({
-    url: `${base}/articles/page/${pageNumber}/`,
-    lastModified: rootLastMod,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }));
+  const totalPages =
+    allPosts.length === 0
+      ? 1
+      : Math.ceil(allPosts.length / paginationSettings.defaultItemsPerPage);
+
+  // Pages 2..N only — page 1 is canonically /articles/ (already listed above).
+  const paginatedRoutes: MetadataRoute.Sitemap = Array.from(
+    { length: Math.max(totalPages - 1, 0) },
+    (_, index) => ({
+      url: `${base}/articles/page/${index + 2}/`,
+      lastModified: rootLastMod,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }),
+  );
 
   const postRoutes = allPosts.map((post) => ({
     url: `${base}${post.url}`,
