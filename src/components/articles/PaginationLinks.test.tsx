@@ -38,6 +38,6 @@ describe('PaginationLinks', () => {
 
   it('exposes the pagination landmark', () => {
     render(<PaginationLinks data={makeData()} />);
-    expect(screen.getByRole('navigation', { name: 'Articles pagination' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Articles pagination, page 2 of 3' })).toBeInTheDocument();
   });
 });

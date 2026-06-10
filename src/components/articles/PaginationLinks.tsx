@@ -32,7 +32,11 @@ export function PaginationLinks({
   const links = generatePaginationLinks(data.currentPage, data.totalPages);
 
   return (
-    <nav data-pagination aria-label={ariaLabel} className="mt-8 flex flex-col items-center gap-4">
+    <nav
+      data-pagination
+      aria-label={`${ariaLabel}, page ${data.currentPage} of ${data.totalPages}`}
+      className="mt-8 flex flex-col items-center gap-4"
+    >
       <div className="flex flex-wrap items-center justify-center gap-2">
         {data.hasPreviousPage ? (
           <Link
@@ -43,7 +47,7 @@ export function PaginationLinks({
             Previous
           </Link>
         ) : (
-          <span aria-hidden className={cn(itemClasses, disabledClasses)}>
+          <span role="link" aria-disabled="true" className={cn(itemClasses, disabledClasses)}>
             Previous
           </span>
         )}
@@ -109,7 +113,7 @@ export function PaginationLinks({
             Next
           </Link>
         ) : (
-          <span aria-hidden className={cn(itemClasses, disabledClasses)}>
+          <span role="link" aria-disabled="true" className={cn(itemClasses, disabledClasses)}>
             Next
           </span>
         )}
