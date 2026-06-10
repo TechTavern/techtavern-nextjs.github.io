@@ -24,9 +24,14 @@ export async function generateMetadata({
   params: Promise<{ pageNumber: string }>;
 }): Promise<Metadata> {
   const { pageNumber } = await params;
+
+  if (!/^[0-9]+$/.test(pageNumber)) {
+    return {};
+  }
+
   const page = Number.parseInt(pageNumber, 10);
 
-  if (!Number.isInteger(page) || page < 1) {
+  if (page < 1) {
     return {};
   }
 

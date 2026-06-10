@@ -145,7 +145,12 @@ export function getAllPosts(): Promise<PostMeta[]> {
     return loadAllPosts();
   }
   if (!postsCache) {
-    postsCache = loadAllPosts();
+    postsCache = loadAllPosts().catch((error: unknown) => {
+      // Don't memoize failures — let the next caller retry and surface
+      // a single clean error instead of one per concurrent awaiter.
+      postsCache = null;
+      throw error;
+    });
   }
   return postsCache;
 }
