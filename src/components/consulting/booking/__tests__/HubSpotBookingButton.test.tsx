@@ -2,15 +2,20 @@ import { fireEvent } from '@testing-library/react';
 import HubSpotBookingButton from '../HubSpotBookingButton';
 import { renderWithProviders } from '@/tests/test-utils';
 
+type HubspotTestWindow = Window & {
+  hbspt?: { meetings: { create: jest.Mock } };
+};
+const testWindow = window as HubspotTestWindow;
+
 describe('HubSpotBookingButton', () => {
   afterEach(() => {
-    delete (window as any).hbspt;
+    delete testWindow.hbspt;
     document.body.innerHTML = '';
   });
 
   it('creates the HubSpot meetings widget when available', () => {
     const create = jest.fn();
-    (window as any).hbspt = { meetings: { create } };
+    testWindow.hbspt = { meetings: { create } };
 
     const { getByRole } = renderWithProviders(
       <HubSpotBookingButton
@@ -27,7 +32,7 @@ describe('HubSpotBookingButton', () => {
 
   it('escapes quotes in the booking link before embedding', () => {
     const create = jest.fn();
-    (window as any).hbspt = { meetings: { create } };
+    testWindow.hbspt = { meetings: { create } };
 
     const { getByRole } = renderWithProviders(
       <HubSpotBookingButton

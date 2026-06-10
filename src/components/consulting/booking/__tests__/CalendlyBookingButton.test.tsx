@@ -2,14 +2,19 @@ import { fireEvent } from '@testing-library/react';
 import CalendlyBookingButton from '../CalendlyBookingButton';
 import { renderWithProviders } from '@/tests/test-utils';
 
+type CalendlyTestWindow = Window & {
+  Calendly?: { initPopupWidget: jest.Mock };
+};
+const testWindow = window as CalendlyTestWindow;
+
 describe('CalendlyBookingButton', () => {
   afterEach(() => {
-    delete (window as any).Calendly;
+    delete testWindow.Calendly;
   });
 
   it('invokes Calendly popup when script is available', () => {
     const initPopupWidget = jest.fn();
-    (window as any).Calendly = {
+    testWindow.Calendly = {
       initPopupWidget,
     };
 
