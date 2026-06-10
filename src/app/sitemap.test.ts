@@ -1,7 +1,7 @@
 /* @jest-environment node */
 
 import { createPosts } from '@/tests/test-utils';
-import { getAllPosts } from '@/lib/posts';
+import { getAllPosts, getTotalPages } from '@/lib/posts';
 import { getBaseUrl } from '@/lib/site.server';
 
 jest.mock('@/lib/site.server', () => ({
@@ -13,16 +13,19 @@ jest.mock('@/lib/posts', () => {
   return {
     ...actual,
     getAllPosts: jest.fn(),
+    getTotalPages: jest.fn(),
   };
 });
 
 const getAllPostsMock = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
+const getTotalPagesMock = getTotalPages as jest.MockedFunction<typeof getTotalPages>;
 const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('sitemap route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     getBaseUrlMock.mockReturnValue('https://example.com');
+    getTotalPagesMock.mockResolvedValue(1);
   });
 
   it('uses latest post modification timestamp for root entries and preserves per-post values', async () => {
@@ -68,5 +71,28 @@ describe('sitemap route', () => {
 
     const { default: sitemap } = await import('@/app/sitemap');
     await expect(sitemap()).rejects.toThrow('failed to load posts');
+  });
+
+  it('lists paginated routes from page 2 onward, never page 1', async () => {
+    const posts = createPosts(
+      Array.from({ length: 16 }, (_, i) => ({
+        slug: `post-${i + 1}`,
+        title: `Post ${i + 1}`,
+        date: '2025-08-01',
+        lastModified: '2025-08-01',
+        excerpt: `Excerpt ${i + 1}`,
+        tags: [],
+      })),
+    );
+
+    getAllPostsMock.mockResolvedValue(posts);
+    getTotalPagesMock.mockResolvedValue(2);
+
+    const { default: sitemap } = await import('@/app/sitemap');
+    const routes = await sitemap();
+    const urls = routes.map((r) => r.url);
+
+    expect(urls).toContain('https://example.com/articles/page/2/');
+    expect(urls.some((u) => u.includes('/articles/page/1/'))).toBe(false);
   });
 });
