@@ -51,7 +51,7 @@ const SocialProfileSchema = z.object({
   url: z.string().url(),
 });
 
-const BookingSchema = z.object({
+export const BookingSchema = z.object({
   provider: z.enum(BOOKING_PROVIDERS).default("google-booking"),
   link: z
     .string()
