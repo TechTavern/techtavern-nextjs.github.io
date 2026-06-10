@@ -53,7 +53,12 @@ const SocialProfileSchema = z.object({
 
 const BookingSchema = z.object({
   provider: z.enum(BOOKING_PROVIDERS).default("google-booking"),
-  link: z.string().url(),
+  link: z
+    .string()
+    .url()
+    .refine((value) => value.startsWith('https://'), {
+      message: 'booking link must be an https:// URL',
+    }),
   ctaLabel: z.string().optional(),
   color: z.string().optional(),
   embedComponent: z.enum(BOOKING_COMPONENT_IDS).optional(),

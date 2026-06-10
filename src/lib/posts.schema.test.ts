@@ -58,4 +58,14 @@ describe('FrontmatterSchema', () => {
     const res = FrontmatterSchema.safeParse(invalid);
     expect(res.success).toBe(false);
   });
+
+  it('rejects non-http canonicalUrl schemes', () => {
+    const result = FrontmatterSchema.safeParse({
+      title: 'T',
+      date: '2024-01-01',
+      slug: 't',
+      canonicalUrl: 'javascript:alert(1)',
+    });
+    expect(result.success).toBe(false);
+  });
 });

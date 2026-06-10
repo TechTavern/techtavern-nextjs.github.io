@@ -61,7 +61,13 @@ export const FrontmatterSchema = z.object({
   ogTitle: z.string().optional(),
   ogDescription: z.string().optional(),
   ogImage: z.string().optional(),
-  canonicalUrl: z.string().url().optional(),
+  canonicalUrl: z
+    .string()
+    .url()
+    .refine((value) => /^https?:\/\//i.test(value), {
+      message: 'canonicalUrl must be an http(s) URL',
+    })
+    .optional(),
   draft: z.boolean().optional(),
 });
 
