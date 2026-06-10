@@ -118,12 +118,16 @@ export default async function ArticlePage({ params }: Props) {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {post.featuredImage && (
-              <div className="mb-8 rounded-lg overflow-hidden shadow-lg border border-secondary/20">
+              <div
+                className="relative mb-8 w-full overflow-hidden rounded-lg shadow-lg border border-secondary/20 bg-secondary/10"
+                style={{ aspectRatio: '16/9' }}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.featuredImage}
                   alt={`Featured image for article: ${post.title}`}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-full object-cover"
+                  fetchPriority="high"
                 />
               </div>
             )}
