@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { PaginationData } from '@/lib/pagination.types';
 import type { PostMeta } from '@/lib/posts';
 import { ArticlesPagination } from '@/components/articles/ArticlesPagination';
+import { formatDisplayDate } from '@/lib/format';
 
 export const ARTICLES_PAGE = {
   title: 'Articles',
@@ -21,15 +22,6 @@ export const ARTICLES_PAGE = {
     buttonLabel: 'Get In Touch',
   },
 } as const;
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
 
 export type ArticlesPageSectionsProps = {
   posts: PostMeta[];
@@ -88,7 +80,7 @@ export function ArticlesPageSections({ posts, pagination }: ArticlesPageSections
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2 text-sm text-accent font-medium">
-                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                        <time dateTime={post.date}>{formatDisplayDate(post.date)}</time>
                         {post.readingTimeMinutes ? (
                           <span className="text-dark/70">· {post.readingTimeMinutes} min</span>
                         ) : null}

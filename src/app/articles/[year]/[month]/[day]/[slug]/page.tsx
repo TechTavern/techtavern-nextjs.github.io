@@ -7,6 +7,7 @@ import { siteMeta, siteOrg } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import type { Metadata } from "next";
 import { mdxOptions } from "@/lib/mdx-options";
+import { formatDisplayDate } from "@/lib/format";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -59,15 +60,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: { canonical },
   };
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -154,7 +146,7 @@ export default async function ArticlePage({ params }: Props) {
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <div className="text-accent font-medium">
-                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                <time dateTime={post.date}>{formatDisplayDate(post.date)}</time>
                 {post.readingTimeMinutes ? (
                   <span className="text-dark/60 ml-2">· {post.readingTimeMinutes} min read</span>
                 ) : null}
