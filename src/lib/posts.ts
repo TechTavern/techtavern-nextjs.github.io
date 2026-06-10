@@ -31,6 +31,15 @@ export type PostMeta = {
 
 const POSTS_DIR = path.join(process.cwd(), "content", "articles");
 
+// Build-time caches. Next.js invokes getAllPosts from generateStaticParams,
+// generateMetadata, every page component, the sitemap, and the RSS route —
+// without this cache the content directory is fully re-read and re-parsed
+// dozens of times per build. Production-only so `next dev` always sees fresh
+// content and Jest keeps per-test isolation.
+const isProd = process.env.NODE_ENV === "production";
+let postsCache: Promise<PostMeta[]> | null = null;
+const sourceCache = new Map<string, string>();
+
 function splitDate(iso: string) {
   const [y, m, d] = String(iso).split("-");
   return { year: y, month: String(m).padStart(2, "0"), day: String(d).padStart(2, "0") };
@@ -71,11 +80,14 @@ export const FrontmatterSchema = z.object({
   draft: z.boolean().optional(),
 });
 
-export async function getAllPosts(): Promise<PostMeta[]> {
+async function loadAllPosts(): Promise<PostMeta[]> {
   const files = await fg("**/*.mdx", { cwd: POSTS_DIR, absolute: true });
   const items = await Promise.all(
     files.map(async (filePath) => {
       const raw = await fs.readFile(filePath, "utf8");
+      if (isProd) {
+        sourceCache.set(filePath, raw);
+      }
       const { data, content } = matter(raw);
       const parsed = FrontmatterSchema.safeParse(data);
       if (!parsed.success) {
@@ -126,6 +138,28 @@ export async function getAllPosts(): Promise<PostMeta[]> {
   return items
     .filter((p) => !p.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getAllPosts(): Promise<PostMeta[]> {
+  if (!isProd) {
+    return loadAllPosts();
+  }
+  if (!postsCache) {
+    postsCache = loadAllPosts();
+  }
+  return postsCache;
+}
+
+/**
+ * Raw MDX source for a post. During a production build the source was already
+ * read (and cached) by getAllPosts, so this avoids a second disk read per page.
+ */
+export async function getPostSource(filePath: string): Promise<string> {
+  const cached = sourceCache.get(filePath);
+  if (cached !== undefined) {
+    return cached;
+  }
+  return fs.readFile(filePath, "utf8");
 }
 
 export async function getPostByParams(y: string, m: string, d: string, slug: string) {

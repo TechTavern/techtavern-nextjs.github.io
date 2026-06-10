@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllPosts, getPostByParams } from "@/lib/posts";
+import { getAllPosts, getPostByParams, getPostSource } from "@/lib/posts";
 import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { siteMeta, siteOrg } from "@/lib/site";
@@ -75,8 +75,7 @@ export default async function ArticlePage({ params }: Props) {
     orgLogoPath: siteOrg.logoPath,
   });
 
-  const fs = await import('node:fs/promises');
-  const source = await fs.readFile(post.filePath, 'utf8');
+  const source = await getPostSource(post.filePath);
   const { content } = await compileMDX({
     source,
     options: {

@@ -4,7 +4,7 @@ import PaginatedArticlesPage, {
   generateStaticParams,
 } from './page';
 import { createPaginationData, createPosts } from '@/tests/test-utils';
-import { generatePaginationParams, getPaginatedPosts } from '@/lib/posts';
+import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
 import { InvalidPageError } from '@/lib/pagination';
 import { getBaseUrl } from '@/lib/site.server';
 
@@ -31,6 +31,7 @@ jest.mock('@/lib/posts', () => {
     ...actual,
     getPaginatedPosts: jest.fn(),
     generatePaginationParams: jest.fn(),
+    getTotalPages: jest.fn(),
   };
 });
 
@@ -51,12 +52,15 @@ jest.mock('@/app/articles/ArticlesPageSections', () => ({
 
 const getPaginatedPostsMock = getPaginatedPosts as jest.MockedFunction<typeof getPaginatedPosts>;
 const generatePaginationParamsMock = generatePaginationParams as jest.MockedFunction<typeof generatePaginationParams>;
+const getTotalPagesMock = getTotalPages as jest.MockedFunction<typeof getTotalPages>;
 const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('Paginated articles page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     getBaseUrlMock.mockReturnValue('https://example.com');
+    // Default: 4 pages exist so page-2 is valid and page-999 is out of range
+    getTotalPagesMock.mockResolvedValue(4);
   });
 
   it('returns static params from the posts helper', async () => {
@@ -77,32 +81,18 @@ describe('Paginated articles page', () => {
   });
 
   it('generates paginated metadata for subsequent pages', async () => {
-    getPaginatedPostsMock.mockResolvedValue(
-      createPaginationData([], {
-        currentPage: 2,
-        totalItems: 6,
-        totalPages: 4,
-        itemsPerPage: 3,
-        startIndex: 3,
-        endIndex: 6,
-        pageItems: [],
-        hasNextPage: true,
-        hasPreviousPage: true,
-      }),
-    );
-
     const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '2' }) });
 
-    expect(getPaginatedPostsMock).toHaveBeenCalledWith(2);
+    expect(getTotalPagesMock).toHaveBeenCalledTimes(1);
+    expect(getPaginatedPostsMock).not.toHaveBeenCalled();
     expect(metadata.title).toBe('Articles – Page 2');
     expect(metadata.openGraph?.url).toBe('https://example.com/articles/page/2/');
   });
 
   it('returns empty metadata when the requested page is missing', async () => {
-    getPaginatedPostsMock.mockRejectedValueOnce(new InvalidPageError('Requested page is out of range'));
-
     const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '999' }) });
 
+    expect(getTotalPagesMock).toHaveBeenCalledTimes(1);
     expect(metadata).toEqual({});
   });
 

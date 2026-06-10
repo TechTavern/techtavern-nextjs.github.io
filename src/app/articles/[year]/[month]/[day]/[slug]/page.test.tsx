@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ArticlePage, { generateMetadata, generateStaticParams } from './page';
 import { createPostMeta } from '@/tests/test-utils';
-import { getAllPosts, getPostByParams } from '@/lib/posts';
+import { getAllPosts, getPostByParams, getPostSource } from '@/lib/posts';
 import MDXImage from '@/components/ui/MDXImage';
 
 jest.mock('next/image', () => ({
@@ -57,10 +57,12 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/lib/posts', () => ({
   getAllPosts: jest.fn(),
   getPostByParams: jest.fn(),
+  getPostSource: jest.fn(),
 }));
 
 const mockGetAllPosts = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
 const mockGetPostByParams = getPostByParams as jest.MockedFunction<typeof getPostByParams>;
+const mockGetPostSource = getPostSource as jest.MockedFunction<typeof getPostSource>;
 const fixturePath = path.join(
   process.cwd(),
   'tests/fixtures/articles/2025-01-01-fixture-with-excerpt.mdx',
@@ -83,6 +85,7 @@ describe('Article page route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     compileMDXMock.mockClear();
+    mockGetPostSource.mockResolvedValue('# Fixture MDX source');
   });
 
   it('generates static params from published posts', async () => {

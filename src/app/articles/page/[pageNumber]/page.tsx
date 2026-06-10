@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { PaginationData } from '@/lib/pagination.types';
 import type { PostMeta } from '@/lib/posts';
-import { generatePaginationParams, getPaginatedPosts } from '@/lib/posts';
+import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
 import { DEFAULT_FEATURED_IMAGE, siteMeta } from '@/lib/site';
 import { getBaseUrl, withBasePath } from '@/lib/site.server';
 import { InvalidPageError } from '@/lib/pagination';
@@ -41,13 +41,9 @@ export async function generateMetadata({
     };
   }
 
-  try {
-    await getPaginatedPosts(page);
-  } catch (error) {
-    if (error instanceof InvalidPageError) {
-      return {};
-    }
-    throw error;
+  const totalPages = await getTotalPages();
+  if (page > totalPages) {
+    return {};
   }
 
   const pageTitle = `${ARTICLES_PAGE.title} – Page ${page}`;
