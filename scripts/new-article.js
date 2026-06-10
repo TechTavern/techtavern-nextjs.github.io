@@ -85,6 +85,8 @@ async function main() {
     return '"' + String(s).replace(/\\/g, '\\\\').replace(/\"/g, '\\"') + '"';
   }
 
+  // NOTE: keep this field list in sync with FrontmatterSchema in src/lib/posts.ts —
+  // the Zod schema is the source of truth; this script cannot import it (CJS/ESM boundary).
   // Generate all frontmatter fields with boilerplate data
   const fm = [
     '---',

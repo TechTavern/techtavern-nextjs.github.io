@@ -3,10 +3,7 @@ import type { PaginationData } from '@/lib/pagination.types';
 import {
   generatePaginationLinks,
   getPaginationData,
-  validatePageParameter,
-  createPaginationState,
   InvalidConfigError,
-  InvalidPageError,
 } from './pagination';
 import { createPosts } from '@/tests/test-utils';
 
@@ -42,39 +39,6 @@ describe('getPaginationData', () => {
       TypeError,
     );
     expect(() => getPaginationData([], 1, 0)).toThrow(InvalidConfigError);
-  });
-});
-
-describe('validatePageParameter', () => {
-  it('returns default page when parameter missing', () => {
-    const result = validatePageParameter(undefined, 5);
-
-    expect(result.parsed).toBe(1);
-    expect(result.isValid).toBe(true);
-    expect(result.errorType).toBeNull();
-  });
-
-  it('marks invalid format errors', () => {
-    const result = validatePageParameter('abc', 5);
-
-    expect(result.isValid).toBe(false);
-    expect(result.errorType).toBe('INVALID_FORMAT');
-    expect(result.parsed).toBeNull();
-  });
-
-  it('marks out of range errors when page exceeds total', () => {
-    const result = validatePageParameter('9', 2);
-
-    expect(result.isValid).toBe(false);
-    expect(result.errorType).toBe('OUT_OF_RANGE');
-  });
-
-  it('normalizes array parameters and handles empty arrays', () => {
-    const fromArray = validatePageParameter(['3', '4'], 5);
-    expect(fromArray.parsed).toBe(3);
-    expect(fromArray.isValid).toBe(true);
-    const fromEmpty = validatePageParameter([], 5);
-    expect(fromEmpty.parsed).toBe(1);
   });
 });
 
@@ -120,16 +84,3 @@ describe('generatePaginationLinks', () => {
   });
 });
 
-describe('createPaginationState', () => {
-  it('acts as a convenience wrapper around getPaginationData', () => {
-    const posts = createPosts([], 6);
-    const state = createPaginationState(posts, 2, { itemsPerPage: 3 });
-    expect(state.currentPage).toBe(2);
-    expect(state.pageItems).toHaveLength(3);
-  });
-
-  it('propagates pagination errors for invalid requests', () => {
-    const posts = createPosts([], 2);
-    expect(() => createPaginationState(posts, 99, { itemsPerPage: 1 })).toThrow(InvalidPageError);
-  });
-});

@@ -2,11 +2,7 @@ import { render } from '@testing-library/react';
 import type { RenderOptions, RenderResult } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import type { PostMeta } from '@/lib/posts';
-import type {
-  PageParameter,
-  PaginationConfig,
-  PaginationData,
-} from '@/lib/pagination.types';
+import type { PaginationData } from '@/lib/pagination.types';
 
 const BASE_POST: PostMeta = {
   title: 'Sample Post',
@@ -74,18 +70,6 @@ export function createPosts(
   });
 }
 
-export function createPaginationConfig(
-  overrides: Partial<PaginationConfig> = {},
-): PaginationConfig {
-  return {
-    itemsPerPage: overrides.itemsPerPage ?? 15,
-    maxVisiblePageLinks: overrides.maxVisiblePageLinks ?? 3,
-    showFirstLastButtons: overrides.showFirstLastButtons ?? false,
-    showPreviousNextButtons: overrides.showPreviousNextButtons ?? true,
-    ellipsisThreshold: overrides.ellipsisThreshold ?? 2,
-  };
-}
-
 export function createPaginationData<T>(
   items: T[],
   overrides: Partial<PaginationData<T>> = {},
@@ -111,13 +95,3 @@ export function createPaginationData<T>(
   };
 }
 
-export function createPageParameter(
-  overrides: Partial<PageParameter> = {},
-): PageParameter {
-  return {
-    raw: overrides.raw ?? '1',
-    parsed: overrides.parsed ?? 1,
-    isValid: overrides.isValid ?? true,
-    errorType: overrides.errorType ?? null,
-  };
-}

@@ -1,11 +1,5 @@
 import { paginationSettings } from '@/lib/site';
-import type {
-  PageParameter,
-  PaginationConfig,
-  PaginationData,
-  PaginationErrorType,
-  PaginationLinks,
-} from '@/lib/pagination.types';
+import type { PaginationData, PaginationLinks } from '@/lib/pagination.types';
 
 export class InvalidPageError extends Error {
   constructor(message: string) {
@@ -19,17 +13,6 @@ export class InvalidConfigError extends Error {
     super(message);
     this.name = 'InvalidConfigError';
   }
-}
-
-function normalizeConfig(config?: Partial<PaginationConfig>): PaginationConfig {
-  return {
-    itemsPerPage: config?.itemsPerPage ?? paginationSettings.defaultItemsPerPage,
-    maxVisiblePageLinks: config?.maxVisiblePageLinks ?? paginationSettings.maxVisiblePageLinks,
-    showFirstLastButtons: config?.showFirstLastButtons ?? paginationSettings.showFirstLastButtons,
-    showPreviousNextButtons:
-      config?.showPreviousNextButtons ?? paginationSettings.showPreviousNextButtons,
-    ellipsisThreshold: config?.ellipsisThreshold ?? paginationSettings.ellipsisThreshold,
-  };
 }
 
 function assertPositiveInteger(value: number, message: string): void {
@@ -81,58 +64,6 @@ export function getPaginationData<T>(
   };
 }
 
-function coerceRawParam(pageParam: string | string[] | undefined): string | null {
-  if (Array.isArray(pageParam)) {
-    return pageParam[0] ?? null;
-  }
-  return pageParam ?? null;
-}
-
-export function validatePageParameter(
-  pageParam: string | string[] | undefined,
-  totalPages: number,
-): PageParameter {
-  const raw = coerceRawParam(pageParam);
-
-  if (raw === null) {
-    return {
-      raw,
-      parsed: 1,
-      isValid: true,
-      errorType: null,
-    };
-  }
-
-  const parsed = Number.parseInt(raw, 10);
-
-  if (!Number.isInteger(parsed) || parsed <= 0) {
-    return {
-      raw,
-      parsed: null,
-      isValid: false,
-      errorType: 'INVALID_FORMAT',
-    };
-  }
-
-  const maxPage = Math.max(1, totalPages);
-
-  if (parsed > maxPage) {
-    return {
-      raw,
-      parsed: null,
-      isValid: false,
-      errorType: 'OUT_OF_RANGE',
-    };
-  }
-
-  return {
-    raw,
-    parsed,
-    isValid: true,
-    errorType: null,
-  };
-}
-
 export function generatePaginationLinks(
   currentPage: number,
   totalPages: number,
@@ -169,21 +100,3 @@ export function generatePaginationLinks(
   };
 }
 
-export function createPaginationState<T>(
-  items: T[],
-  currentPage: number,
-  config?: Partial<PaginationConfig>,
-): PaginationData<T> {
-  const normalizedConfig = normalizeConfig(config);
-  return getPaginationData(items, currentPage, normalizedConfig.itemsPerPage);
-}
-
-export function getPaginationErrorType(error: unknown): PaginationErrorType | null {
-  if (error instanceof InvalidPageError) {
-    return 'OUT_OF_RANGE';
-  }
-  if (error instanceof InvalidConfigError) {
-    return 'INVALID_FORMAT';
-  }
-  return null;
-}

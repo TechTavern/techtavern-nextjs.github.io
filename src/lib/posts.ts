@@ -172,15 +172,6 @@ export async function getPostByParams(y: string, m: string, d: string, slug: str
   return posts.find((p) => p.year === y && p.month === m && p.day === d && p.slug === slug) || null;
 }
 
-export function getPostsForPage(
-  posts: PostMeta[],
-  page: number,
-  itemsPerPage: number,
-): PostMeta[] {
-  const data = getPaginationData(posts, page, itemsPerPage);
-  return data.pageItems as PostMeta[];
-}
-
 export async function getTotalPages(
   itemsPerPage: number = paginationSettings.defaultItemsPerPage,
 ): Promise<number> {
