@@ -37,16 +37,6 @@ const nextConfig = {
 
     pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
 
-    async redirects() {
-        return [
-            {
-                source: "/scott",
-                destination: "/consulting/scott-turnbull",
-                permanent: true,
-            },
-        ];
-    },
-
     // Hard-block zod from client bundles to enforce CSP
     webpack: (config, { isServer }) => {
         if (!isServer) {
