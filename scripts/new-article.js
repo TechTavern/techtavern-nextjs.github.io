@@ -201,7 +201,7 @@ async function main() {
 
   await fs.writeFile(filePath, `${frontmatter}${body}`, 'utf8');
   console.log(`\nCreated: ${path.relative(rootDir, filePath)}`);
-  console.log('Contentlayer will automatically include this file on the next build/dev refresh.');
+  console.log('The next build or dev refresh will pick up this file automatically.');
 }
 
 main().catch((err) => {

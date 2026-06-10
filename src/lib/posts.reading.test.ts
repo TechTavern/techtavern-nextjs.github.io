@@ -19,10 +19,6 @@ describe('getAllPosts data loading edge cases', () => {
         paginationSettings: {
           defaultItemsPerPage: 5,
           maxVisiblePageLinks: 3,
-          showFirstLastButtons: false,
-          showPreviousNextButtons: true,
-          ellipsisThreshold: 2,
-          minTouchTargetSize: 44,
         },
         siteMeta: { title: 'Tech Tavern', description: 'Testing description' },
       }));
@@ -46,10 +42,6 @@ describe('getAllPosts data loading edge cases', () => {
         paginationSettings: {
           defaultItemsPerPage: 5,
           maxVisiblePageLinks: 3,
-          showFirstLastButtons: false,
-          showPreviousNextButtons: true,
-          ellipsisThreshold: 2,
-          minTouchTargetSize: 44,
         },
         siteMeta: { title: 'Tech Tavern', description: 'Testing description' },
       }));

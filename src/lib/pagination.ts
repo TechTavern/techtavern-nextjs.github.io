@@ -68,10 +68,8 @@ export function generatePaginationLinks(
   currentPage: number,
   totalPages: number,
   maxVisibleLinks: number = paginationSettings.maxVisiblePageLinks,
-  _ellipsisThreshold: number = paginationSettings.ellipsisThreshold,
 ): PaginationLinks {
   assertPositiveInteger(maxVisibleLinks, 'maxVisibleLinks must be a positive integer');
-  assertPositiveInteger(_ellipsisThreshold, 'ellipsisThreshold must be a positive integer');
 
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = Math.min(Math.max(currentPage, 1), safeTotalPages);

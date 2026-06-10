@@ -19,8 +19,4 @@ export const siteOrg = {
 export const paginationSettings = {
   defaultItemsPerPage: 12,
   maxVisiblePageLinks: 3,
-  showFirstLastButtons: false,
-  showPreviousNextButtons: true,
-  ellipsisThreshold: 2,
-  minTouchTargetSize: 44,
 } as const;
