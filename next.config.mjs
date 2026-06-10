@@ -25,12 +25,6 @@ const nextConfig = {
         }),
     }),
 
-    // Ensure all pages are statically generated
-    experimental: {
-        workerThreads: false,
-        cpus: 1,
-    },
-
     images: {
         unoptimized: true,
     },
