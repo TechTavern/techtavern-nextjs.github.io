@@ -20,7 +20,7 @@ export async function GET() {
   const items = posts
     .map((p) => {
       const title = escapeXml(p.title)
-      const link = `${base}${p.url}`
+      const link = escapeXml(`${base}${p.url}`)
       const description = escapeXml(p.excerpt || '')
       const pubDate = new Date(p.date).toUTCString()
       const guid = link
