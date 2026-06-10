@@ -34,8 +34,11 @@ export default function HubSpotBookingButton({
         container.id = containerId;
         document.body.appendChild(container);
       }
+      // Percent-encode quotes so the URL cannot break out of the data-src
+      // attribute in the HTML string HubSpot injects via innerHTML.
+      const safeBookingSrc = bookingLink.replace(/"/g, '%22').replace(/'/g, '%27');
       hubspotMeetings.create({
-        embedCode: `<div class="meetings-iframe-container" data-src="${bookingLink}"></div>`,
+        embedCode: `<div class="meetings-iframe-container" data-src="${safeBookingSrc}"></div>`,
         target: `#${containerId}`,
       });
       return;

@@ -25,6 +25,26 @@ describe('HubSpotBookingButton', () => {
     expect(document.getElementById('hubspot-meetings-container')).toBeInTheDocument();
   });
 
+  it('escapes quotes in the booking link before embedding', () => {
+    const create = jest.fn();
+    (window as any).hbspt = { meetings: { create } };
+
+    const { getByRole } = renderWithProviders(
+      <HubSpotBookingButton
+        bookingLink={'https://meetings.hubspot.com/acme?x="onmouseover="alert(1)'}
+        label="Connect"
+        className="btn"
+      />,
+    );
+
+    fireEvent.click(getByRole('button', { name: 'Connect' }));
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        embedCode: expect.not.stringContaining('"onmouseover'),
+      }),
+    );
+  });
+
   it('falls back to opening a new tab when API is unavailable', () => {
     const originalOpen = window.open;
     window.open = jest.fn();
