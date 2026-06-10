@@ -8,6 +8,7 @@ import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import type { Metadata } from "next";
 import { mdxOptions } from "@/lib/mdx-options";
 import { formatDisplayDate } from "@/lib/format";
+import { buildArticleJsonLd } from "@/lib/seo";
 
 // Build all routes at export time
 export async function generateStaticParams() {
@@ -67,6 +68,13 @@ export default async function ArticlePage({ params }: Props) {
   const post = await getPostByParams(year, month, day, slug);
   if (!post) notFound();
 
+  const jsonLd = buildArticleJsonLd({
+    post,
+    baseUrl: getBaseUrl(),
+    orgName: siteOrg.name,
+    orgLogoPath: siteOrg.logoPath,
+  });
+
   const fs = await import('node:fs/promises');
   const source = await fs.readFile(post.filePath, 'utf8');
   const { content } = await compileMDX({
@@ -80,6 +88,10 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb Navigation */}
       <nav className="bg-secondary/5 py-4 border-b border-secondary/20" aria-label="Breadcrumb">
         <div className="container mx-auto px-4">

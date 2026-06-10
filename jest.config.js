@@ -25,7 +25,6 @@ const customJestConfig = {
     '!src/app/**/not-found.tsx',
     '!src/app/**/loading.tsx',
     '!src/app/**/error.tsx',
-    '!src/app/**/head.tsx',
     '!src/**/*.{test,spec}.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/tests/**/*',

@@ -117,6 +117,23 @@ describe('Article page route', () => {
     expect(screen.getByRole('img', { name: /diagram of coverage/i })).toBeInTheDocument();
   });
 
+  it('renders Article JSON-LD structured data', async () => {
+    mockGetPostByParams.mockResolvedValueOnce(post);
+
+    const page = await ArticlePage({
+      params: Promise.resolve({ year: '2025', month: '01', day: '01', slug: 'fixture-with-excerpt' }),
+    });
+    render(page);
+
+    const script = document.querySelector('script[type="application/ld+json"]');
+    expect(script).not.toBeNull();
+
+    const json = JSON.parse(script?.textContent ?? '{}');
+    expect(json['@type']).toBe('Article');
+    expect(json.headline).toBe('Fixture Article With Excerpt');
+    expect(json.datePublished).toBeTruthy();
+  });
+
   it('invokes notFound when an article cannot be located', async () => {
     mockGetPostByParams.mockResolvedValueOnce(null);
 
