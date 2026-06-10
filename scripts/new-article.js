@@ -2,7 +2,7 @@
 /*
   new-article.js
   Prompts for a title and date (default today), creates a new MDX file
-  in content/articles with frontmatter. Contentlayer will pick it up automatically.
+  in content/articles with frontmatter. The next build or dev refresh picks it up automatically.
 */
 
 const fs = require('node:fs/promises');
