@@ -177,3 +177,17 @@ Remember: These guidelines should enhance development velocity while maintaining
 - **NEXT_PUBLIC_BASE_PATH**: Handled automatically by CI for staging/production
 - **Validation**: Runtime environment validation using `src/lib/env.ts`
 - **Defaults**: Falls back to `http://localhost:3000` in development
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+
+Update cadence (code only):
+- The graph tracks **code only** (`src/**`, `scripts/**`, config `.ts`/`.js`). Never rebuild it for content changes — `content/articles/*.mdx`, docs, or images do not trigger an update.
+- A git post-commit hook rebuilds the graph automatically in the background after every commit that touches code files (AST-only, no LLM cost). Committing is the primary update mechanism — do not run a manual update after committing.
+- In-session, run `graphify update .` manually only when both are true: (a) you changed code files that are still uncommitted, and (b) you are about to query the graph about that changed code. Do not run it after every edit.

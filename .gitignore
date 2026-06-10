@@ -55,3 +55,6 @@ techtavern.github.io/
 
 /temp/
 /tmp
+
+# graphify knowledge graph (rebuilt locally by post-commit hook)
+/graphify-out/
