@@ -1,0 +1,76 @@
+---
+title: "Pathologies of Agentic Development at Scale"
+date: "2026-09-23"
+slug: "pathologies-of-agentic-development-at-scale"
+excerpt: "At scale, agent swarms vouch for each other's green lights, re-infect themselves from stale specs, and approve work nobody fully understands. Here's what I've seen, and what actually helps."
+tags: ["ai-agents", "multi-agent-systems", "ai-assisted-development", "context-engineering", "software-engineering", "engineering-leadership"]
+featuredImage: "/images/pathologies-of-agentic-development-at-scale.webp"
+ogTitle: "Pathologies of Agentic Development at Scale"
+ogDescription: "Four failure patterns of multi-agent AI development in large codebases, and how orchestration, ADRs, and context engineering keep agent swarms on track."
+ogImage: "/images/pathologies-of-agentic-development-at-scale.webp"
+canonicalUrl: "https://techtavern.com/articles/2026/09/23/pathologies-of-agentic-development-at-scale/"
+draft: false
+---
+I've been doing complex agentic development for over a year and a half now, and I've spent the last seven months working with a client on a particularly large, complicated codebase that deploys across a lot of moving parts. It's been one of the better engagements of my career, with a sharp team and a real willingness to push AI-assisted development further than most organizations would. It has also shown me, very clearly, where agent-driven development starts to break down.
+
+None of what I'm about to describe shows up in a weekend vibe-coding project. When your whole app fits in one context window, and in your own head, the agents mostly behave. The problems appear when the system gets bigger than any one agent (or any one person) can hold at once, and when several agents are working on it at the same time. Worse still when those agents are working in entirely different but related codebases. (Thanks, microservices!) That's where most serious organizations are headed, so I want to share what I've seen and what I think we can do about it.
+
+## Four failure patterns that kept popping up
+
+The first pattern is what I've started calling a cascade of false assurances. An agent makes a mistake during a build, so someone (a person or another agent) adds a safety check to prevent it from happening again. Later another agent skips that check, so a second check gets added to confirm the first one ran. Give it a few months and you have agents producing written proof that checks occurred, other agents auditing that proof, and a stack of green lights where each one vouches for the one before it. Every layer reports that things are fine. Very little of it is still checking the software, and the whole ritual eats more effort than the code it's supposed to protect.
+
+The end state is an agent reporting success on work it just broke. One Microsoft engineer [documented an integrator agent](https://techcommunity.microsoft.com/blog/appsonazureblog/the-swarm-diaries-what-happens-when-you-let-ai-agents-loose-on-a-codebase/4501393) in a small multi-agent experiment that wiped out another agent's entire implementation while resolving a merge conflict, then reported the merge as resolved successfully. The green light was on. The code was gone.
+
+The instruction files that drive agents show the same accretion. A [recent study](https://arxiv.org/pdf/2608.11095) of nearly 1,900 GitHub repositories found that agent instruction files like CLAUDE.md more than triple in size over their lifetime, and that the older an instruction gets, the less likely anyone is to delete it. It's legacy debt we've all seen before, but at AI speeds. Once nobody (and no agent) remembers why a rule was added, removing it feels too risky, so it stays forever.
+
+The second pattern is scope creep, and anyone who has renovated an old house will recognize it. You open a wall to replace one outlet and find ungrounded wiring. Rewiring the room means upgrading the panel, the panel needs a permit, and the permit brings an inspector who flags the plumbing you never meant to touch. Agents work the same way, where every step makes sense from where they're standing, and when you check back in half the system is torn open while the original bug is still sitting there. Multiply that across several agents in a large codebase and you get what Augment calls [quiet sprawl](https://www.augmentcode.com/guides/multi-agent-ai-system-code-development), several slightly different helpers or validators that all solve the same requirement because no agent saw what the others built, and the architecture slowly fragments.
+
+The third pattern is basically when orchrators are asked to grant permission without understanding. An executing agent hits an ambiguity and asks the orchestrator for permission. The executor has the street-level technical detail but not the project vision, while the orchestrator has the vision but not the detail. So the orchestrator approves something flawed, the executor proceeds because it was authorized, and the system does something nobody intended.
+
+Merges are where this bites hardest. Each executor gets its change approved on its own terms, and changes that look correct on their own can contradict each other once combined. They often still pass compilation and linting, so nothing flags the contradiction until something breaks downstream.
+
+The fourth pattern worries me most, and I think of it as social contagion for agents. Architecture Decision Records (ADRs) and specs are important in agentic development, but the same artifacts that enforce good practices can embed bad ones too. One agent writes a flawed assumption into a project note, the next agent reads it and concludes that's how we do things here, and the pattern propagates across sessions. Fix it in one place and an agent will happily re-infect itself from another file where the bad idea still lives.
+
+Old code is a special case of this. A retired architecture looks almost exactly like the current one, and [research from Chroma](https://www.trychroma.com/research/context-rot) found in retrieval tests that models performed worse when distracting information was closely related in topic to what they actually needed. Chroma wasn't testing code, but I'd bet your old service layer is the most convincing distractor an agent will ever see.
+
+None of these patterns are new. Human teams pile up process, creep scope, and cargo-cult bad conventions too. Agents just do it faster, and without the hallway memory of why things are the way they are.
+
+Looking at all four together, I don't think any of them is mainly a model problem. Better models will help at the margins, but every one of these patterns is fed by what agents are given to read and who gets to write it. That's what I mean by context engineering, deciding what goes into an agent's working context, where it came from, and whether it's still true. These are failures of context engineering. Without a structured path connecting street-level execution back to human intent, agent swarms drift toward false assurance, sprawl, and bad information on their own.
+
+## What has actually helped
+
+My experience has been that it's hard to find a single solution because AI keeps evolving so quickly and so do our frameworks. I've tried memory files, memory databases, boards, planning skills, and things like Spec Kit. They all suffer from the same problem of drift, because nothing in them says what's current, who owns it, or when it stops being true. The research on fixing these problems is uneven too, and most of it comes from lab benchmarks rather than production systems like the one I've been in. Still, a few practices have held up both in my experience and in the studies I could find.
+
+Top-level orchestration matters more than I expected. Letting agents work independently sounds efficient, but a [Google and MIT study](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/) found that agents working in parallel with no coordination amplified errors by about 17 times, while systems with a central orchestrator held that to roughly 4 times. Those were general agent benchmarks rather than codebases, and the same study found multi-agent setups can hurt on sequential work, so I read it as containment rather than a cure. That's why I pair orchestration with keeping writes single-threaded wherever I can, meaning one writer per area of the code at a time. Cognition, the company behind Devin, has [landed on something similar](https://cognition.com/blog/multi-agents-working), where multiple agents contribute intelligence to a task while writes stay single-threaded.
+
+The orchestrator isn't the last word, though. That's the lesson of the third pattern. When an executor's question touches intent rather than implementation, what the feature is supposed to do rather than how to build it, the orchestrator's job is to send it up to a person instead of approving it.
+
+I've also learned to be aggressive about removing things. Old code, outdated specs, obsolete tests, and stale memories all hint to the agents that some other architecture might still be in play. The CLAUDE.md study carries a warning here, though. When teams clean up by bulldozing a file, growth resumes right away, and actually faster than before. The paper's own experiments suggest removal holds up better when the reason a rule exists is written down alongside it, and that matches what I've seen.
+
+That's why I've come to see ADRs and core design documents as the backbone of this whole approach, as long as they're kept ruthlessly current. Decision records hold the why, which is exactly what agents can't recover from the code. Design docs hold the current shape of the system, and they get updated in the same change that alters the architecture, not in some future cleanup sprint.
+
+Superseded decisions stay archived for the humans but come out of the agents' reading path entirely. A person owns those documents, and the orchestrator can propose changes at most, because if every agent can edit the source of truth, you've built a highway for mind viruses. That's also how I handle the contagion problem. The documents stay, but only current ones sit in the agents' path, and only a person can change them.
+
+Finally, I keep related work moving together. That sounds like it contradicts the usual advice to parallelize independent tasks, but I don't think it does. The work should be related in purpose, so every agent is reasoning about the same architecture and the same feature push, while staying independent in the files and seams each agent touches. That separation is also what keeps writes single-threaded without serializing the whole team.
+
+## Advice for CTOs and team leads
+
+If you're running teams that use agents at scale, the biggest lever I've found is picking one cohesive set of features and going all in on it. Adding tasks mid-stream is where things really go sideways. A [study across fifteen models](https://arxiv.org/pdf/2505.06120) found that when requirements arrived piece by piece over a conversation instead of all at once, performance dropped an average of 39 percent, driven mostly by a collapse in reliability. Handing the model the same information as one consolidated prompt recovered nearly all of that loss. So when scope changes, update the spec and start fresh rather than bolting the change onto work already in flight.
+
+I've felt that difference firsthand. When we held scope steady, problems grew roughly in line with the work. When we added changes mid-push, they seemed to multiply. I can't point to a study that measures that curve, but I'd bet on it.
+
+A few other habits help. Treat agent instruction files as code, with owners and review, instead of a junk drawer anyone can append to. Review decisions and not just diffs, since a clean diff can still encode a bad assumption.
+
+Watch your merge conflicts, too. Adam Tornhill [makes a good case](https://adamtornhill.substack.com/p/why-merge-conflicts-became-the-new) that when the same areas keep attracting parallel work, recurring conflicts show you where your code boundaries no longer support the work being done. And inside that one cohesive push, keep batches small. Google's [DORA research](https://dora.dev/capabilities/working-in-small-batches/) found that working in small batches strengthens AI's positive effect on product performance.
+
+## The acceleration problem
+
+All of this gets worse under the shipping culture AI has encouraged. When features can be generated in hours, the expectation becomes that they will be, and the backlog never gets a chance to breathe. I see it in the teams I work with and I feel it myself. Everyone is tired.
+
+The flaw I keep coming back to is that acceleration doesn't buy us time to think. It just buys more acceleration. The hours we save go to the next feature instead of the design review, the documentation update, or the cleanup that would have kept the agents on track.
+
+DORA's [2025 report](https://services.google.com/fh/files/misc/2025_state_of_ai_assisted_software_development.pdf) describes AI as an amplifier that magnifies the strengths of high-performing organizations and the dysfunctions of struggling ones, and I think that applies here too. A team that skips reflection at human speed will skip it faster with agents. I'd go a step further. In my experience, it compounds dysfunction faster than it compounds strength, and a strong, high-performing team can turn into an exhausted, dysfunctional one after only a couple of bad decisions. Act accordingly.
+
+I don't think the answer is slowing down across the board. I think it's protecting the thinking work on purpose, the same way we protect testing and security reviews, because the faster the agents go, the more that discipline matters.
+
+I'd love to hear how your teams are handling this. Are you seeing the same patterns at scale, and have you found ways to buy back time to think?
