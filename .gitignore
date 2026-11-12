@@ -58,3 +58,6 @@ techtavern.github.io/
 
 # graphify knowledge graph (rebuilt locally by post-commit hook)
 /graphify-out/
+
+# Personal Claude Code settings
+.claude/settings.local.json

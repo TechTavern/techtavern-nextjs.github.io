@@ -2,6 +2,16 @@
 
 Single source of guidance for AI coding agents (Claude Code, Codex, etc.) working in this repository. `CLAUDE.md` only points here — edit this file, not that one.
 
+## Agent Skills & Subagents
+
+Project skills and subagents live under `.agents/` so any agent tool can use them:
+
+- `.agents/skills/<name>/SKILL.md` — project skills (read natively by Codex and other tools that support `.agents/skills`).
+- `.agents/agents/*.md` — subagent definitions (Claude Code format).
+- `.claude/skills` and `.claude/agents` are symlinks to the directories above. Add or edit files in `.agents/`, never through `.claude/`.
+- Inside skills, reference files by their `.agents/...` path, not `.claude/...`.
+- `.claude/settings.json` is shared and committed; `.claude/settings.local.json` is personal and gitignored.
+
 ## Project Overview
 
 A Next.js static blog for Tech Tavern, LLC, deployed to GitHub Pages.

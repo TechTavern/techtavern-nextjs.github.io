@@ -56,7 +56,7 @@ This is the single most important step for consistency. The corpus has accumulat
 
 Before assigning tags to the article:
 
-1. Run `bash .claude/skills/article-frontmatter/scripts/tag_catalog.sh` from the repo root. It emits a frequency table of every tag in `content/articles/`, plus a kebab-normalized canonical form. Read the output.
+1. Run `bash .agents/skills/article-frontmatter/scripts/tag_catalog.sh` from the repo root. It emits a frequency table of every tag in `content/articles/`, plus a kebab-normalized canonical form. Read the output.
 2. For each tag concept you want to assign, **prefer an existing kebab-case tag** that already appears in the catalog (e.g., `ai-governance`, `ai-strategy`, `nonprofit-tech`). Reusing an existing tag is almost always better than inventing a new variant.
 3. Only invent a new tag if no semantically equivalent tag exists in the catalog. New tags must be kebab-case, lowercase, hyphen-separated.
 4. Aim for **3–6 tags per article**. Fewer than 3 under-categorizes the piece; more than 6 dilutes signal.
