@@ -13,7 +13,6 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "techtavern.github.io/**",
-      "specs/**",
     ],
   },
   ...nextConfig,
