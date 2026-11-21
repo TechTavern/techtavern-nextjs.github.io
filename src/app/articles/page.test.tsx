@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import ArticlesIndexPage, { metadata } from './page';
 import { createPosts, createPaginationData } from '@/tests/test-utils';
-import { getPaginatedPosts } from '@/lib/posts';
+import { getArticleIndexPage } from '@/lib/article-index';
 
 jest.mock('next/navigation', () => {
   const actual = jest.requireActual('next/navigation');
@@ -13,15 +13,15 @@ jest.mock('next/navigation', () => {
   };
 });
 
-jest.mock('@/lib/posts', () => {
-  const actual = jest.requireActual('@/lib/posts');
+jest.mock('@/lib/article-index', () => {
+  const actual = jest.requireActual('@/lib/article-index');
   return {
     ...actual,
-    getPaginatedPosts: jest.fn(),
+    getArticleIndexPage: jest.fn(),
   };
 });
 
-const mockGetPaginatedPosts = getPaginatedPosts as jest.MockedFunction<typeof getPaginatedPosts>;
+const mockGetArticleIndexPage = getArticleIndexPage as jest.MockedFunction<typeof getArticleIndexPage>;
 
 describe('Articles index page', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('Articles index page', () => {
   });
 
   it('renders an empty state when no posts are available', async () => {
-    mockGetPaginatedPosts.mockResolvedValueOnce(
+    mockGetArticleIndexPage.mockResolvedValueOnce(
       createPaginationData([], {
         totalItems: 0,
         totalPages: 1,
@@ -71,7 +71,7 @@ describe('Articles index page', () => {
         slug: 'observability-for-ai',
       },
     ]);
-    mockGetPaginatedPosts.mockResolvedValueOnce(
+    mockGetArticleIndexPage.mockResolvedValueOnce(
       createPaginationData(posts, {
         totalItems: posts.length,
         totalPages: 2,

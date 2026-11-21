@@ -1,4 +1,4 @@
-import { getPaginatedPosts } from "@/lib/posts";
+import { getArticleIndexPage } from "@/lib/article-index";
 import { DEFAULT_FEATURED_IMAGE, siteMeta } from "@/lib/site";
 import { getBaseUrl, withBasePath } from "@/lib/site.server";
 import { ARTICLES_PAGE, ArticlesPageSections } from "@/app/articles/ArticlesPageSections";
@@ -26,6 +26,6 @@ export const metadata = {
 };
 
 export default async function ArticlesIndexPage() {
-  const pagination = await getPaginatedPosts(1);
+  const pagination = await getArticleIndexPage(1);
   return <ArticlesPageSections posts={pagination.pageItems} pagination={pagination} />;
 }

@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import type { PaginationData } from '@/lib/pagination.types';
-import type { PostMeta } from '@/lib/posts';
-import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
+import {
+  getArticleIndexPage,
+  getPagedRouteParams,
+  parsePagedRouteParam,
+} from '@/lib/article-index';
 import { DEFAULT_FEATURED_IMAGE, siteMeta } from '@/lib/site';
 import { getBaseUrl, withBasePath } from '@/lib/site.server';
-import { InvalidPageError } from '@/lib/pagination';
 import { ARTICLES_PAGE, ArticlesPageSections } from '@/app/articles/ArticlesPageSections';
 
 function formatMetadataUrl(page: number): string {
@@ -15,7 +16,7 @@ function formatMetadataUrl(page: number): string {
 export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<Array<{ pageNumber: string }>> {
-  return generatePaginationParams();
+  return getPagedRouteParams();
 }
 
 export async function generateMetadata({
@@ -24,24 +25,8 @@ export async function generateMetadata({
   params: Promise<{ pageNumber: string }>;
 }): Promise<Metadata> {
   const { pageNumber } = await params;
-
-  if (!/^[0-9]+$/.test(pageNumber)) {
-    return {};
-  }
-
-  const page = Number.parseInt(pageNumber, 10);
-
-  if (page < 1) {
-    return {};
-  }
-
-  if (page === 1) {
-    // /articles/page/1/ is never generated; page 1 lives at /articles/.
-    return {};
-  }
-
-  const totalPages = await getTotalPages();
-  if (page > totalPages) {
+  const page = await parsePagedRouteParam(pageNumber);
+  if (page === null) {
     return {};
   }
 
@@ -76,35 +61,17 @@ export async function generateMetadata({
   };
 }
 
-async function resolvePagination(pageParam: string): Promise<PaginationData<PostMeta>> {
-  if (!/^[0-9]+$/.test(pageParam)) {
-    notFound();
-  }
-
-  const page = Number.parseInt(pageParam, 10);
-
-  if (page <= 1) {
-    // Page 1 is canonically /articles/; treat /articles/page/1/ as missing.
-    notFound();
-  }
-
-  try {
-    return await getPaginatedPosts(page);
-  } catch (error) {
-    if (error instanceof InvalidPageError) {
-      notFound();
-    }
-    throw error;
-  }
-}
-
 export default async function PaginatedArticlesPage({
   params,
 }: {
   params: Promise<{ pageNumber: string }>;
 }) {
   const { pageNumber } = await params;
-  const pagination = await resolvePagination(pageNumber);
+  const page = await parsePagedRouteParam(pageNumber);
+  if (page === null) {
+    notFound();
+  }
+  const pagination = await getArticleIndexPage(page);
 
   return <ArticlesPageSections posts={pagination.pageItems} pagination={pagination} />;
 }
