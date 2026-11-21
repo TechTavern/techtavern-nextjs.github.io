@@ -5,7 +5,7 @@
       "id": 1,
       "name": "stub-water-article",
       "prompt": "I just finished writing the body of content/articles/2026-05-18-the-u-s-water-system-was-already-broken.mdx. Can you review the frontmatter and propose fixes before I publish? Write your proposed review to outputs/review.md — do not edit the article file itself.",
-      "expected_output": "A review identifying: stub excerpt, stub ogDescription, generic ['technology','programming'] tags, default featuredImage. Proposes an editorial-voice excerpt (~140-200 chars), a distinct keyword-rich ogDescription (~150-160 chars), and 3-6 kebab-case tags reusing existing catalog tags (e.g., ai-infrastructure, sustainability, tech-strategy) plus likely-new water-specific tags. Also confirms schema validation passes and canonicalUrl matches slug+date.",
+      "expected_output": "A review identifying: stub excerpt, stub ogDescription, generic ['technology','programming'] tags, default featuredImage. Proposes an editorial-voice excerpt (~140-200 chars), a distinct keyword-rich ogDescription (~150-160 chars), and 3-6 kebab-case tags reusing existing catalog tags (e.g., ai-infrastructure, sustainability, tech-strategy) plus likely-new water-specific tags. Also confirms schema validation passes and canonicalUrl is absent.",
       "files": [],
       "assertions": [
         {"text": "Review identifies the stub excerpt string 'A brief description of this article.'"},
@@ -24,7 +24,7 @@
       "id": 2,
       "name": "clean-power-grid-article",
       "prompt": "Take a look at content/articles/2026-05-02-the-power-grid-was-already-broken-ai-just-made-it-visibile.mdx — I'm about to commit it. Anything to clean up in the frontmatter? Write your review to outputs/review.md.",
-      "expected_output": "A review confirming the frontmatter is well-formed: no stub fields, kebab-case tags already used, excerpt and ogDescription are distinct and on-voice. Should NOT propose unnecessary rewrites of already-good content. May note the canonicalUrl typo ('visibile' is misspelled in the slug — confirm intentional).",
+      "expected_output": "A review confirming the frontmatter is well-formed: no stub fields, kebab-case tags already used, excerpt and ogDescription are distinct and on-voice. Should NOT propose unnecessary rewrites of already-good content.",
       "files": [],
       "assertions": [
         {"text": "Review does NOT flag the excerpt as a stub"},
@@ -32,7 +32,7 @@
         {"text": "Review does NOT propose replacing the existing excerpt with a different one"},
         {"text": "Review does NOT propose replacing the existing ogDescription with a different one"},
         {"text": "Review confirms tags are already kebab-case"},
-        {"text": "Review confirms canonicalUrl is well-formed (or flags the visibile/visible spelling)"}
+        {"text": "Review confirms canonicalUrl is absent (self-canonical) and does not invent one"}
       ]
     },
     {

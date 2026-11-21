@@ -99,7 +99,6 @@ async function main() {
     `ogTitle: ${yq(title)}`,
     `ogDescription: ${yq('A brief description of this article for social media sharing.')}`,
     `ogImage: ${yq('/images/tech-tavern-default-featured.webp')}`,
-    `canonicalUrl: ${yq('https://techtavern.com/articles/' + dateStr.replace(/-/g, '/') + '/' + slug + '/')}`,
     `draft: false`,
     '---',
     ''

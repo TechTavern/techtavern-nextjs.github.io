@@ -44,7 +44,7 @@ The build's Zod schema lives at `src/lib/posts.ts`. A frontmatter file that fail
 
 Additional Tech Tavern conventions (not enforced by Zod, but break implicit contracts):
 
-- **`canonicalUrl` shape** must be `https://techtavern.com/articles/YYYY/MM/DD/slug/` where `YYYY/MM/DD` matches the article's own `date` field and `slug` matches the article's `slug`. A mismatch means the article advertises a canonical URL pointing at a different post — bad for SEO and likely a copy-paste error.
+- **`canonicalUrl` should normally be absent.** When omitted, the site emits the article's own Permalink (built from `SITE_URL`, i.e. `https://www.tech-tavern.com/articles/YYYY/MM/DD/slug/`) as canonical. Only set it for an article whose original home is on another site (a cross-post). Flag any `canonicalUrl` that points at the article's own tech-tavern.com Permalink (redundant) or at any other `tech-tavern.com`/`techtavern.com` URL (wrong — `techtavern.com` is not our domain).
 - **`ogTitle`** — flag if missing. Not required by the schema, but social/SERP previews benefit from an explicitly tuned title. Default to the article `title` if you propose one; only diverge when the article `title` is long or stylized in a way that hurts share previews.
 - **File-name vs slug consistency** — files are named `YYYY-MM-DD-slug.mdx`. The slug in the filename should match the `slug` field. Mismatch is a renamed-but-not-updated bug.
 
@@ -88,7 +88,7 @@ Present your review in this structure. Don't blind-edit the file — show the us
 - [ pass | fail with specific reasons ]
 
 ### Convention checks
-- canonicalUrl: [ ok / mismatch — expected X, got Y ]
+- canonicalUrl: [ absent (ok) / external cross-post (confirm intended) / remove — points at X ]
 - ogTitle: [ present / missing ]
 - filename slug vs frontmatter slug: [ match / mismatch ]
 - featuredImage: [ custom / DEFAULT (image still placeholder) ]
