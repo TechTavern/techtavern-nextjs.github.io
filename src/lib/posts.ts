@@ -4,7 +4,6 @@ import matter from "gray-matter";
 import fg from "fast-glob";
 import { z } from "zod";
 import { DEFAULT_FEATURED_IMAGE, paginationSettings } from "@/lib/site";
-import { withBasePath } from "@/lib/site.server";
 import { getPaginationData, InvalidPageError } from "@/lib/pagination";
 import type { PaginationData } from "@/lib/pagination.types";
 
@@ -110,8 +109,9 @@ async function loadAllPosts(): Promise<PostMeta[]> {
       const fm = parsed.data;
       const { year, month, day } = splitDate(String(data.date));
       const readingTimeMinutes = computeReadingTime(content);
-      const featured = withBasePath(fm.featuredImage) || withBasePath(DEFAULT_FEATURED_IMAGE);
-      const ogImg = withBasePath(fm.ogImage) || featured;
+      // Stored paths are basePath-free; render and URL sites go through siteAddress.
+      const featured = fm.featuredImage || DEFAULT_FEATURED_IMAGE;
+      const ogImg = fm.ogImage || featured;
       const lastModified = fm.lastModified ?? fm.date;
       return {
         title: fm.title,

@@ -22,7 +22,6 @@ describe('getAllPosts data loading edge cases', () => {
         },
         siteMeta: { title: 'Tech Tavern', description: 'Testing description' },
       }));
-      jest.doMock('@/lib/site.server', () => ({ withBasePath: (value: string | undefined) => value }));
 
       const { getAllPosts } = await import('./posts');
       const posts = await getAllPosts();
@@ -45,7 +44,6 @@ describe('getAllPosts data loading edge cases', () => {
         },
         siteMeta: { title: 'Tech Tavern', description: 'Testing description' },
       }));
-      jest.doMock('@/lib/site.server', () => ({ withBasePath: (value: string | undefined) => value }));
 
       const { getAllPosts } = await import('./posts');
       await expect(getAllPosts()).rejects.toThrow(/Invalid frontmatter/);

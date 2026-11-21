@@ -3,13 +3,13 @@ import { notFound } from 'next/navigation';
 import type { PaginationData } from '@/lib/pagination.types';
 import type { PostMeta } from '@/lib/posts';
 import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
-import { DEFAULT_FEATURED_IMAGE, siteMeta } from '@/lib/site';
-import { getBaseUrl, withBasePath } from '@/lib/site.server';
+import { siteMeta } from '@/lib/site';
+import { defaultFeaturedImageUrl, siteAddress } from '@/lib/site.server';
 import { InvalidPageError } from '@/lib/pagination';
 import { ARTICLES_PAGE, ArticlesPageSections } from '@/app/articles/ArticlesPageSections';
 
 function formatMetadataUrl(page: number): string {
-  return new URL(withBasePath(`/articles/page/${page}/`)!, getBaseUrl()).toString();
+  return siteAddress.absoluteUrl(`/articles/page/${page}/`);
 }
 
 export const dynamicParams = false;
@@ -59,7 +59,7 @@ export async function generateMetadata({
       url: pageUrl,
       images: [
         {
-          url: new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString(),
+          url: defaultFeaturedImageUrl(),
           alt: siteMeta.title,
         },
       ],
@@ -68,7 +68,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: pageTitle,
       description: siteMeta.description,
-      images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
+      images: [defaultFeaturedImageUrl()],
     },
     alternates: {
       canonical: pageUrl,

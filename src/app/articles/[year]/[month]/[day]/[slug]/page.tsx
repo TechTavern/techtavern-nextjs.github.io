@@ -4,7 +4,7 @@ import { getAllPosts, getPostByParams, getPostSource } from "@/lib/posts";
 import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { siteMeta, siteOrg } from "@/lib/site";
-import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import { siteAddress } from "@/lib/site.server";
 import type { Metadata } from "next";
 import { mdxOptions } from "@/lib/mdx-options";
 import { formatDisplayDate } from "@/lib/format";
@@ -30,15 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
   const title = post.ogTitle || post.title;
   const description = post.ogDescription || post.excerpt || `Read ${post.title} on Tech Tavern's blog`;
-  const base = getBaseUrl();
-  const toAbs = (u: string) => {
-    const pathWithBase = withBasePath(u) || u;
-    try { return new URL(pathWithBase, base).toString(); } catch { return pathWithBase; }
-  };
   const chooseImage = post.ogImage || post.featuredImage;
-  const imageUrl = chooseImage ? (chooseImage.startsWith('http') ? chooseImage : toAbs(chooseImage)) : undefined;
+  const imageUrl = chooseImage ? siteAddress.absoluteUrl(chooseImage) : undefined;
   const images = imageUrl ? [{ url: imageUrl, alt: title }] : undefined;
-  const absoluteUrl = toAbs(post.url);
+  const absoluteUrl = siteAddress.absoluteUrl(post.url);
   const canonical = post.canonicalUrl ? post.canonicalUrl : absoluteUrl;
   return {
     title,
@@ -71,7 +66,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const jsonLd = buildArticleJsonLd({
     post,
-    baseUrl: getBaseUrl(),
+    address: siteAddress,
     orgName: siteOrg.name,
     orgLogoPath: siteOrg.logoPath,
   });
@@ -125,7 +120,7 @@ export default async function ArticlePage({ params }: Props) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={post.featuredImage}
+                  src={siteAddress.href(post.featuredImage)}
                   alt={`Featured image for article: ${post.title}`}
                   className="w-full h-full object-cover"
                   fetchPriority="high"

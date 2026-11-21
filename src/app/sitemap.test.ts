@@ -2,14 +2,13 @@
 
 import { createPosts } from '@/tests/test-utils';
 import { getAllPosts, getTotalPages } from '@/lib/posts';
-import { getBaseUrl } from '@/lib/site.server';
-
-jest.mock('@/lib/site.server', () => ({
-  getBaseUrl: jest.fn(),
-}));
+jest.mock('@/lib/site.server', () => {
+  const actual = jest.requireActual('@/lib/site.server');
+  return { ...actual, siteAddress: actual.createSiteAddress({ siteUrl: 'https://example.com' }) };
+});
 
 jest.mock('@/lib/profiles', () => ({
-  getAllProfiles: jest.fn().mockResolvedValue([{ slug: 'jane-doe', url: '/consulting/jane-doe' }]),
+  getAllProfiles: jest.fn().mockResolvedValue([{ slug: 'jane-doe', url: '/consulting/jane-doe/' }]),
 }));
 
 jest.mock('@/lib/posts', () => {
@@ -23,12 +22,10 @@ jest.mock('@/lib/posts', () => {
 
 const getAllPostsMock = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
 const getTotalPagesMock = getTotalPages as jest.MockedFunction<typeof getTotalPages>;
-const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('sitemap route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    getBaseUrlMock.mockReturnValue('https://example.com');
     getTotalPagesMock.mockResolvedValue(1);
   });
 

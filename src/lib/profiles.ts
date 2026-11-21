@@ -104,7 +104,7 @@ async function readProfileFile(filePath: string): Promise<ProfileMeta> {
   return {
     ...parsed.data,
     filePath,
-    url: `/consulting/${parsed.data.slug}`,
+    url: `/consulting/${parsed.data.slug}/`,
   };
 }
 

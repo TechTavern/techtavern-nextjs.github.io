@@ -1,14 +1,17 @@
 /* @jest-environment node */
-import { buildOrganizationJsonLd, buildArticleJsonLd, toAbsoluteUrl } from './seo';
+import { buildOrganizationJsonLd, buildArticleJsonLd } from './seo';
+import { createSiteAddress } from '@/lib/site.server';
 import { createPostMeta } from '@/tests/test-utils';
 
 describe('seo JSON-LD builders', () => {
-  const baseUrl = 'https://example.com';
+  // Real site address with a non-empty basePath
+  const address = createSiteAddress({ siteUrl: 'https://example.com', basePath: '/base' });
+  const baseUrl = 'https://example.com/base';
 
   it('builds Organization JSON-LD with absolute logo', () => {
     const json = buildOrganizationJsonLd({
       name: 'Tech Tavern, LLC',
-      baseUrl,
+      address,
       logoPath: '/favicons/android-icon-192x192.png',
       email: 'info@tech-tavern.com',
     });
@@ -30,7 +33,7 @@ describe('seo JSON-LD builders', () => {
 
     const json = buildArticleJsonLd({
       post,
-      baseUrl,
+      address,
       orgName: 'Tech Tavern, LLC',
       orgLogoPath: '/favicons/android-icon-192x192.png',
     });
@@ -48,7 +51,7 @@ describe('seo JSON-LD builders', () => {
     const post = createPostMeta();
     const json = buildArticleJsonLd({
       post,
-      baseUrl,
+      address,
       orgName: 'Tech Tavern, LLC',
       orgLogoPath: '/favicons/android-icon-192x192.png',
     });
@@ -56,12 +59,5 @@ describe('seo JSON-LD builders', () => {
     expect(json.description).toBe(post.excerpt);
     expect(json.image).toBe(`${baseUrl}${post.featuredImage}`);
     expect(json.url).toBe(`${baseUrl}${post.url}`);
-  });
-
-  it('toAbsoluteUrl handles absolute inputs and invalid URLs safely', () => {
-    expect(toAbsoluteUrl('https://foo.bar/img.png', baseUrl)).toBe('https://foo.bar/img.png');
-    expect(toAbsoluteUrl('/img.png', baseUrl)).toBe(`${baseUrl}/img.png`);
-    // Pass a clearly invalid URL-like string; function should fall back
-    expect(toAbsoluteUrl('not a url', baseUrl)).toBe('not a url');
   });
 });

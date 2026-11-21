@@ -1,5 +1,6 @@
-import { withBasePath } from '@/lib/site.server';
+import type { SiteAddress } from '@/lib/site.server';
 import type { PostMeta } from '@/lib/posts';
+import { DEFAULT_FEATURED_IMAGE } from '@/lib/site';
 
 export type OrganizationJsonLd = {
   '@context': 'https://schema.org';
@@ -37,37 +38,19 @@ export type ArticleJsonLd = {
   url?: string;
 };
 
-export function toAbsoluteUrl(input: string | undefined, baseUrl: string): string | undefined {
-  if (!input) return undefined;
-  const s = String(input);
-  // If already absolute (http/https), return as-is
-  if (/^https?:\/\//i.test(s)) return s;
-  // Only resolve root-relative paths against base
-  if (s.startsWith('/')) {
-    const withBase = withBasePath(s) || s;
-    try {
-      return new URL(withBase, baseUrl).toString();
-    } catch {
-      return withBase;
-    }
-  }
-  // Otherwise, leave as provided (avoid coercing arbitrary strings)
-  return s;
-}
-
 export function buildOrganizationJsonLd(params: {
   name: string;
-  baseUrl: string;
+  address: SiteAddress;
   logoPath?: string;
   email?: string;
 }): OrganizationJsonLd {
-  const { name, baseUrl, logoPath, email } = params;
-  const logo = logoPath ? toAbsoluteUrl(logoPath, baseUrl) : undefined;
+  const { name, address, logoPath, email } = params;
+  const logo = logoPath ? address.absoluteUrl(logoPath) : undefined;
   const json: OrganizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name,
-    url: baseUrl,
+    url: address.baseUrl,
   };
   if (logo) json.logo = logo;
   if (email) {
@@ -84,16 +67,16 @@ export function buildOrganizationJsonLd(params: {
 
 export function buildArticleJsonLd(params: {
   post: PostMeta;
-  baseUrl: string;
+  address: SiteAddress;
   orgName: string;
   orgLogoPath?: string;
 }): ArticleJsonLd {
-  const { post, baseUrl, orgName, orgLogoPath } = params;
+  const { post, address, orgName, orgLogoPath } = params;
   const headline = post.ogTitle || post.title;
   const description = post.ogDescription || post.excerpt;
-  const image = toAbsoluteUrl(post.ogImage || post.featuredImage, baseUrl);
-  const canonical = post.canonicalUrl || toAbsoluteUrl(post.url, baseUrl);
-  const publisherLogo = orgLogoPath ? toAbsoluteUrl(orgLogoPath, baseUrl) : undefined;
+  const image = address.absoluteUrl(post.ogImage || post.featuredImage || DEFAULT_FEATURED_IMAGE);
+  const canonical = post.canonicalUrl || address.absoluteUrl(post.url);
+  const publisherLogo = orgLogoPath ? address.absoluteUrl(orgLogoPath) : undefined;
 
   const json: ArticleJsonLd = {
     '@context': 'https://schema.org',
@@ -109,8 +92,9 @@ export function buildArticleJsonLd(params: {
         : {}),
     },
     ...(description ? { description } : {}),
-    ...(image ? { image } : {}),
-    ...(canonical ? { mainEntityOfPage: canonical, url: canonical } : {}),
+    image,
+    mainEntityOfPage: canonical,
+    url: canonical,
   };
 
   return json;

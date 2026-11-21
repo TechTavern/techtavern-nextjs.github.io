@@ -2,7 +2,6 @@
 
 import { createPosts } from '@/tests/test-utils';
 import { getAllPosts } from '@/lib/posts';
-import { getBaseUrl } from '@/lib/site.server';
 
 jest.mock('@/lib/site', () => ({
   siteMeta: {
@@ -15,17 +14,16 @@ jest.mock('@/lib/posts', () => ({
   getAllPosts: jest.fn(),
 }));
 
-jest.mock('@/lib/site.server', () => ({
-  getBaseUrl: jest.fn(),
-}));
+jest.mock('@/lib/site.server', () => {
+  const actual = jest.requireActual('@/lib/site.server');
+  return { ...actual, siteAddress: actual.createSiteAddress({ siteUrl: 'https://example.com' }) };
+});
 
 const getAllPostsMock = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
-const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('rss route GET', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    getBaseUrlMock.mockReturnValue('https://example.com');
   });
 
   it('returns RSS XML with escaped content and caching headers', async () => {

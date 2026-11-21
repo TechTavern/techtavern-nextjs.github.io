@@ -18,9 +18,10 @@ jest.mock('@/lib/site', () => ({
   },
 }));
 
-jest.mock('@/lib/site.server', () => ({
-  getBaseUrl: () => 'https://example.com',
-}));
+jest.mock('@/lib/site.server', () => {
+  const actual = jest.requireActual('@/lib/site.server');
+  return { ...actual, siteAddress: actual.createSiteAddress({ siteUrl: 'https://example.com' }) };
+});
 
 import { GET } from './route';
 

@@ -17,7 +17,7 @@ import {
 import { getAllProfiles, getProfileBySlug, type SocialService } from "@/lib/profiles";
 import { getMDXComponents } from "@/mdx-components";
 import { mdxOptions } from "@/lib/mdx-options";
-import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import { siteAddress } from "@/lib/site.server";
 import { proseHeadingAnchorReset } from "@/lib/prose";
 import {
   resolveBookingComponent,
@@ -37,11 +37,8 @@ export async function generateMetadata({ params }: { params: PageParams }): Prom
   const profile = await getProfileBySlug(slug);
   if (!profile) return {};
 
-  const baseUrl = getBaseUrl();
-  const pageUrl = new URL(withBasePath(profile.url) ?? profile.url, baseUrl).toString();
-  const imageUrl = profile.image
-    ? new URL(withBasePath(profile.image) ?? profile.image, baseUrl).toString()
-    : undefined;
+  const pageUrl = siteAddress.absoluteUrl(profile.url);
+  const imageUrl = profile.image ? siteAddress.absoluteUrl(profile.image) : undefined;
 
   return {
     title: `${profile.name} | ${profile.title}`,
