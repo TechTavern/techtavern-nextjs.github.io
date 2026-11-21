@@ -11,6 +11,11 @@ jest.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) =>
     jest.requireActual('react').createElement('img', { src, alt }),
 }));
+// Render the home variant of the header as the home route would.
+jest.mock('next/navigation', () => ({
+  ...jest.requireActual('next/navigation'),
+  usePathname: () => '/',
+}));
 jest.mock('next-mdx-remote/rsc', () => ({
   compileMDX: jest.fn(async () => ({ content: null })),
 }));
@@ -25,6 +30,7 @@ type Loaded = {
   profiles: typeof import('@/lib/profiles');
   sitemap: typeof import('@/app/sitemap');
   renderAssets: () => string;
+  renderHomeNav: () => string;
   renderToStaticMarkup: (element: unknown) => string;
 };
 
@@ -41,6 +47,12 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
       profiles: require('@/lib/profiles'),
       sitemap: require('@/app/sitemap'),
       renderToStaticMarkup: require('react-dom/server').renderToStaticMarkup,
+      renderHomeNav: (() => {
+        const { createElement } = require('react');
+        const { renderToStaticMarkup } = require('react-dom/server');
+        const Header = require('@/components/ui/Header').default;
+        return () => renderToStaticMarkup(createElement(Header, { variant: 'home' }));
+      })(),
       renderAssets: (() => {
         const { createElement } = require('react');
         const { renderToStaticMarkup } = require('react-dom/server');
@@ -138,6 +150,11 @@ describe.each([
       expect(url.startsWith(`${BASE_PATH}/`)).toBe(true);
       expect(url).not.toContain(doubled);
     }
+  });
+
+  it('home Navigation logo (client component) carries the basePath once', () => {
+    const srcs = [...m.renderHomeNav().matchAll(/src="([^"]+)"/g)].map(([, src]) => src);
+    expect(srcs).toEqual([`${BASE_PATH}/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg`]);
   });
 
   it('Consultant Profile page images carry the basePath once', async () => {

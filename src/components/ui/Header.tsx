@@ -10,7 +10,14 @@ type HeaderProps = {
 export default function Header({ variant }: HeaderProps) {
   if (variant === "home") {
     // Home page header uses the existing client Navigation with scroll behavior
-    return <Navigation />;
+    return (
+      <Navigation
+        logos={{
+          onDark: siteAddress.href("/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg"),
+          onLight: siteAddress.href("/assets/img/logos/TechTavern_Logo_Horizontal_X.svg"),
+        }}
+      />
+    );
   }
 
   // Interior header for articles and other inner pages
