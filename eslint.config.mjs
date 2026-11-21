@@ -50,6 +50,12 @@ const eslintConfig = [
           selector: "TemplateLiteral > MemberExpression[property.name='baseUrl']",
           message: "Use siteAddress.absoluteUrl(path) instead of concatenating onto baseUrl.",
         },
+        {
+          // Raw <a href="/..."> skips basePath; next/link applies it (including /#hash links).
+          selector:
+            "JSXOpeningElement[name.name='a'] > JSXAttribute[name.name='href'] :matches(Literal[value=/^\\x2F(?!\\x2F)/], TemplateElement:first-child[value.raw=/^\\x2F(?!\\x2F)/])",
+          message: "Use next/link for internal links; a raw <a href=\"/...\"> skips basePath.",
+        },
       ],
     },
   },

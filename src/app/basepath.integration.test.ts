@@ -21,6 +21,8 @@ jest.mock('next-mdx-remote/rsc', () => ({
 }));
 
 const BASE_PATH = '/techtavern-nextjs.github.io';
+// next.config sets trailingSlash: true; the build inlines this for next/link (read per call).
+process.env.__NEXT_TRAILING_SLASH = 'true';
 const SITE_URL = 'https://example.github.io';
 
 type Loaded = {
@@ -35,9 +37,15 @@ type Loaded = {
 };
 
 function loadWithEnv(siteUrl: string, basePath: string): Loaded {
-  const prev = { SITE_URL: process.env.SITE_URL, NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH };
+  const prev = {
+    SITE_URL: process.env.SITE_URL,
+    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH,
+    __NEXT_ROUTER_BASEPATH: process.env.__NEXT_ROUTER_BASEPATH,
+  };
   process.env.SITE_URL = siteUrl;
   process.env.NEXT_PUBLIC_BASE_PATH = basePath;
+  // next.config's basePath, which the build inlines for next/link (read at module load).
+  process.env.__NEXT_ROUTER_BASEPATH = basePath;
   let loaded: Loaded | undefined;
   jest.isolateModules(() => {
     loaded = {
@@ -79,6 +87,8 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
   });
   process.env.SITE_URL = prev.SITE_URL;
   process.env.NEXT_PUBLIC_BASE_PATH = prev.NEXT_PUBLIC_BASE_PATH;
+  if (prev.__NEXT_ROUTER_BASEPATH === undefined) delete process.env.__NEXT_ROUTER_BASEPATH;
+  else process.env.__NEXT_ROUTER_BASEPATH = prev.__NEXT_ROUTER_BASEPATH;
   return loaded as Loaded;
 }
 
@@ -157,6 +167,18 @@ describe.each([
   it('home Navigation logo (client component) carries the basePath once', () => {
     const srcs = [...m.renderHomeNav().matchAll(/src="([^"]+)"/g)].map(([, src]) => src);
     expect(srcs).toEqual([`${BASE_PATH}/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg`]);
+  });
+
+  it('home Navigation section links (including /#hash links) carry the basePath once', () => {
+    const hrefs = [...m.renderHomeNav().matchAll(/href="([^"]+)"/g)].map(([, href]) => href);
+    const rootRelative = hrefs.filter((h) => h.startsWith('/'));
+    // next/link renders '/#Services' as `${basePath}#Services` (as the real build does).
+    expect(rootRelative).toEqual(expect.arrayContaining([`${BASE_PATH}#Services`, `${BASE_PATH}#Contact`]));
+    for (const href of rootRelative) {
+      expect(href === BASE_PATH || /^[/#]/.test(href.slice(BASE_PATH.length))).toBe(true);
+      expect(href.startsWith(BASE_PATH)).toBe(true);
+      expect(href).not.toContain(doubled);
+    }
   });
 
   it('Consultant Profile page images carry the basePath once', async () => {

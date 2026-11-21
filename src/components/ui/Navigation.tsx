@@ -98,26 +98,8 @@ export default function Navigation({ logos }: NavigationProps) {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8" role="menubar" aria-label="Desktop navigation menu">
               {navigationItems.map((item) => {
-                // Use regular anchor tags for hash links, Link for page navigation
+                // next/link (not a raw <a>) so basePath is applied to /#hash links too.
                 const isHashLink = item.href.startsWith('/#');
-
-                if (isHashLink) {
-                  return (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className={`px-3 py-2 text-sm font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                        ? 'text-gray-900 hover:text-blue-600 focus-ring'
-                        : 'text-white hover:text-blue-200 focus-ring-light'
-                        }`}
-                      onClick={handleLinkClick}
-                      role="menuitem"
-                      aria-label={`Navigate to ${item.label} section`}
-                    >
-                      {item.label}
-                    </a>
-                  );
-                }
 
                 return (
                   <Link
@@ -129,7 +111,7 @@ export default function Navigation({ logos }: NavigationProps) {
                       }`}
                     onClick={handleLinkClick}
                     role="menuitem"
-                    aria-label={`Navigate to ${item.label} page`}
+                    aria-label={`Navigate to ${item.label} ${isHashLink ? 'section' : 'page'}`}
                   >
                     {item.label}
                   </Link>
@@ -170,26 +152,8 @@ export default function Navigation({ logos }: NavigationProps) {
               aria-label="Mobile navigation menu"
             >
               {navigationItems.map((item) => {
-                // Use regular anchor tags for hash links, Link for page navigation
+                // next/link (not a raw <a>) so basePath is applied to /#hash links too.
                 const isHashLink = item.href.startsWith('/#');
-
-                if (isHashLink) {
-                  return (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className={`block px-3 py-2 text-base font-medium transition-colors duration-300 hover:opacity-80 touch-target ${isScrolled
-                        ? 'text-gray-900 hover:text-blue-600 hover:bg-gray-50 focus-ring'
-                        : 'text-white hover:text-blue-200 hover:bg-white/10 focus-ring-light'
-                        } rounded-md`}
-                      onClick={handleLinkClick}
-                      role="menuitem"
-                      aria-label={`Navigate to ${item.label} section`}
-                    >
-                      {item.label}
-                    </a>
-                  );
-                }
 
                 return (
                   <Link
@@ -201,7 +165,7 @@ export default function Navigation({ logos }: NavigationProps) {
                       } rounded-md`}
                     onClick={handleLinkClick}
                     role="menuitem"
-                    aria-label={`Navigate to ${item.label} page`}
+                    aria-label={`Navigate to ${item.label} ${isHashLink ? 'section' : 'page'}`}
                   >
                     {item.label}
                   </Link>

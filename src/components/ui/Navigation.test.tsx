@@ -11,10 +11,12 @@ const logos = {
   onLight: '/base/assets/img/logos/standard.svg',
 };
 
+// Stand-in for next/link applying basePath, so links that bypass Link
+// (raw <a href="/...">) show up unprefixed.
 jest.mock('next/link', () => ({
   __esModule: true,
   default: ({ children, href, ...rest }: { children: React.ReactNode; href: string }) => (
-    <a href={href} {...rest}>
+    <a href={`/base${href}`} {...rest}>
       {children}
     </a>
   ),
@@ -38,7 +40,7 @@ describe('Navigation', () => {
 
     expect(
       screen.getByRole('menuitem', { name: /navigate to services section/i })
-    ).toHaveAttribute('href', '/#Services');
+    ).toHaveAttribute('href', '/base/#Services');
 
     const toggle = screen.getByRole('button', { name: /open mobile menu/i });
     await userEvent.click(toggle);
@@ -76,6 +78,20 @@ describe('Navigation', () => {
       window.dispatchEvent(new Event('scroll'));
     });
     expect(screen.getByRole('img', { name: 'Tech Tavern' })).toHaveAttribute('src', logos.onLight);
+  });
+
+  it('routes every root-relative link through next/link so basePath applies', async () => {
+    render(<Navigation logos={logos} />);
+    await userEvent.click(screen.getByRole('button', { name: /open mobile menu/i }));
+    const hrefs = screen
+      .getAllByRole('link')
+      .concat(screen.getAllByRole('menuitem'))
+      .map((el) => el.getAttribute('href') ?? '')
+      .filter((href) => href.startsWith('/'));
+    expect(hrefs.length).toBeGreaterThan(5);
+    for (const href of hrefs) {
+      expect(href.startsWith('/base/')).toBe(true);
+    }
   });
 
   it('returns null on non-home routes', () => {
