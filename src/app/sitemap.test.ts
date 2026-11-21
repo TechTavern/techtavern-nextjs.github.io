@@ -8,6 +8,10 @@ jest.mock('@/lib/site.server', () => ({
   getBaseUrl: jest.fn(),
 }));
 
+jest.mock('@/lib/profiles', () => ({
+  getAllProfiles: jest.fn().mockResolvedValue([{ slug: 'jane-doe', url: '/consulting/jane-doe' }]),
+}));
+
 jest.mock('@/lib/posts', () => {
   const actual = jest.requireActual('@/lib/posts');
   return {
@@ -94,5 +98,14 @@ describe('sitemap route', () => {
 
     expect(urls).toContain('https://example.com/articles/page/2/');
     expect(urls.some((u) => u.includes('/articles/page/1/'))).toBe(false);
+  });
+
+  it('lists consultant profile pages with a trailing slash', async () => {
+    getAllPostsMock.mockResolvedValue([]);
+
+    const { default: sitemap } = await import('@/app/sitemap');
+    const routes = await sitemap();
+
+    expect(routes.map((r) => r.url)).toContain('https://example.com/consulting/jane-doe/');
   });
 });

@@ -3,6 +3,7 @@ import type { MetadataRoute } from 'next';
 export const dynamic = 'force-static';
 
 import { getAllPosts, getTotalPages } from '@/lib/posts';
+import { getAllProfiles } from '@/lib/profiles';
 import { getBaseUrl } from '@/lib/site.server';
 
 function formatYmd(date: Date): string {
@@ -47,5 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...baseRoutes, ...paginatedRoutes, ...postRoutes];
+  const profiles = await getAllProfiles();
+  const profileRoutes: MetadataRoute.Sitemap = profiles.map((profile) => ({
+    url: `${base}${profile.url.replace(/\/?$/, '/')}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
+  return [...baseRoutes, ...profileRoutes, ...paginatedRoutes, ...postRoutes];
 }
