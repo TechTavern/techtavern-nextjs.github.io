@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteAddress } from "@/lib/site.server";
 import Image from "next/image";
 import Navigation from "@/components/ui/Navigation";
 
@@ -26,7 +27,7 @@ export default function Header({ variant }: HeaderProps) {
             aria-label="Tech Tavern - Return to homepage"
           >
             <Image
-              src="/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg"
+              src={siteAddress.href("/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg")}
               alt="Tech Tavern"
               width={180}
               height={40}

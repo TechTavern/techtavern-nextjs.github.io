@@ -47,15 +47,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicons/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png" />
-        <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="preload" as="image" href="/images/richmond-station-view-375w.webp" type="image/webp" media="(max-width: 767px)" />
-        <link rel="preload" as="image" href="/images/richmond-station-view-768w.webp" type="image/webp" media="(min-width: 768px) and (max-width: 1199px)" />
-        <link rel="preload" as="image" href="/images/richmond-station-view-1200w.webp" type="image/webp" media="(min-width: 1200px)" />
+        <link rel="icon" href={siteAddress.href("/favicons/favicon.ico")} />
+        <link rel="apple-touch-icon" sizes="180x180" href={siteAddress.href("/favicons/apple-icon-180x180.png")} />
+        <link rel="icon" type="image/png" sizes="96x96" href={siteAddress.href("/favicons/favicon-96x96.png")} />
+        <link rel="icon" type="image/png" sizes="32x32" href={siteAddress.href("/favicons/favicon-32x32.png")} />
+        <link rel="icon" type="image/png" sizes="16x16" href={siteAddress.href("/favicons/favicon-16x16.png")} />
+        <link rel="manifest" href={siteAddress.href("/site.webmanifest")} />
+        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-375w.webp")} type="image/webp" media="(max-width: 767px)" />
+        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-768w.webp")} type="image/webp" media="(min-width: 768px) and (max-width: 1199px)" />
+        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-1200w.webp")} type="image/webp" media="(min-width: 1200px)" />
         {/* Inline critical CSS removed; relying on globals.css and Tailwind utilities */}
         <meta
           httpEquiv="Content-Security-Policy"

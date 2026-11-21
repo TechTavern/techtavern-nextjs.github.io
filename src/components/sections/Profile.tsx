@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { siteAddress } from '@/lib/site.server';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
 
@@ -54,7 +55,7 @@ export default function Profile() {
       <div className="order-2 lg:order-1">
         <div className="relative">
           <Image
-            src={profile.image.src}
+            src={siteAddress.href(profile.image.src)}
             alt={profile.image.alt}
             width={profile.image.width}
             height={profile.image.height}
@@ -73,7 +74,7 @@ export default function Profile() {
           >
             <div className="relative w-full aspect-square">
               <Image
-                src={profile.certifications.pmp.badgeImage}
+                src={siteAddress.href(profile.certifications.pmp.badgeImage)}
                 alt={profile.certifications.pmp.altText}
                 fill
                 sizes="(min-width: 1024px) 300px, (min-width: 768px) 240px, 160px"
@@ -91,7 +92,7 @@ export default function Profile() {
           >
             <div className="relative w-full aspect-square">
               <Image
-                src={profile.certifications.genAiLeader.badgeImage}
+                src={siteAddress.href(profile.certifications.genAiLeader.badgeImage)}
                 alt={profile.certifications.genAiLeader.altText}
                 fill
                 sizes="(min-width: 1024px) 300px, (min-width: 768px) 240px, 160px"

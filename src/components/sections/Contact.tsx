@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { siteAddress } from '@/lib/site.server';
 import Link from 'next/link';
 import { MapPin, Mail, Globe, Calendar } from 'lucide-react';
 
@@ -75,7 +76,7 @@ export default function Contact() {
       {/* Illustration */}
       <div className="flex justify-center">
         <Image
-          src="/assets/img/undraw_contact_us_15o2_white_circles.svg"
+          src={siteAddress.href("/assets/img/undraw_contact_us_15o2_white_circles.svg")}
           alt="Illustration of people collaborating around social media and communication icons"
           width={500}
           height={400}

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { siteAddress } from '@/lib/site.server';
 import styles from './Services.module.css';
 
 interface LogoConfig {
@@ -126,7 +127,7 @@ export default function Services() {
                       className="flex justify-center items-center"
                     >
                       <Image
-                        src={logo.src}
+                        src={siteAddress.href(logo.src)}
                         alt={logo.alt}
                         width={200}
                         height={150}
@@ -174,7 +175,7 @@ export default function Services() {
             {/* Image */}
             <div className={`${service.layout === 'image-first' ? 'lg:col-start-1' : ''}`}>
               <Image
-                src={service.image}
+                src={siteAddress.href(service.image)}
                 alt={service.imageAlt}
                 width={500}
                 height={400}

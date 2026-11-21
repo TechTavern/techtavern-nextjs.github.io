@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { siteAddress } from '@/lib/site.server';
 import { DEFAULT_FEATURED_IMAGE, siteMeta } from '@/lib/site';
 
 const info = {
@@ -20,7 +21,7 @@ export default function Info() {
       <div className="order-2 lg:order-1">
         <div className="relative">
           <Image
-            src={info.image.src}
+            src={siteAddress.href(info.image.src)}
             alt={info.image.alt}
             width={600}
             height={400}

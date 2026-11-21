@@ -5,6 +5,12 @@
 jest.mock('@/lib/mdx-options', () => ({
   mdxOptions: { remarkPlugins: [], rehypePlugins: [] },
 }));
+// The build sets images.unoptimized, so next/image renders `src` unchanged.
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: ({ src, alt }: { src: string; alt: string }) =>
+    jest.requireActual('react').createElement('img', { src, alt }),
+}));
 jest.mock('next-mdx-remote/rsc', () => ({
   compileMDX: jest.fn(async () => ({ content: null })),
 }));
@@ -18,6 +24,7 @@ type Loaded = {
   consultingPage: typeof import('@/app/consulting/[slug]/page');
   profiles: typeof import('@/lib/profiles');
   sitemap: typeof import('@/app/sitemap');
+  renderAssets: () => string;
 };
 
 function loadWithEnv(siteUrl: string, basePath: string): Loaded {
@@ -32,6 +39,22 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
       consultingPage: require('@/app/consulting/[slug]/page'),
       profiles: require('@/lib/profiles'),
       sitemap: require('@/app/sitemap'),
+      renderAssets: (() => {
+        const { createElement } = require('react');
+        const { renderToStaticMarkup } = require('react-dom/server');
+        const RootLayout = require('@/app/layout').default;
+        const sections = [
+          require('@/components/sections/Profile').default,
+          require('@/components/sections/Services').default,
+          require('@/components/sections/Info').default,
+          require('@/components/sections/Contact').default,
+          require('@/components/ui/Header').default,
+        ];
+        return () =>
+          [RootLayout({ children: null }), ...sections.map((C) => createElement(C, {}))]
+            .map((element) => renderToStaticMarkup(element))
+            .join('\n');
+      })(),
     };
   });
   process.env.SITE_URL = prev.SITE_URL;
@@ -90,6 +113,20 @@ describe.each([
       expect(entry.url.startsWith(`${SITE_URL}${BASE_PATH}/`)).toBe(true);
       expect(entry.url).not.toContain(doubled);
       expect(entry.url.endsWith('/')).toBe(true);
+    }
+  });
+
+  it('public-folder asset hrefs (favicons, preloads, next/image src) carry the basePath once', () => {
+    const html = m.renderAssets();
+    const assetUrls = [...html.matchAll(/(?:href|src)="([^"]+\.(?:ico|png|webp|svg|jpg|webmanifest))"/g)].map(
+      ([, url]) => url,
+    );
+    expect(assetUrls).toEqual(expect.arrayContaining([`${BASE_PATH}/favicons/favicon.ico`]));
+    expect(assetUrls.some((u) => u.includes('/images/badges/'))).toBe(true);
+    expect(assetUrls.some((u) => u.includes('/assets/img/logos/'))).toBe(true);
+    for (const url of assetUrls.filter((u) => u.startsWith('/'))) {
+      expect(url.startsWith(`${BASE_PATH}/`)).toBe(true);
+      expect(url).not.toContain(doubled);
     }
   });
 });
