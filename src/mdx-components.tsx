@@ -3,6 +3,14 @@ import React from "react";
 import Link from "next/link";
 import MDXImage from "@/components/ui/MDXImage";
 import type { MDXImageProps } from "@/components/ui/MDXImage";
+import { siteAddress } from "@/lib/site.server";
+
+/** Root-relative public-folder image paths need the basePath; next/image does not add it. */
+function withSiteImageSrc(props: MDXImageProps): MDXImageProps {
+  return typeof props.src === "string" && props.src.startsWith("/")
+    ? { ...props, src: siteAddress.href(props.src) }
+    : props;
+}
 
 export function getMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -176,9 +184,9 @@ export function getMDXComponents(components: MDXComponents): MDXComponents {
     ),
 
     // Image handling: prefers next/image for local assets with known dimensions
-    img: (props) => <MDXImage {...(props as MDXImageProps)} />,
+    img: (props) => <MDXImage {...withSiteImageSrc(props as MDXImageProps)} />,
     // Allow explicit usage in MDX: <Image .../>
-    Image: (props: MDXImageProps) => <MDXImage {...props} />,
+    Image: (props: MDXImageProps) => <MDXImage {...withSiteImageSrc(props)} />,
 
     ...components,
   };

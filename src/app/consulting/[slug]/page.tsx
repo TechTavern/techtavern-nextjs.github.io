@@ -107,7 +107,7 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
           {/* Profile Image - Larger and more prominent */}
           <div className="flex-shrink-0 mx-auto md:mx-0">
             <Image
-              src={profile.image}
+              src={siteAddress.href(profile.image)}
               alt={profile.name}
               width={200}
               height={200}
@@ -203,7 +203,7 @@ export default async function ConsultingProfilePage({ params }: { params: PagePa
             const card = (
               <div className="group flex flex-col items-center justify-center gap-4 w-44 h-44 rounded-2xl border-2 border-secondary/30 bg-white shadow-md hover:shadow-xl hover:border-accent/50 transition-all duration-300 hover:-translate-y-1 px-4 text-center">
                 <Image
-                  src={certification.badge_image}
+                  src={siteAddress.href(certification.badge_image)}
                   alt={`${certification.title} badge`}
                   width={80}
                   height={80}

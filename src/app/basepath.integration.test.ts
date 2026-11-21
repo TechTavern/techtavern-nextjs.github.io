@@ -25,6 +25,7 @@ type Loaded = {
   profiles: typeof import('@/lib/profiles');
   sitemap: typeof import('@/app/sitemap');
   renderAssets: () => string;
+  renderToStaticMarkup: (element: unknown) => string;
 };
 
 function loadWithEnv(siteUrl: string, basePath: string): Loaded {
@@ -39,10 +40,12 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
       consultingPage: require('@/app/consulting/[slug]/page'),
       profiles: require('@/lib/profiles'),
       sitemap: require('@/app/sitemap'),
+      renderToStaticMarkup: require('react-dom/server').renderToStaticMarkup,
       renderAssets: (() => {
         const { createElement } = require('react');
         const { renderToStaticMarkup } = require('react-dom/server');
         const RootLayout = require('@/app/layout').default;
+        const mdx = require('@/mdx-components').getMDXComponents();
         const sections = [
           require('@/components/sections/Profile').default,
           require('@/components/sections/Services').default,
@@ -51,7 +54,12 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
           require('@/components/ui/Header').default,
         ];
         return () =>
-          [RootLayout({ children: null }), ...sections.map((C) => createElement(C, {}))]
+          [
+            RootLayout({ children: null }),
+            ...sections.map((C) => createElement(C, {})),
+            mdx.img({ src: '/images/mdx-sample.webp', alt: '', width: 10, height: 10 }),
+            mdx.img({ src: 'https://cdn.example.com/remote.webp', alt: '' }),
+          ]
             .map((element) => renderToStaticMarkup(element))
             .join('\n');
       })(),
@@ -124,9 +132,22 @@ describe.each([
     expect(assetUrls).toEqual(expect.arrayContaining([`${BASE_PATH}/favicons/favicon.ico`]));
     expect(assetUrls.some((u) => u.includes('/images/badges/'))).toBe(true);
     expect(assetUrls.some((u) => u.includes('/assets/img/logos/'))).toBe(true);
+    expect(assetUrls).toContain(`${BASE_PATH}/images/mdx-sample.webp`);
+    expect(assetUrls).toContain('https://cdn.example.com/remote.webp');
     for (const url of assetUrls.filter((u) => u.startsWith('/'))) {
       expect(url.startsWith(`${BASE_PATH}/`)).toBe(true);
       expect(url).not.toContain(doubled);
+    }
+  });
+
+  it('Consultant Profile page images carry the basePath once', async () => {
+    const [profile] = await m.profiles.getAllProfiles();
+    const page = await m.consultingPage.default({ params: Promise.resolve({ slug: profile.slug }) });
+    const srcs = [...m.renderToStaticMarkup(page).matchAll(/src="([^"]+)"/g)].map(([, src]) => src);
+    expect(srcs).toContain(`${BASE_PATH}${profile.image}`);
+    for (const src of srcs.filter((u) => u.startsWith('/'))) {
+      expect(src.startsWith(`${BASE_PATH}/`)).toBe(true);
+      expect(src).not.toContain(doubled);
     }
   });
 });
