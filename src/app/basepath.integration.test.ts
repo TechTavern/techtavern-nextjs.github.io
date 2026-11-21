@@ -146,7 +146,9 @@ describe.each([
     expect(assetUrls.some((u) => u.includes('/assets/img/logos/'))).toBe(true);
     expect(assetUrls).toContain(`${BASE_PATH}/images/mdx-sample.webp`);
     expect(assetUrls).toContain('https://cdn.example.com/remote.webp');
-    for (const url of assetUrls.filter((u) => u.startsWith('/'))) {
+    // '/img.jpg' is next/jest's stub for bundler-imported images (the hero
+    // preloads); the real build emits those under `${basePath}/_next/static/media/`.
+    for (const url of assetUrls.filter((u) => u.startsWith('/') && u !== '/img.jpg')) {
       expect(url.startsWith(`${BASE_PATH}/`)).toBe(true);
       expect(url).not.toContain(doubled);
     }
@@ -167,4 +169,32 @@ describe.each([
       expect(src).not.toContain(doubled);
     }
   });
+});
+
+describe('CSS asset references', () => {
+  // Root-absolute url('/x') in CSS is emitted verbatim and ignores basePath.
+  // Relative urls are resolved by the bundler, which fingerprints the file
+  // under /_next/static/media/ and applies assetPrefix (= basePath).
+  const fs = require('node:fs') as typeof import('node:fs');
+  const path = require('node:path') as typeof import('node:path');
+  const srcDir = path.join(process.cwd(), 'src');
+  const cssFiles = (fs.readdirSync(srcDir, { recursive: true }) as string[])
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => path.join(srcDir, f));
+  const refs = cssFiles.flatMap((file) =>
+    [...fs.readFileSync(file, 'utf8').matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)].map(([, url]) => ({ file, url })),
+  );
+
+  it('finds the CSS url() references', () => {
+    expect(refs.length).toBeGreaterThan(0);
+  });
+
+  it.each(refs.map((r) => [path.relative(process.cwd(), r.file), r.url]))(
+    '%s: %s is bundler-resolved and exists',
+    (file, url) => {
+      expect(url).not.toMatch(/^\//);
+      if (/^(?:data:|https?:|#)/.test(url)) return;
+      expect(fs.existsSync(path.resolve(path.dirname(file), url))).toBe(true);
+    },
+  );
 });

@@ -6,7 +6,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/lato/lato-400-normal.ttf') format('truetype');
+  src: url('../../public/fonts/lato/lato-400-normal.ttf') format('truetype');
 }
 
 @font-face {
@@ -14,7 +14,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/lato/lato-700-normal.ttf') format('truetype');
+  src: url('../../public/fonts/lato/lato-700-normal.ttf') format('truetype');
 }
 
 /* Poppins Font Family - Optimized (only essential weights) */
@@ -23,7 +23,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/poppins/poppins-400-normal.ttf') format('truetype');
+  src: url('../../public/fonts/poppins/poppins-400-normal.ttf') format('truetype');
 }
 
 @font-face {
@@ -31,7 +31,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/poppins/poppins-600-normal.ttf') format('truetype');
+  src: url('../../public/fonts/poppins/poppins-600-normal.ttf') format('truetype');
 }
 
 @font-face {
@@ -39,7 +39,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/poppins/poppins-700-normal.ttf') format('truetype');
+  src: url('../../public/fonts/poppins/poppins-700-normal.ttf') format('truetype');
 }
 
 /* Enable Tailwind */
@@ -223,7 +223,7 @@
   padding-left: 2rem;
   line-height: 1.5rem;
   margin-bottom: 1rem;
-  background-image: url('/assets/img/check.svg');
+  background-image: url('../../public/assets/img/check.svg');
   background-repeat: no-repeat;
 }
 
