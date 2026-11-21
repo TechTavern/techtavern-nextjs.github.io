@@ -1,4 +1,4 @@
-import { getPaginatedPosts } from "@/lib/posts";
+import { articleIndexPath, getArticleIndexPage } from "@/lib/article-index";
 import { siteMeta } from "@/lib/site";
 import { defaultFeaturedImageUrl, siteAddress } from "@/lib/site.server";
 import { ARTICLES_PAGE, ArticlesPageSections } from "@/app/articles/ArticlesPageSections";
@@ -11,7 +11,7 @@ export const metadata = {
     description: siteMeta.description,
     type: 'website',
     siteName: siteMeta.title,
-    url: siteAddress.absoluteUrl('/articles/'),
+    url: siteAddress.absoluteUrl(articleIndexPath(1)),
     images: [{ url: defaultFeaturedImageUrl(), alt: siteMeta.title }],
   },
   twitter: {
@@ -21,11 +21,11 @@ export const metadata = {
     images: [defaultFeaturedImageUrl()],
   },
   alternates: {
-    canonical: siteAddress.absoluteUrl('/articles/'),
+    canonical: siteAddress.absoluteUrl(articleIndexPath(1)),
   }
 };
 
 export default async function ArticlesIndexPage() {
-  const pagination = await getPaginatedPosts(1);
+  const pagination = await getArticleIndexPage(1);
   return <ArticlesPageSections posts={pagination.pageItems} pagination={pagination} />;
 }

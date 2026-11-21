@@ -25,6 +25,15 @@ function createPageRange(start: number, end: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
+/** Number of pages needed for `totalItems`; an empty list still has one (empty) page. */
+export function countPages(
+  totalItems: number,
+  itemsPerPage: number = paginationSettings.defaultItemsPerPage,
+): number {
+  assertPositiveInteger(itemsPerPage, 'itemsPerPage must be a positive integer');
+  return totalItems === 0 ? 1 : Math.ceil(totalItems / itemsPerPage);
+}
+
 export function getPaginationData<T>(
   items: T[],
   currentPage: number,
@@ -34,10 +43,8 @@ export function getPaginationData<T>(
     throw new TypeError('Items must be an array');
   }
 
-  assertPositiveInteger(itemsPerPage, 'itemsPerPage must be a positive integer');
-
   const totalItems = items.length;
-  const totalPages = totalItems === 0 ? 1 : Math.ceil(totalItems / itemsPerPage);
+  const totalPages = countPages(totalItems, itemsPerPage);
 
   if (!Number.isInteger(currentPage) || currentPage <= 0) {
     throw new InvalidPageError('Invalid current page');

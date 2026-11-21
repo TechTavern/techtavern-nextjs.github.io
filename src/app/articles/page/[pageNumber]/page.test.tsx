@@ -3,9 +3,9 @@ import PaginatedArticlesPage, {
   generateMetadata,
   generateStaticParams,
 } from './page';
-import { createPaginationData, createPosts } from '@/tests/test-utils';
-import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
-import { InvalidPageError } from '@/lib/pagination';
+import { createPosts } from '@/tests/test-utils';
+import { getAllPosts } from '@/lib/posts';
+import { paginationSettings } from '@/lib/site';
 
 jest.mock('next/navigation', () => ({
   notFound: () => {
@@ -25,9 +25,7 @@ jest.mock('@/lib/posts', () => {
   const actual = jest.requireActual('@/lib/posts');
   return {
     ...actual,
-    getPaginatedPosts: jest.fn(),
-    generatePaginationParams: jest.fn(),
-    getTotalPages: jest.fn(),
+    getAllPosts: jest.fn(),
   };
 });
 
@@ -46,24 +44,22 @@ jest.mock('@/app/articles/ArticlesPageSections', () => ({
   },
 }));
 
-const getPaginatedPostsMock = getPaginatedPosts as jest.MockedFunction<typeof getPaginatedPosts>;
-const generatePaginationParamsMock = generatePaginationParams as jest.MockedFunction<typeof generatePaginationParams>;
-const getTotalPagesMock = getTotalPages as jest.MockedFunction<typeof getTotalPages>;
+const getAllPostsMock = getAllPosts as jest.MockedFunction<typeof getAllPosts>;
+const perPage = paginationSettings.defaultItemsPerPage;
 
 describe('Paginated articles page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Default: 4 pages exist so page-2 is valid and page-999 is out of range
-    getTotalPagesMock.mockResolvedValue(4);
+    getAllPostsMock.mockResolvedValue(createPosts([], perPage * 4));
   });
 
-  it('returns static params from the posts helper', async () => {
-    generatePaginationParamsMock.mockResolvedValue([{ pageNumber: '2' }, { pageNumber: '3' }]);
-
-    const params = await generateStaticParams();
-
-    expect(generatePaginationParamsMock).toHaveBeenCalledTimes(1);
-    expect(params).toEqual([{ pageNumber: '2' }, { pageNumber: '3' }]);
+  it('generates static params for pages 2..N only', async () => {
+    expect(await generateStaticParams()).toEqual([
+      { pageNumber: '2' },
+      { pageNumber: '3' },
+      { pageNumber: '4' },
+    ]);
   });
 
   it('returns empty metadata for page 1 (page 1 lives at /articles/)', async () => {
@@ -71,14 +67,11 @@ describe('Paginated articles page', () => {
 
     // /articles/page/1/ is never generated; no metadata needed.
     expect(metadata).toEqual({});
-    expect(getPaginatedPostsMock).not.toHaveBeenCalled();
   });
 
   it('generates paginated metadata for subsequent pages', async () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '2' }) });
 
-    expect(getTotalPagesMock).toHaveBeenCalledTimes(1);
-    expect(getPaginatedPostsMock).not.toHaveBeenCalled();
     expect(metadata.title).toBe('Articles – Page 2');
     expect(metadata.openGraph?.url).toBe('https://example.com/articles/page/2/');
   });
@@ -86,7 +79,6 @@ describe('Paginated articles page', () => {
   it('returns empty metadata when the requested page is missing', async () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ pageNumber: '999' }) });
 
-    expect(getTotalPagesMock).toHaveBeenCalledTimes(1);
     expect(metadata).toEqual({});
   });
 
@@ -96,31 +88,19 @@ describe('Paginated articles page', () => {
   });
 
   it('renders the paginated articles section when data is available', async () => {
-    const posts = createPosts([
-      { title: 'Paginated article', slug: 'paginated-article' },
-      { title: 'Another article', slug: 'another-article' },
-      { title: 'Third article', slug: 'third-article' },
-    ]);
-
-    getPaginatedPostsMock.mockResolvedValue(
-      createPaginationData(posts, {
-        currentPage: 2,
-        totalItems: posts.length,
-        totalPages: 2,
-        itemsPerPage: 3,
-        startIndex: 0,
-        endIndex: posts.length,
-        pageItems: posts,
-        hasNextPage: false,
-        hasPreviousPage: true,
-      }),
-    );
+    getAllPostsMock.mockResolvedValue(createPosts([], perPage + 3));
 
     const Page = await PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: '2' }) });
     render(Page);
 
     expect(screen.getByTestId('current-page')).toHaveTextContent('2');
     expect(screen.getByTestId('posts-count')).toHaveTextContent('3');
+  });
+
+  it('throws notFound for pages beyond the last page', async () => {
+    await expect(
+      PaginatedArticlesPage({ params: Promise.resolve({ pageNumber: '5' }) }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
   it('throws notFound for non-numeric page parameters', async () => {

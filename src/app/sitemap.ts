@@ -2,7 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export const dynamic = 'force-static';
 
-import { getAllPosts, getTotalPages } from '@/lib/posts';
+import { getAllPosts } from '@/lib/posts';
+import { getArticleIndexPages } from '@/lib/article-index';
 import { getAllProfiles } from '@/lib/profiles';
 import { siteAddress } from '@/lib/site.server';
 
@@ -27,18 +28,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: siteAddress.absoluteUrl('/articles/'), lastModified: rootLastMod, changeFrequency: 'weekly', priority: 0.9 },
   ];
 
-  const totalPages = await getTotalPages();
-
-  // Pages 2..N only — page 1 is canonically /articles/ (already listed above).
-  const paginatedRoutes: MetadataRoute.Sitemap = Array.from(
-    { length: Math.max(totalPages - 1, 0) },
-    (_, index) => ({
-      url: siteAddress.absoluteUrl(`/articles/page/${index + 2}/`),
-      lastModified: rootLastMod,
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    }),
-  );
+  // Page 1 is /articles/ (listed above with a higher priority); list pages 2..N.
+  const indexPages = await getArticleIndexPages();
+  const paginatedRoutes: MetadataRoute.Sitemap = indexPages.slice(1).map(({ path }) => ({
+    url: siteAddress.absoluteUrl(path),
+    lastModified: rootLastMod,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
 
   const postRoutes = allPosts.map((post) => ({
     url: siteAddress.absoluteUrl(post.url),
