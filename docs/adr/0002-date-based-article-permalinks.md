@@ -1,0 +1,3 @@
+# Article Permalinks are date-based and content lives in the repo
+
+An Article's Permalink is `/articles/YYYY/MM/DD/slug/`, built from its Publication Date and Slug. The file name in `content/articles/` is not part of it. Articles are MDX files in the repository and are validated against a frontmatter schema at build time; there is no CMS. The date-based scheme matches the URLs Articles had before they were migrated into this repo. We chose repo-based MDX so that writing, review, and publishing all happen in git, and invalid content fails the build instead of reaching production. Changing either the Publication Date or the Slug of a published Article breaks inbound links, so treat both as immutable after publication.

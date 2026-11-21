@@ -1,0 +1,3 @@
+# Static export to GitHub Pages, no server runtime
+
+The site is built with `output: "export"` and served as plain files from GitHub Pages. We chose this over a hosted Next.js runtime (Vercel, a Node server) because the site is a publishing and marketing surface with no per-request needs, and static hosting is free, fast, and has almost no attack surface. As a result there are no API routes, middleware, server redirects, or on-demand image optimization. Anything dynamic, such as Booking or analytics, goes through third-party embeds allowed by the CSP. The `/scott` Vanity Redirect runs client-side because `redirects()` is ignored under static export.
