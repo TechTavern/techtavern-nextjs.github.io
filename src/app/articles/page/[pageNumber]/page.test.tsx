@@ -6,7 +6,6 @@ import PaginatedArticlesPage, {
 import { createPaginationData, createPosts } from '@/tests/test-utils';
 import { generatePaginationParams, getPaginatedPosts, getTotalPages } from '@/lib/posts';
 import { InvalidPageError } from '@/lib/pagination';
-import { getBaseUrl } from '@/lib/site.server';
 
 jest.mock('next/navigation', () => ({
   notFound: () => {
@@ -19,10 +18,7 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@/lib/site.server', () => {
   const actual = jest.requireActual('@/lib/site.server');
-  return {
-    ...actual,
-    getBaseUrl: jest.fn(),
-  };
+  return { ...actual, siteAddress: actual.createSiteAddress({ siteUrl: 'https://example.com' }) };
 });
 
 jest.mock('@/lib/posts', () => {
@@ -53,12 +49,10 @@ jest.mock('@/app/articles/ArticlesPageSections', () => ({
 const getPaginatedPostsMock = getPaginatedPosts as jest.MockedFunction<typeof getPaginatedPosts>;
 const generatePaginationParamsMock = generatePaginationParams as jest.MockedFunction<typeof generatePaginationParams>;
 const getTotalPagesMock = getTotalPages as jest.MockedFunction<typeof getTotalPages>;
-const getBaseUrlMock = getBaseUrl as jest.MockedFunction<typeof getBaseUrl>;
 
 describe('Paginated articles page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    getBaseUrlMock.mockReturnValue('https://example.com');
     // Default: 4 pages exist so page-2 is valid and page-999 is out of range
     getTotalPagesMock.mockResolvedValue(4);
   });

@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import AnalyticsRoot from "@/components/analytics/AnalyticsRoot";
-import { DEFAULT_FEATURED_IMAGE, siteMeta, siteOrg } from "@/lib/site";
-import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import { siteMeta, siteOrg } from "@/lib/site";
+import { defaultFeaturedImageUrl, siteAddress } from "@/lib/site.server";
 import { env } from "@/lib/env";
 import { buildOrganizationJsonLd } from "@/lib/seo";
 import { buildContentSecurityPolicy } from "@/lib/csp";
@@ -11,33 +11,32 @@ export const metadata = {
   title: siteMeta.title,
   description: siteMeta.description,
   keywords: "technology consulting, AI, data security, IT solutions, software development, DevOps",
-  metadataBase: new URL(getBaseUrl()),
+  metadataBase: new URL(siteAddress.baseUrl),
   openGraph: {
     title: siteMeta.title,
     description: siteMeta.description,
     type: 'website',
     siteName: siteMeta.title,
-    url: getBaseUrl(),
+    url: siteAddress.baseUrl,
     images: [
-      { url: new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString(), alt: siteMeta.title },
+      { url: defaultFeaturedImageUrl(), alt: siteMeta.title },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: siteMeta.title,
     description: siteMeta.description,
-    images: [new URL(withBasePath(DEFAULT_FEATURED_IMAGE)!, getBaseUrl()).toString()],
+    images: [defaultFeaturedImageUrl()],
   },
   alternates: {
-    canonical: getBaseUrl(),
+    canonical: siteAddress.baseUrl,
   },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const baseUrl = getBaseUrl();
   const orgJsonLd = buildOrganizationJsonLd({
     name: siteOrg.name,
-    baseUrl,
+    address: siteAddress,
     logoPath: siteOrg.logoPath,
     email: siteOrg.email,
   });

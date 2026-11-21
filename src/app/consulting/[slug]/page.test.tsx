@@ -57,10 +57,10 @@ jest.mock('@/lib/profiles', () => ({
   getProfileBySlug: jest.fn(),
 }));
 
-jest.mock('@/lib/site.server', () => ({
-  getBaseUrl: () => 'https://example.com',
-  withBasePath: (path: string) => path,
-}));
+jest.mock('@/lib/site.server', () => {
+  const actual = jest.requireActual('@/lib/site.server');
+  return { ...actual, siteAddress: actual.createSiteAddress({ siteUrl: 'https://example.com' }) };
+});
 
 const mockBookingComponent = jest.fn(({ label }: { label: string }) => (
   <button type="button">{label}</button>
@@ -121,7 +121,7 @@ const profile: ProfileMeta = {
     },
   ],
   filePath: '/virtual/profiles/jordan-avery.mdx',
-  url: '/consulting/jordan-avery',
+  url: '/consulting/jordan-avery/',
 };
 
 describe('Consulting profile route', () => {
@@ -170,6 +170,6 @@ describe('Consulting profile metadata', () => {
 
     const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'jordan-avery' }) });
     expect(metadata.title).toBe('Jordan Avery | AI Transformation Partner');
-    expect(metadata.alternates?.canonical).toBe('https://example.com/consulting/jordan-avery');
+    expect(metadata.alternates?.canonical).toBe('https://example.com/consulting/jordan-avery/');
   });
 });

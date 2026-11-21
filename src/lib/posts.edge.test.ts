@@ -5,7 +5,6 @@ import { readFile } from 'node:fs/promises';
 import matter from 'gray-matter';
 
 import { getAllPosts } from './posts';
-import { withBasePath } from '@/lib/site.server';
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/site';
 
 jest.mock('fast-glob', () => ({
@@ -27,11 +26,6 @@ jest.mock('gray-matter', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@/lib/site.server', () => ({
-  withBasePath: jest.fn((path: string | undefined) =>
-    path ? `__base${path}` : undefined,
-  ),
-}));
 
 const fgMock = fg as unknown as jest.MockedFunction<typeof fg>;
 const readFileFn = readFile as jest.MockedFunction<typeof readFile>;
@@ -39,7 +33,6 @@ const matterMock = matter as unknown as jest.Mock<
   { data: Record<string, unknown>; content: string },
   [string]
 >;
-const withBasePathMock = withBasePath as jest.MockedFunction<typeof withBasePath>;
 
 let matterQueue: Array<{ data: Record<string, unknown>; content: string }> = [];
 
@@ -59,7 +52,6 @@ describe('getAllPosts edge cases', () => {
       }
       return matterQueue.shift()!;
     });
-    withBasePathMock.mockImplementation((path) => (path ? `__base${path}` : undefined));
   });
 
   it('filters drafts and sorts posts descending by date', async () => {
@@ -158,7 +150,7 @@ describe('getAllPosts edge cases', () => {
     }).rejects.toThrow(/Invalid frontmatter/);
   });
 
-  it('normalizes asset paths via withBasePath and preserves canonical URL overrides', async () => {
+  it('stores basePath-free asset paths and preserves canonical URL overrides', async () => {
     fgMock.mockResolvedValue(['/content/with-assets.mdx']);
     queueMatter([
       {
@@ -174,10 +166,8 @@ describe('getAllPosts edge cases', () => {
     ]);
 
     const [post] = await getAllPosts();
-    expect(withBasePathMock).toHaveBeenCalledWith('/og-image.png');
-    expect(withBasePathMock).toHaveBeenCalledWith(DEFAULT_FEATURED_IMAGE);
-    expect(post.featuredImage).toBe(`__base${DEFAULT_FEATURED_IMAGE}`);
-    expect(post.ogImage).toBe('__base/og-image.png');
+    expect(post.featuredImage).toBe(DEFAULT_FEATURED_IMAGE);
+    expect(post.ogImage).toBe('/og-image.png');
     expect(post.canonicalUrl).toBe('https://canonical.example/seo-rich');
     expect(post.url).toBe('/articles/2025/01/17/seo-rich/');
     expect(post.lastModified).toBe('2025-01-17');

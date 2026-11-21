@@ -4,11 +4,12 @@ import { getAllPosts, getPostByParams, getPostSource } from "@/lib/posts";
 import { getMDXComponents } from "@/mdx-components";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { siteMeta, siteOrg } from "@/lib/site";
-import { getBaseUrl, withBasePath } from "@/lib/site.server";
+import { siteAddress } from "@/lib/site.server";
 import type { Metadata } from "next";
 import { mdxOptions } from "@/lib/mdx-options";
 import { formatDisplayDate } from "@/lib/format";
 import { buildArticleJsonLd } from "@/lib/seo";
+import { articlePresentation } from "@/lib/article-presentation";
 import { proseHeadingAnchorReset } from "@/lib/prose";
 
 // Build all routes at export time
@@ -28,18 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
   if (!post) return {};
-  const title = post.ogTitle || post.title;
-  const description = post.ogDescription || post.excerpt || `Read ${post.title} on Tech Tavern's blog`;
-  const base = getBaseUrl();
-  const toAbs = (u: string) => {
-    const pathWithBase = withBasePath(u) || u;
-    try { return new URL(pathWithBase, base).toString(); } catch { return pathWithBase; }
-  };
-  const chooseImage = post.ogImage || post.featuredImage;
-  const imageUrl = chooseImage ? (chooseImage.startsWith('http') ? chooseImage : toAbs(chooseImage)) : undefined;
-  const images = imageUrl ? [{ url: imageUrl, alt: title }] : undefined;
-  const absoluteUrl = toAbs(post.url);
-  const canonical = post.canonicalUrl ? post.canonicalUrl : absoluteUrl;
+  const { permalink, canonicalUrl, socialPreview } = articlePresentation(post, siteAddress);
+  const { title, description, image } = socialPreview;
   return {
     title,
     description,
@@ -51,16 +42,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.date,
       ...(post.tags && post.tags.length ? { tags: post.tags } : {}),
       authors: [siteOrg.name],
-      images,
-      url: absoluteUrl,
+      images: [{ url: image, alt: title }],
+      url: permalink,
     },
     twitter: {
-      card: images ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
-      images: imageUrl ? [imageUrl] : undefined,
+      images: [image],
     },
-    alternates: { canonical },
+    alternates: { canonical: canonicalUrl },
   };
 }
 
@@ -71,7 +62,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const jsonLd = buildArticleJsonLd({
     post,
-    baseUrl: getBaseUrl(),
+    address: siteAddress,
     orgName: siteOrg.name,
     orgLogoPath: siteOrg.logoPath,
   });
@@ -125,7 +116,7 @@ export default async function ArticlePage({ params }: Props) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={post.featuredImage}
+                  src={siteAddress.href(post.featuredImage)}
                   alt={`Featured image for article: ${post.title}`}
                   className="w-full h-full object-cover"
                   fetchPriority="high"

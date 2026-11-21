@@ -4,7 +4,7 @@ export const dynamic = 'force-static';
 
 import { getAllPosts, getTotalPages } from '@/lib/posts';
 import { getAllProfiles } from '@/lib/profiles';
-import { getBaseUrl } from '@/lib/site.server';
+import { siteAddress } from '@/lib/site.server';
 
 function formatYmd(date: Date): string {
   const y = date.getUTCFullYear();
@@ -14,7 +14,6 @@ function formatYmd(date: Date): string {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = getBaseUrl();
   const allPosts = await getAllPosts();
 
   const newestPostLastMod = allPosts.reduce<string | null>((acc, post) => {
@@ -24,8 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const rootLastMod = newestPostLastMod ?? formatYmd(new Date());
 
   const baseRoutes: MetadataRoute.Sitemap = [
-    { url: `${base}/`, lastModified: rootLastMod, changeFrequency: 'weekly', priority: 1 },
-    { url: `${base}/articles/`, lastModified: rootLastMod, changeFrequency: 'weekly', priority: 0.9 },
+    { url: siteAddress.absoluteUrl('/'), lastModified: rootLastMod, changeFrequency: 'weekly', priority: 1 },
+    { url: siteAddress.absoluteUrl('/articles/'), lastModified: rootLastMod, changeFrequency: 'weekly', priority: 0.9 },
   ];
 
   const totalPages = await getTotalPages();
@@ -34,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paginatedRoutes: MetadataRoute.Sitemap = Array.from(
     { length: Math.max(totalPages - 1, 0) },
     (_, index) => ({
-      url: `${base}/articles/page/${index + 2}/`,
+      url: siteAddress.absoluteUrl(`/articles/page/${index + 2}/`),
       lastModified: rootLastMod,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
@@ -42,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const postRoutes = allPosts.map((post) => ({
-    url: `${base}${post.url}`,
+    url: siteAddress.absoluteUrl(post.url),
     lastModified: post.lastModified,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
@@ -50,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const profiles = await getAllProfiles();
   const profileRoutes: MetadataRoute.Sitemap = profiles.map((profile) => ({
-    url: `${base}${profile.url.replace(/\/?$/, '/')}`,
+    url: siteAddress.absoluteUrl(profile.url),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));

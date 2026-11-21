@@ -3,6 +3,7 @@ import type { PaginationData } from '@/lib/pagination.types';
 import type { PostMeta } from '@/lib/posts';
 import { PaginationLinks } from '@/components/articles/PaginationLinks';
 import { formatDisplayDate } from '@/lib/format';
+import { siteAddress } from '@/lib/site.server';
 
 export const ARTICLES_PAGE = {
   title: 'Articles',
@@ -70,7 +71,7 @@ export function ArticlesPageSections({ posts, pagination }: ArticlesPageSections
                     <div className="relative w-full overflow-hidden bg-secondary/10" style={{ aspectRatio: '16/9' }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={post.featuredImage}
+                        src={siteAddress.href(post.featuredImage)}
                         alt={`Featured image for article: ${post.title}`}
                         className="w-full h-full object-cover"
                         loading="lazy"
