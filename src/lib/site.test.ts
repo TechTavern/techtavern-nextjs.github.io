@@ -8,7 +8,6 @@ describe('createSiteAddress', () => {
 
   it('combines SITE_URL and basePath into baseUrl', () => {
     expect(withBase.baseUrl).toBe('https://example.com/myapp');
-    expect(withBase.basePath).toBe('/myapp');
   });
 
   it('defaults to localhost when SITE_URL is missing', () => {

@@ -19,8 +19,6 @@ export type SiteAddressConfig = {
 export type SiteAddress = {
   /** Absolute URL of the site root including basePath, without trailing slash. */
   readonly baseUrl: string;
-  /** Normalized basePath ("" or "/something", no trailing slash). */
-  readonly basePath: string;
   /** Root-relative, basePath-prefixed href for a stored path. */
   href(path: string): string;
   /** Fully qualified URL for a stored path. */
@@ -65,7 +63,6 @@ export function createSiteAddress(config: SiteAddressConfig): SiteAddress {
 
   return {
     baseUrl: `${root}${basePath}`,
-    basePath,
     href,
     absoluteUrl: (path: string) => (ABSOLUTE_URL.test(path) ? path : `${root}${href(path)}`),
   };
