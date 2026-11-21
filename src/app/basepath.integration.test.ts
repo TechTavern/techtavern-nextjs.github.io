@@ -11,6 +11,11 @@ jest.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) =>
     jest.requireActual('react').createElement('img', { src, alt }),
 }));
+// Render the home variant of the header as the home route would.
+jest.mock('next/navigation', () => ({
+  ...jest.requireActual('next/navigation'),
+  usePathname: () => '/',
+}));
 jest.mock('next-mdx-remote/rsc', () => ({
   compileMDX: jest.fn(async () => ({ content: null })),
 }));
@@ -25,6 +30,7 @@ type Loaded = {
   profiles: typeof import('@/lib/profiles');
   sitemap: typeof import('@/app/sitemap');
   renderAssets: () => string;
+  renderHomeNav: () => string;
   renderToStaticMarkup: (element: unknown) => string;
 };
 
@@ -41,6 +47,12 @@ function loadWithEnv(siteUrl: string, basePath: string): Loaded {
       profiles: require('@/lib/profiles'),
       sitemap: require('@/app/sitemap'),
       renderToStaticMarkup: require('react-dom/server').renderToStaticMarkup,
+      renderHomeNav: (() => {
+        const { createElement } = require('react');
+        const { renderToStaticMarkup } = require('react-dom/server');
+        const Header = require('@/components/ui/Header').default;
+        return () => renderToStaticMarkup(createElement(Header, { variant: 'home' }));
+      })(),
       renderAssets: (() => {
         const { createElement } = require('react');
         const { renderToStaticMarkup } = require('react-dom/server');
@@ -134,10 +146,17 @@ describe.each([
     expect(assetUrls.some((u) => u.includes('/assets/img/logos/'))).toBe(true);
     expect(assetUrls).toContain(`${BASE_PATH}/images/mdx-sample.webp`);
     expect(assetUrls).toContain('https://cdn.example.com/remote.webp');
-    for (const url of assetUrls.filter((u) => u.startsWith('/'))) {
+    // '/img.jpg' is next/jest's stub for bundler-imported images (the hero
+    // preloads); the real build emits those under `${basePath}/_next/static/media/`.
+    for (const url of assetUrls.filter((u) => u.startsWith('/') && u !== '/img.jpg')) {
       expect(url.startsWith(`${BASE_PATH}/`)).toBe(true);
       expect(url).not.toContain(doubled);
     }
+  });
+
+  it('home Navigation logo (client component) carries the basePath once', () => {
+    const srcs = [...m.renderHomeNav().matchAll(/src="([^"]+)"/g)].map(([, src]) => src);
+    expect(srcs).toEqual([`${BASE_PATH}/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg`]);
   });
 
   it('Consultant Profile page images carry the basePath once', async () => {
@@ -150,4 +169,32 @@ describe.each([
       expect(src).not.toContain(doubled);
     }
   });
+});
+
+describe('CSS asset references', () => {
+  // Root-absolute url('/x') in CSS is emitted verbatim and ignores basePath.
+  // Relative urls are resolved by the bundler, which fingerprints the file
+  // under /_next/static/media/ and applies assetPrefix (= basePath).
+  const fs = require('node:fs') as typeof import('node:fs');
+  const path = require('node:path') as typeof import('node:path');
+  const srcDir = path.join(process.cwd(), 'src');
+  const cssFiles = (fs.readdirSync(srcDir, { recursive: true }) as string[])
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => path.join(srcDir, f));
+  const refs = cssFiles.flatMap((file) =>
+    [...fs.readFileSync(file, 'utf8').matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)].map(([, url]) => ({ file, url })),
+  );
+
+  it('finds the CSS url() references', () => {
+    expect(refs.length).toBeGreaterThan(0);
+  });
+
+  it.each(refs.map((r) => [path.relative(process.cwd(), r.file), r.url]))(
+    '%s: %s is bundler-resolved and exists',
+    (file, url) => {
+      expect(url).not.toMatch(/^\//);
+      if (/^(?:data:|https?:|#)/.test(url)) return;
+      expect(fs.existsSync(path.resolve(path.dirname(file), url))).toBe(true);
+    },
+  );
 });

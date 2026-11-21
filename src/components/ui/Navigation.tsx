@@ -7,7 +7,20 @@ import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import { siteMeta } from '@/lib/site';
 
-export default function Navigation() {
+export type NavigationProps = {
+  /**
+   * Rendered logo srcs, already basePath-prefixed by the server parent
+   * (siteAddress is server-only, so this client component cannot resolve them).
+   */
+  logos: {
+    /** Shown over the dark hero before scrolling. */
+    onDark: string;
+    /** Shown on the light background after scrolling. */
+    onLight: string;
+  };
+};
+
+export default function Navigation({ logos }: NavigationProps) {
   const navigationItems = [
     { href: '/#', label: 'Home' },
     { href: '/#Services', label: 'Services' },
@@ -70,7 +83,7 @@ export default function Navigation() {
               aria-label={`${siteMeta.title} - Home`}
             >
               <Image
-                src={isScrolled ? "/assets/img/logos/TechTavern_Logo_Horizontal_X.svg" : "/assets/img/logos/TechTavern_Logo_Inverted_Horizontal_X.svg"}
+                src={isScrolled ? logos.onLight : logos.onDark}
                 alt={siteMeta.title}
                 width={180}
                 height={40}

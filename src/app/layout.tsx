@@ -6,6 +6,11 @@ import { defaultFeaturedImageUrl, siteAddress } from "@/lib/site.server";
 import { env } from "@/lib/env";
 import { buildOrganizationJsonLd } from "@/lib/seo";
 import { buildContentSecurityPolicy } from "@/lib/csp";
+// Same files Hero.module.css references; importing them yields the bundler's
+// fingerprinted, assetPrefix-ed URL so the preloads match the CSS requests.
+import heroImage375 from "../../public/images/richmond-station-view-375w.webp";
+import heroImage768 from "../../public/images/richmond-station-view-768w.webp";
+import heroImage1200 from "../../public/images/richmond-station-view-1200w.webp";
 
 export const metadata = {
   title: siteMeta.title,
@@ -53,9 +58,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="icon" type="image/png" sizes="32x32" href={siteAddress.href("/favicons/favicon-32x32.png")} />
         <link rel="icon" type="image/png" sizes="16x16" href={siteAddress.href("/favicons/favicon-16x16.png")} />
         <link rel="manifest" href={siteAddress.href("/site.webmanifest")} />
-        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-375w.webp")} type="image/webp" media="(max-width: 767px)" />
-        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-768w.webp")} type="image/webp" media="(min-width: 768px) and (max-width: 1199px)" />
-        <link rel="preload" as="image" href={siteAddress.href("/images/richmond-station-view-1200w.webp")} type="image/webp" media="(min-width: 1200px)" />
+        <link rel="preload" as="image" href={heroImage375.src} type="image/webp" media="(max-width: 767px)" />
+        <link rel="preload" as="image" href={heroImage768.src} type="image/webp" media="(min-width: 768px) and (max-width: 1199px)" />
+        <link rel="preload" as="image" href={heroImage1200.src} type="image/webp" media="(min-width: 1200px)" />
         {/* Inline critical CSS removed; relying on globals.css and Tailwind utilities */}
         <meta
           httpEquiv="Content-Security-Policy"

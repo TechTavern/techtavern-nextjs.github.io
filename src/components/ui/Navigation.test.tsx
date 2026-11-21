@@ -5,6 +5,12 @@ import Navigation from './Navigation';
 
 const mockUsePathname = jest.fn<string, []>();
 
+// Resolved, basePath-prefixed logo srcs come from the server parent (Header).
+const logos = {
+  onDark: '/base/assets/img/logos/inverted.svg',
+  onLight: '/base/assets/img/logos/standard.svg',
+};
+
 jest.mock('next/link', () => ({
   __esModule: true,
   default: ({ children, href, ...rest }: { children: React.ReactNode; href: string }) => (
@@ -24,7 +30,7 @@ describe('Navigation', () => {
   });
 
   it('renders links on the home page and controls the mobile menu', async () => {
-    render(<Navigation />);
+    render(<Navigation logos={logos} />);
 
     expect(
       screen.getByRole('navigation', { name: /main navigation/i })
@@ -48,7 +54,7 @@ describe('Navigation', () => {
   });
 
   it('updates styling after scrolling', () => {
-    render(<Navigation />);
+    render(<Navigation logos={logos} />);
     const nav = screen.getByRole('navigation', { name: /main navigation/i });
     expect(nav.className).toContain('bg-transparent');
 
@@ -60,9 +66,21 @@ describe('Navigation', () => {
     expect(nav.className).toContain('bg-white/95');
   });
 
+  it('renders the logo src it is given, switching variants on scroll', () => {
+    Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
+    render(<Navigation logos={logos} />);
+    expect(screen.getByRole('img', { name: 'Tech Tavern' })).toHaveAttribute('src', logos.onDark);
+
+    Object.defineProperty(window, 'scrollY', { value: 80, writable: true });
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+    });
+    expect(screen.getByRole('img', { name: 'Tech Tavern' })).toHaveAttribute('src', logos.onLight);
+  });
+
   it('returns null on non-home routes', () => {
     mockUsePathname.mockReturnValue('/articles');
-    const { container } = render(<Navigation />);
+    const { container } = render(<Navigation logos={logos} />);
     expect(container.firstChild).toBeNull();
   });
 });
