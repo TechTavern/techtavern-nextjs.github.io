@@ -122,7 +122,7 @@ Frontmatter is validated by the Zod schema in `src/lib/posts.ts`; invalid frontm
 
 ### Playwright (E2E/accessibility)
 - Config: `playwright.config.js` (auto-starts `npm run dev:webpack`).
-- Requires at least 16 articles for pagination tests (15 per page → 2 pages).
+- Requires at least 13 articles for pagination tests (12 per page → 2 pages; `paginationSettings` in `src/lib/site.ts`).
 - Runs in the GitHub Actions `quality-gates` job; HTML reports are uploaded as artifacts (`npx playwright show-report` locally).
 - See `tests/README.md` for test-data requirements.
 

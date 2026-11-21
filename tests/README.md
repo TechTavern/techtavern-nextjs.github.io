@@ -5,7 +5,7 @@ This directory contains Playwright end-to-end tests with a focus on WCAG accessi
 ## Prerequisites
 
 - Node.js 20+
-- At least **16 MDX articles** in `/content/articles/` for pagination tests to run
+- At least **13 MDX articles** in `/content/articles/` for pagination tests to run
 - Dev server running on `localhost:3000` (handled automatically by Playwright)
 
 ## Running Tests
@@ -43,11 +43,11 @@ Tests run automatically in GitHub Actions during the `quality-gates` job. The wo
 
 The pagination accessibility test requires:
 
-- **Minimum 16 articles** in `content/articles/` directory
-- Default pagination setting: 15 items per page (configured in `src/lib/site.ts`)
-- With 16 articles, pagination renders with 2 pages
+- **Minimum 13 articles** in `content/articles/` directory
+- Default pagination setting: 12 items per page (configured in `src/lib/site.ts`)
+- With 13 articles, pagination renders with 2 pages
 
-If fewer than 16 articles exist, the pagination test will automatically skip with a clear message.
+If fewer than 13 articles exist, the pagination test will automatically skip with a clear message.
 
 ### Test Data Verification
 
@@ -102,7 +102,7 @@ Tests WCAG 2.1 AA compliance across:
 
 **Pagination not visible:**
 - Check article count: `find content/articles -name "*.mdx" | wc -l`
-- Ensure at least 16 articles exist
+- Ensure at least 13 articles exist
 - Verify pagination settings in `src/lib/site.ts`
 
 **Test timeouts:**

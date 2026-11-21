@@ -180,7 +180,7 @@ test.describe('Accessibility Tests', () => {
     } else {
       // Skip test if pagination doesn't render (graceful degradation)
       const articles = await page.locator('article').count();
-      test.skip(true, `Skipping pagination test: ${articles} articles found, pagination not rendered (need > 15 for 2 pages with itemsPerPage=15)`);
+      test.skip(true, `Skipping pagination test: ${articles} articles found, pagination not rendered (need > 12 for 2 pages with itemsPerPage=12)`);
     }
   });
 

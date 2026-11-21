@@ -10,7 +10,7 @@ const path = require('path');
 const fg = require('fast-glob');
 
 const ARTICLES_DIR = path.join(__dirname, '..', 'content', 'articles');
-const MIN_ARTICLES_FOR_PAGINATION = 16; // With 15 items per page, need 16 for 2 pages
+const MIN_ARTICLES_FOR_PAGINATION = 13; // With 12 items per page (src/lib/site.ts), need 13 for 2 pages
 
 async function verifyTestData() {
   console.log('Verifying test data for Playwright tests...\n');
@@ -37,7 +37,7 @@ async function verifyTestData() {
       `\n⚠️  Warning: Only ${articleCount} articles found.`
     );
     console.warn(
-      `   Pagination tests require at least ${MIN_ARTICLES_FOR_PAGINATION} articles (with 15 items/page setting).`
+      `   Pagination tests require at least ${MIN_ARTICLES_FOR_PAGINATION} articles (with 12 items/page setting).`
     );
     console.warn(
       `   These tests will be automatically skipped.\n`
