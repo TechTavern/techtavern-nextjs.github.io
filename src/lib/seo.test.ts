@@ -60,4 +60,10 @@ describe('seo JSON-LD builders', () => {
     expect(json.image).toBe(`${baseUrl}${post.featuredImage}`);
     expect(json.url).toBe(`${baseUrl}${post.url}`);
   });
+
+  it('uses the same description fallback as the page metadata', () => {
+    const post = createPostMeta({ title: 'No Excerpt', excerpt: undefined });
+    const json = buildArticleJsonLd({ post, address, orgName: 'Tech Tavern, LLC' });
+    expect(json.description).toBe("Read No Excerpt on Tech Tavern's blog");
+  });
 });

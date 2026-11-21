@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { mdxOptions } from "@/lib/mdx-options";
 import { formatDisplayDate } from "@/lib/format";
 import { buildArticleJsonLd } from "@/lib/seo";
+import { articlePresentation } from "@/lib/article-presentation";
 import { proseHeadingAnchorReset } from "@/lib/prose";
 
 // Build all routes at export time
@@ -28,13 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, month, day, slug } = await params;
   const post = await getPostByParams(year, month, day, slug);
   if (!post) return {};
-  const title = post.ogTitle || post.title;
-  const description = post.ogDescription || post.excerpt || `Read ${post.title} on Tech Tavern's blog`;
-  const chooseImage = post.ogImage || post.featuredImage;
-  const imageUrl = chooseImage ? siteAddress.absoluteUrl(chooseImage) : undefined;
-  const images = imageUrl ? [{ url: imageUrl, alt: title }] : undefined;
-  const absoluteUrl = siteAddress.absoluteUrl(post.url);
-  const canonical = post.canonicalUrl ? post.canonicalUrl : absoluteUrl;
+  const { permalink, canonicalUrl, socialPreview } = articlePresentation(post, siteAddress);
+  const { title, description, image } = socialPreview;
   return {
     title,
     description,
@@ -46,16 +42,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.date,
       ...(post.tags && post.tags.length ? { tags: post.tags } : {}),
       authors: [siteOrg.name],
-      images,
-      url: absoluteUrl,
+      images: [{ url: image, alt: title }],
+      url: permalink,
     },
     twitter: {
-      card: images ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
-      images: imageUrl ? [imageUrl] : undefined,
+      images: [image],
     },
-    alternates: { canonical },
+    alternates: { canonical: canonicalUrl },
   };
 }
 

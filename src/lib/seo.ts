@@ -1,6 +1,6 @@
 import type { SiteAddress } from '@/lib/site.server';
+import { articlePresentation } from '@/lib/article-presentation';
 import type { PostMeta } from '@/lib/posts';
-import { DEFAULT_FEATURED_IMAGE } from '@/lib/site';
 
 export type OrganizationJsonLd = {
   '@context': 'https://schema.org';
@@ -72,16 +72,13 @@ export function buildArticleJsonLd(params: {
   orgLogoPath?: string;
 }): ArticleJsonLd {
   const { post, address, orgName, orgLogoPath } = params;
-  const headline = post.ogTitle || post.title;
-  const description = post.ogDescription || post.excerpt;
-  const image = address.absoluteUrl(post.ogImage || post.featuredImage || DEFAULT_FEATURED_IMAGE);
-  const canonical = post.canonicalUrl || address.absoluteUrl(post.url);
+  const { canonicalUrl, socialPreview } = articlePresentation(post, address);
   const publisherLogo = orgLogoPath ? address.absoluteUrl(orgLogoPath) : undefined;
 
   const json: ArticleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline,
+    headline: socialPreview.title,
     datePublished: post.date,
     author: { '@type': 'Organization', name: orgName },
     publisher: {
@@ -91,10 +88,10 @@ export function buildArticleJsonLd(params: {
         ? { logo: { '@type': 'ImageObject', url: publisherLogo } }
         : {}),
     },
-    ...(description ? { description } : {}),
-    image,
-    mainEntityOfPage: canonical,
-    url: canonical,
+    description: socialPreview.description,
+    image: socialPreview.image,
+    mainEntityOfPage: canonicalUrl,
+    url: canonicalUrl,
   };
 
   return json;
